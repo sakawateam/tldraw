@@ -1,0 +1,1 @@
+{"version":3,"file":"BoundsBg.d.ts","sourceRoot":"","sources":["../../../../src/components/Bounds/BoundsBg.tsx"],"names":[],"mappings":"AAEA,OAAO,KAAK,KAAK,MAAM,OAAO,CAAA;AAC9B,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,QAAQ,CAAA;AAKtC,UAAU,aAAa;IACrB,MAAM,EAAE,QAAQ,CAAA;IAChB,QAAQ,EAAE,MAAM,CAAA;IAChB,QAAQ,EAAE,OAAO,CAAA;CAClB;AAED,eAAO,MAAM,QAAQ,wCAqBnB,CAAA"}

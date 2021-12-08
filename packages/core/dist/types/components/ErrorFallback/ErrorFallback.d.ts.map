@@ -1,0 +1,1 @@
+{"version":3,"file":"ErrorFallback.d.ts","sourceRoot":"","sources":["../../../../src/components/ErrorFallback/ErrorFallback.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,KAAK,MAAM,OAAO,CAAA;AAG9B,UAAU,kBAAkB;IAC1B,KAAK,EAAE,KAAK,CAAA;IACZ,kBAAkB,EAAE,MAAM,IAAI,CAAA;CAC/B;AAED,eAAO,MAAM,aAAa,gDAWxB,CAAA"}

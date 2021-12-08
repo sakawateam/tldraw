@@ -1,0 +1,1 @@
+{"version":3,"file":"deleteShapes.d.ts","sourceRoot":"","sources":["../../../../../src/state/commands/deleteShapes/deleteShapes.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,SAAS,EAAE,MAAM,gBAAgB,CAAA;AAE/C,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,QAAQ,CAAA;AAG3C,wBAAgB,YAAY,CAC1B,GAAG,EAAE,SAAS,EACd,GAAG,EAAE,MAAM,EAAE,EACb,MAAM,SAAoB,GACzB,aAAa,CAiCf"}
