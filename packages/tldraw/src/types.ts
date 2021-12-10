@@ -275,6 +275,7 @@ export enum TDShapeType {
   Line = 'line',
   Text = 'text',
   Group = 'group',
+  Image = 'image',
 }
 
 export enum Decoration {
@@ -356,6 +357,13 @@ export interface GroupShape extends TDBaseShape {
   children: string[]
 }
 
+// The shape nishizaki created
+export interface ImageShape extends TLShape {
+  type: TDShapeType.Image
+  size: number[]
+  url?: string
+}
+
 // A union of all shapes
 export type TDShape =
   | RectangleShape
@@ -365,6 +373,7 @@ export type TDShape =
   | TextShape
   | GroupShape
   | StickyShape
+  | ImageShape
 
 /* ------------------ Shape Styles ------------------ */
 
