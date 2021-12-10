@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { TLShapeUtil, SVGContainer } from '@tldraw/core'
-import type { ImageShape } from './ImageShape'
+import type { ImageShape } from '~types'
 
 export const ImageComponent = TLShapeUtil.Component<ImageShape, SVGSVGElement>(
   ({ shape, events, isGhost, meta }, ref) => {

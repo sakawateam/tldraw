@@ -358,7 +358,7 @@ export interface GroupShape extends TDBaseShape {
 }
 
 // The shape nishizaki created
-export interface ImageShape extends TLShape {
+export interface ImageShape extends TDBaseShape {
   type: TDShapeType.Image
   size: number[]
   url?: string

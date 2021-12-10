@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { TLShapeUtil } from '@tldraw/core'
-import type { ImageShape } from './ImageShape'
+import type { ImageShape } from '~types'
 
 export const ImageIndicator = TLShapeUtil.Indicator<ImageShape>(({ shape }) => {
   return (

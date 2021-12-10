@@ -5,6 +5,7 @@ import { CustomShapeUtil } from './CustomShapeUtil'
 import { ImageComponent } from './ImageComponent'
 import { ImageIndicator } from './ImageIndicator'
 import { ImageShape, TDShapeType } from '~types'
+import { defaultStyle } from '../shared/shape-styles'
 
 type T = ImageShape
 type E = SVGSVGElement
@@ -44,6 +45,7 @@ export class ImageUtil extends CustomShapeUtil<T, E> {
       point: [0, 0],
       size: [100, 100],
       childIndex: 1,
+      style: defaultStyle,
       ...props,
     }
   }
