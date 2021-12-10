@@ -1,16 +1,17 @@
 import { Utils, TLBounds } from '@tldraw/core'
 import { intersectLineSegmentBounds } from '@tldraw/intersect'
 import { nanoid } from 'nanoid'
-import { CustomShapeUtil } from './CustomShapeUtil'
 import { ImageComponent } from './ImageComponent'
 import { ImageIndicator } from './ImageIndicator'
 import { ImageShape, TDShapeType } from '~types'
 import { defaultStyle } from '../shared/shape-styles'
+import { TDShapeUtil } from '../TDShapeUtil'
 
 type T = ImageShape
 type E = SVGSVGElement
 
-export class ImageUtil extends CustomShapeUtil<T, E> {
+export class ImageUtil extends TDShapeUtil<T, E> {
+  type = TDShapeType.Image as const
   Component = ImageComponent
 
   Indicator = ImageIndicator
@@ -62,8 +63,8 @@ export class ImageUtil extends CustomShapeUtil<T, E> {
     return intersectLineSegmentBounds(A, B, this.getBounds(shape)).length > 0
   }
 
-  transform = (shape: T, bounds: TLBounds, initialShape: T, scale: number[]) => {
-    shape.point = [bounds.minX, bounds.minY]
-    shape.size = [bounds.width, bounds.height]
-  }
+  // transform = (shape: T, bounds: TLBounds, initialShape: T, scale: number[]) => {
+  //   shape.point = [bounds.minX, bounds.minY]
+  //   shape.size = [bounds.width, bounds.height]
+  // }
 }
