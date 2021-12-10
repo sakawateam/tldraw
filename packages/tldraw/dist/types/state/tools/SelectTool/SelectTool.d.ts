@@ -165,6 +165,24 @@ export declare class SelectTool extends BaseTool<Status> {
         isLocked?: boolean | undefined;
         isGenerated?: boolean | undefined;
         isAspectRatioLocked?: boolean | undefined;
+    } | {
+        id: string;
+        point: number[];
+        type: TDShapeType.Image;
+        size: number[];
+        url?: string | undefined;
+        style: import("../../../types").ShapeStyles;
+        handles?: Record<string, import("../../../types").TldrawHandle> | undefined;
+        parentId: string;
+        childIndex: number;
+        name: string;
+        rotation?: number | undefined;
+        children?: string[] | undefined;
+        isGhost?: boolean | undefined;
+        isHidden?: boolean | undefined;
+        isLocked?: boolean | undefined;
+        isGenerated?: boolean | undefined;
+        isAspectRatioLocked?: boolean | undefined;
     } | undefined;
     onCancel: () => void;
     onKeyDown: TLKeyboardEventHandler;

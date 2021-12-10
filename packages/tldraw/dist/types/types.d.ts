@@ -183,7 +183,8 @@ export declare enum TDShapeType {
     Arrow = "arrow",
     Line = "line",
     Text = "text",
-    Group = "group"
+    Group = "group",
+    Image = "image"
 }
 export declare enum Decoration {
     Arrow = "arrow"
@@ -244,7 +245,12 @@ export interface GroupShape extends TDBaseShape {
     size: number[];
     children: string[];
 }
-export declare type TDShape = RectangleShape | EllipseShape | DrawShape | ArrowShape | TextShape | GroupShape | StickyShape;
+export interface ImageShape extends TDBaseShape {
+    type: TDShapeType.Image;
+    size: number[];
+    url?: string;
+}
+export declare type TDShape = RectangleShape | EllipseShape | DrawShape | ArrowShape | TextShape | GroupShape | StickyShape | ImageShape;
 export declare enum ColorStyle {
     White = "white",
     LightGray = "lightGray",

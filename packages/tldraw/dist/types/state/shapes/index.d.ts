@@ -6,6 +6,7 @@ import { GroupUtil } from './GroupUtil';
 import { StickyUtil } from './StickyUtil';
 import { TextUtil } from './TextUtil';
 import { DrawUtil } from './DrawUtil';
+import { ImageUtil } from './ImageUtil';
 import { TDShape } from '../../types';
 export declare const Rectangle: RectangleUtil;
 export declare const Ellipse: EllipseUtil;
@@ -14,6 +15,7 @@ export declare const Arrow: ArrowUtil;
 export declare const Text: TextUtil;
 export declare const Group: GroupUtil;
 export declare const Sticky: StickyUtil;
+export declare const Image: ImageUtil;
 export declare const shapeUtils: {
     rectangle: RectangleUtil;
     ellipse: EllipseUtil;
@@ -22,6 +24,7 @@ export declare const shapeUtils: {
     text: TextUtil;
     group: GroupUtil;
     sticky: StickyUtil;
+    image: ImageUtil;
 };
 export declare const getShapeUtil: <T extends TDShape>(shape: T | T["type"]) => TDShapeUtil<T, any>;
 //# sourceMappingURL=index.d.ts.map
