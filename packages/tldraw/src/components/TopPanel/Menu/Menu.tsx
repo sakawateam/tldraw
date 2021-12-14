@@ -83,7 +83,7 @@ export const Menu = React.memo(function Menu({ showSponsorLink, readOnly }: Menu
       <DMTriggerIcon isSponsor={showSponsorLink}>
         <HamburgerMenuIcon />
       </DMTriggerIcon>
-      <DMContent variant="menu">
+      {/* <DMContent variant="menu">
         {showFileMenu && (
           <DMSubMenu label="File...">
             {app.callbacks.onNewProject && (
@@ -208,6 +208,14 @@ export const Menu = React.memo(function Menu({ showSponsorLink, readOnly }: Menu
             )}
           </>
         )}
+      </DMContent> */}
+      <DMContent variant="menu">
+        <DMItem onClick={onSaveProject} kbd="#S">
+          保存
+        </DMItem>
+        <DMItem onClick={onSaveProjectAs} kbd="#⇧S">
+          提出
+        </DMItem>
       </DMContent>
     </DropdownMenu.Root>
   )
