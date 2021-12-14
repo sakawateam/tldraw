@@ -11844,17 +11844,6 @@ var React36 = __toModule(require("react"));
 
 // src/components/Primitives/icons/DiscordIcon.tsx
 var React37 = __toModule(require("react"));
-function DiscordIcon() {
-  return /* @__PURE__ */ React37.createElement("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    width: "16",
-    height: "16",
-    fill: "currentColor",
-    viewBox: "0 0 16 16"
-  }, /* @__PURE__ */ React37.createElement("path", {
-    d: "M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"
-  }));
-}
 
 // src/components/Primitives/icons/LineIcon.tsx
 var React38 = __toModule(require("react"));
@@ -12142,24 +12131,6 @@ var DMRadioItem = styled(import_react_dropdown_menu7.RadioItem, {
 // src/components/Primitives/DropdownMenu/DMSubMenu.tsx
 var React44 = __toModule(require("react"));
 var import_react_dropdown_menu8 = __toModule(require("@radix-ui/react-dropdown-menu"));
-function DMSubMenu({ children, disabled = false, label }) {
-  return /* @__PURE__ */ React44.createElement(import_react_dropdown_menu8.Root, {
-    dir: "ltr"
-  }, /* @__PURE__ */ React44.createElement(import_react_dropdown_menu8.TriggerItem, {
-    dir: "ltr",
-    asChild: true
-  }, /* @__PURE__ */ React44.createElement(RowButton, {
-    disabled,
-    hasArrow: true
-  }, label)), /* @__PURE__ */ React44.createElement(import_react_dropdown_menu8.Content, {
-    dir: "ltr",
-    asChild: true,
-    sideOffset: 2,
-    alignOffset: -2
-  }, /* @__PURE__ */ React44.createElement(MenuContent, null, children, /* @__PURE__ */ React44.createElement(import_react_dropdown_menu8.Arrow, {
-    offset: 13
-  }))));
-}
 
 // src/components/Primitives/DropdownMenu/DMTriggerIcon.tsx
 var React45 = __toModule(require("react"));
@@ -12472,81 +12443,9 @@ var DropdownMenu3 = __toModule(require("@radix-ui/react-dropdown-menu"));
 
 // src/components/TopPanel/PreferencesMenu/PreferencesMenu.tsx
 var React50 = __toModule(require("react"));
-var settingsSelector = (s) => s.settings;
-function PreferencesMenu() {
-  const app = useTldrawApp();
-  const settings = app.useStore(settingsSelector);
-  const toggleDebugMode = React50.useCallback(() => {
-    app.setSetting("isDebugMode", (v) => !v);
-  }, [app]);
-  const toggleDarkMode = React50.useCallback(() => {
-    app.setSetting("isDarkMode", (v) => !v);
-  }, [app]);
-  const toggleFocusMode = React50.useCallback(() => {
-    app.setSetting("isFocusMode", (v) => !v);
-  }, [app]);
-  const toggleRotateHandle = React50.useCallback(() => {
-    app.setSetting("showRotateHandles", (v) => !v);
-  }, [app]);
-  const toggleGrid = React50.useCallback(() => {
-    app.setSetting("showGrid", (v) => !v);
-  }, [app]);
-  const toggleBoundShapesHandle = React50.useCallback(() => {
-    app.setSetting("showBindingHandles", (v) => !v);
-  }, [app]);
-  const toggleisSnapping = React50.useCallback(() => {
-    app.setSetting("isSnapping", (v) => !v);
-  }, [app]);
-  const toggleCloneControls = React50.useCallback(() => {
-    app.setSetting("showCloneHandles", (v) => !v);
-  }, [app]);
-  return /* @__PURE__ */ React50.createElement(DMSubMenu, {
-    label: "Preferences"
-  }, /* @__PURE__ */ React50.createElement(DMCheckboxItem, {
-    checked: settings.isDarkMode,
-    onCheckedChange: toggleDarkMode,
-    kbd: "#\u21E7D"
-  }, "Dark Mode"), /* @__PURE__ */ React50.createElement(DMCheckboxItem, {
-    checked: settings.isFocusMode,
-    onCheckedChange: toggleFocusMode,
-    kbd: "#."
-  }, "Focus Mode"), /* @__PURE__ */ React50.createElement(DMCheckboxItem, {
-    checked: settings.isDebugMode,
-    onCheckedChange: toggleDebugMode
-  }, "Debug Mode"), /* @__PURE__ */ React50.createElement(DMDivider, null), /* @__PURE__ */ React50.createElement(DMCheckboxItem, {
-    checked: settings.showRotateHandles,
-    onCheckedChange: toggleRotateHandle
-  }, "Rotate Handles"), /* @__PURE__ */ React50.createElement(DMCheckboxItem, {
-    checked: settings.showBindingHandles,
-    onCheckedChange: toggleBoundShapesHandle
-  }, "Binding Handles"), /* @__PURE__ */ React50.createElement(DMCheckboxItem, {
-    checked: settings.showCloneHandles,
-    onCheckedChange: toggleCloneControls
-  }, "Clone Handles"), /* @__PURE__ */ React50.createElement(DMCheckboxItem, {
-    checked: settings.showGrid,
-    onCheckedChange: toggleGrid,
-    kbd: "#\u21E7G"
-  }, "Grid"), /* @__PURE__ */ React50.createElement(DMCheckboxItem, {
-    checked: settings.isSnapping,
-    onCheckedChange: toggleisSnapping
-  }, "Always Show Snaps"));
-}
 
 // src/components/Primitives/icons/HeartIcon.tsx
 var React51 = __toModule(require("react"));
-function HeartIcon() {
-  return /* @__PURE__ */ React51.createElement("svg", {
-    width: "24",
-    height: "24",
-    viewBox: "0 0 24 24",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, /* @__PURE__ */ React51.createElement("path", {
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 2,
-    d: "M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-  }));
-}
 
 // src/components/TopPanel/Menu/Menu.tsx
 var numberOfSelectedIdsSelector = (s) => {
@@ -12594,97 +12493,13 @@ var Menu = React52.memo(function Menu2({ showSponsorLink, readOnly }) {
     isSponsor: showSponsorLink
   }, /* @__PURE__ */ React52.createElement(import_react_icons5.HamburgerMenuIcon, null)), /* @__PURE__ */ React52.createElement(DMContent, {
     variant: "menu"
-  }, showFileMenu && /* @__PURE__ */ React52.createElement(DMSubMenu, {
-    label: "File..."
-  }, app.callbacks.onNewProject && /* @__PURE__ */ React52.createElement(DMItem, {
-    onClick: onNewProject,
-    kbd: "#N"
-  }, "New Project"), app.callbacks.onOpenProject && /* @__PURE__ */ React52.createElement(DMItem, {
-    onClick: onOpenProject,
-    kbd: "#O"
-  }, "Open..."), app.callbacks.onSaveProject && /* @__PURE__ */ React52.createElement(DMItem, {
+  }, /* @__PURE__ */ React52.createElement(DMItem, {
     onClick: onSaveProject,
     kbd: "#S"
-  }, "Save"), app.callbacks.onSaveProjectAs && /* @__PURE__ */ React52.createElement(DMItem, {
+  }, "\u4FDD\u5B58"), /* @__PURE__ */ React52.createElement(DMItem, {
     onClick: onSaveProjectAs,
     kbd: "#\u21E7S"
-  }, "Save As...")), !readOnly && /* @__PURE__ */ React52.createElement(React52.Fragment, null, /* @__PURE__ */ React52.createElement(DMSubMenu, {
-    label: "Edit..."
-  }, /* @__PURE__ */ React52.createElement(DMItem, {
-    onSelect: preventEvent,
-    onClick: app.undo,
-    kbd: "#Z"
-  }, "Undo"), /* @__PURE__ */ React52.createElement(DMItem, {
-    onSelect: preventEvent,
-    onClick: app.redo,
-    kbd: "#\u21E7Z"
-  }, "Redo"), /* @__PURE__ */ React52.createElement(DMDivider, {
-    dir: "ltr"
-  }), /* @__PURE__ */ React52.createElement(DMItem, {
-    onSelect: preventEvent,
-    disabled: !hasSelection,
-    onClick: handleCut,
-    kbd: "#X"
-  }, "Cut"), /* @__PURE__ */ React52.createElement(DMItem, {
-    onSelect: preventEvent,
-    disabled: !hasSelection,
-    onClick: handleCopy,
-    kbd: "#C"
-  }, "Copy"), /* @__PURE__ */ React52.createElement(DMItem, {
-    onSelect: preventEvent,
-    onClick: handlePaste,
-    kbd: "#V"
-  }, "Paste"), /* @__PURE__ */ React52.createElement(DMDivider, {
-    dir: "ltr"
-  }), /* @__PURE__ */ React52.createElement(DMItem, {
-    onSelect: preventEvent,
-    disabled: !hasSelection,
-    onClick: handleCopySvg,
-    kbd: "#\u21E7C"
-  }, "Copy as SVG"), /* @__PURE__ */ React52.createElement(DMItem, {
-    onSelect: preventEvent,
-    disabled: !hasSelection,
-    onClick: handleCopyJson
-  }, "Copy as JSON"), /* @__PURE__ */ React52.createElement(DMDivider, {
-    dir: "ltr"
-  }), /* @__PURE__ */ React52.createElement(DMItem, {
-    onSelect: preventEvent,
-    onClick: handleSelectAll,
-    kbd: "#A"
-  }, "Select All"), /* @__PURE__ */ React52.createElement(DMItem, {
-    onSelect: preventEvent,
-    onClick: handleselectNone
-  }, "Select None"))), /* @__PURE__ */ React52.createElement("a", {
-    href: "https://tldraw.com/r"
-  }, /* @__PURE__ */ React52.createElement(DMItem, null, "Create a Multiplayer Room")), /* @__PURE__ */ React52.createElement(DMDivider, {
-    dir: "ltr"
-  }), /* @__PURE__ */ React52.createElement(PreferencesMenu, null), /* @__PURE__ */ React52.createElement(DMDivider, {
-    dir: "ltr"
-  }), /* @__PURE__ */ React52.createElement("a", {
-    href: "https://github.com/Tldraw/Tldraw",
-    target: "_blank",
-    rel: "nofollow"
-  }, /* @__PURE__ */ React52.createElement(DMItem, null, "GitHub", /* @__PURE__ */ React52.createElement(SmallIcon, null, /* @__PURE__ */ React52.createElement(import_react_icons5.GitHubLogoIcon, null)))), /* @__PURE__ */ React52.createElement("a", {
-    href: "https://twitter.com/Tldraw",
-    target: "_blank",
-    rel: "nofollow"
-  }, /* @__PURE__ */ React52.createElement(DMItem, null, "Twitter", /* @__PURE__ */ React52.createElement(SmallIcon, null, /* @__PURE__ */ React52.createElement(import_react_icons5.TwitterLogoIcon, null)))), /* @__PURE__ */ React52.createElement("a", {
-    href: "https://discord.gg/SBBEVCA4PG",
-    target: "_blank",
-    rel: "nofollow"
-  }, /* @__PURE__ */ React52.createElement(DMItem, null, "Discord", /* @__PURE__ */ React52.createElement(SmallIcon, null, /* @__PURE__ */ React52.createElement(DiscordIcon, null)))), showSponsorLink && /* @__PURE__ */ React52.createElement("a", {
-    href: "https://github.com/sponsors/steveruizok",
-    target: "_blank",
-    rel: "nofollow"
-  }, /* @__PURE__ */ React52.createElement(DMItem, {
-    isSponsor: true
-  }, "Become a Sponsor", " ", /* @__PURE__ */ React52.createElement(SmallIcon, null, /* @__PURE__ */ React52.createElement(HeartIcon, null)))), showSignInOutMenu && /* @__PURE__ */ React52.createElement(React52.Fragment, null, /* @__PURE__ */ React52.createElement(DMDivider, {
-    dir: "ltr"
-  }), " ", app.callbacks.onSignIn && /* @__PURE__ */ React52.createElement(DMItem, {
-    onSelect: handleSignIn
-  }, "Sign In"), app.callbacks.onSignOut && /* @__PURE__ */ React52.createElement(DMItem, {
-    onSelect: handleSignOut
-  }, "Sign Out", /* @__PURE__ */ React52.createElement(SmallIcon, null, /* @__PURE__ */ React52.createElement(import_react_icons5.ExitIcon, null))))));
+  }, "\u63D0\u51FA")));
 });
 
 // src/components/TopPanel/PageMenu/PageMenu.tsx
