@@ -387,9 +387,9 @@ __export(exports, {
 });
 
 // src/Tldraw.tsx
-var React60 = __toModule(require("react"));
+var React59 = __toModule(require("react"));
 var import_react_id = __toModule(require("@radix-ui/react-id"));
-var import_core47 = __toModule(require("@tldraw/core"));
+var import_core45 = __toModule(require("@tldraw/core"));
 
 // src/styles/stitches.config.ts
 var import_react = __toModule(require("@stitches/react"));
@@ -647,8 +647,8 @@ var FontStyle;
 })(FontStyle || (FontStyle = {}));
 
 // src/state/TldrawApp.ts
-var import_vec36 = __toModule(require("@tldraw/vec"));
-var import_core45 = __toModule(require("@tldraw/core"));
+var import_vec37 = __toModule(require("@tldraw/vec"));
+var import_core43 = __toModule(require("@tldraw/core"));
 
 // src/state/data/index.ts
 var data_exports = {};
@@ -790,8 +790,8 @@ function openFromFileSystem() {
 __reExport(data_exports, __toModule(require_browser_fs_access()));
 
 // src/state/TLDR.ts
-var import_core17 = __toModule(require("@tldraw/core"));
-var import_vec12 = __toModule(require("@tldraw/vec"));
+var import_core15 = __toModule(require("@tldraw/core"));
+var import_vec13 = __toModule(require("@tldraw/vec"));
 
 // src/state/shapes/RectangleUtil/RectangleUtil.tsx
 var React2 = __toModule(require("react"));
@@ -3255,122 +3255,131 @@ var DrawUtil = class extends TDShapeUtil {
   }
 };
 
-// src/state/shapes/ImageUtil/ImageUtil.ts
-var import_core16 = __toModule(require("@tldraw/core"));
-var import_intersect6 = __toModule(require("@tldraw/intersect"));
-
-// ../../node_modules/nanoid/index.prod.js
-if (false) {
-  if (typeof navigator !== "undefined" && navigator.product === "ReactNative" && typeof crypto === "undefined") {
-    throw new Error("React Native does not have a built-in secure random generator. If you don\u2019t need unpredictable IDs use `nanoid/non-secure`. For secure IDs, import `react-native-get-random-values` before Nano ID.");
-  }
-  if (typeof msCrypto !== "undefined" && typeof crypto === "undefined") {
-    throw new Error("Import file with `if (!window.crypto) window.crypto = window.msCrypto` before importing Nano ID to fix IE 11 support");
-  }
-  if (typeof crypto === "undefined") {
-    throw new Error("Your browser does not have secure random generator. If you don\u2019t need unpredictable IDs, you can use nanoid/non-secure.");
-  }
-}
-var nanoid = (size = 21) => {
-  let id = "";
-  let bytes = crypto.getRandomValues(new Uint8Array(size));
-  while (size--) {
-    let byte = bytes[size] & 63;
-    if (byte < 36) {
-      id += byte.toString(36);
-    } else if (byte < 62) {
-      id += (byte - 26).toString(36).toUpperCase();
-    } else if (byte < 63) {
-      id += "_";
-    } else {
-      id += "-";
-    }
-  }
-  return id;
-};
-
-// src/state/shapes/ImageUtil/ImageComponent.tsx
+// src/state/shapes/ImageUtil/ImageUtil.tsx
 var React9 = __toModule(require("react"));
 var import_core14 = __toModule(require("@tldraw/core"));
-var ImageComponent = import_core14.TLShapeUtil.Component(({ shape, events, isGhost, meta }, ref) => {
-  const color = meta.isDarkMode ? "white" : "black";
-  return /* @__PURE__ */ React9.createElement(import_core14.SVGContainer, __spreadValues({
-    fr: void 0,
-    ref
-  }, events), /* @__PURE__ */ React9.createElement("image", {
-    href: shape.url,
-    width: shape.size[0],
-    height: shape.size[1],
-    stroke: color,
-    strokeWidth: 3,
-    strokeLinejoin: "round",
-    fill: "none",
-    rx: 4,
-    opacity: isGhost ? 0.3 : 1,
-    pointerEvents: "all"
-  }));
-});
-
-// src/state/shapes/ImageUtil/ImageIndicator.tsx
-var React10 = __toModule(require("react"));
-var import_core15 = __toModule(require("@tldraw/core"));
-var ImageIndicator = import_core15.TLShapeUtil.Indicator(({ shape }) => {
-  return /* @__PURE__ */ React10.createElement("rect", {
-    pointerEvents: "none",
-    width: shape.size[0],
-    height: shape.size[1],
-    fill: "none",
-    stroke: "tl-selectedStroke",
-    strokeWidth: 1,
-    rx: 4
-  });
-});
-
-// src/state/shapes/ImageUtil/ImageUtil.ts
+var import_vec12 = __toModule(require("@tldraw/vec"));
+var import_perfect_freehand5 = __toModule(require("perfect-freehand"));
 var ImageUtil = class extends TDShapeUtil {
   constructor() {
     super(...arguments);
     this.type = TDShapeType.Image;
-    this.Component = ImageComponent;
-    this.Indicator = ImageIndicator;
-    this.getBounds = (shape) => {
-      const bounds = import_core16.Utils.getFromCache(this.boundsCache, shape, () => {
-        const [width, height] = shape.size;
-        return {
-          minX: 0,
-          maxX: width,
-          minY: 0,
-          maxY: height,
-          width,
-          height
-        };
-      });
-      return import_core16.Utils.translateBounds(bounds, shape.point);
-    };
     this.canBind = true;
+    this.canClone = true;
     this.getShape = (props) => {
-      return __spreadValues({
-        id: nanoid(),
+      return import_core14.Utils.deepMerge({
+        id: "id",
         type: TDShapeType.Image,
-        name: "Image",
-        parentId: "page1",
-        point: [0, 0],
-        size: [100, 100],
+        name: "Rectangle",
+        parentId: "page",
         childIndex: 1,
+        point: [0, 0],
+        size: [1, 1],
+        rotation: 0,
         style: defaultStyle
       }, props);
     };
-    this.getCenter = (shape) => {
-      return import_core16.Utils.getBoundsCenter(this.getBounds(shape));
+    this.Component = TDShapeUtil.Component(({ shape, isBinding, isSelected, isGhost, meta, events }, ref) => {
+      const { id, size, style } = shape;
+      const styles2 = getShapeStyle(style, meta.isDarkMode);
+      const { strokeWidth } = styles2;
+      const pathTDSnapshot = getRectanglePath2(shape);
+      const indicatorPath = getRectangleIndicatorPathTDSnapshot2(shape);
+      return /* @__PURE__ */ React9.createElement(import_core14.SVGContainer, __spreadValues({
+        ref,
+        id: shape.id + "_svg"
+      }, events), /* @__PURE__ */ React9.createElement("image", {
+        href: shape.url,
+        className: "tl-binding-indicator",
+        x: strokeWidth / 2 - BINDING_DISTANCE,
+        y: strokeWidth / 2 - BINDING_DISTANCE,
+        width: Math.max(0, size[0] - strokeWidth / 2) + BINDING_DISTANCE * 2,
+        height: Math.max(0, size[1] - strokeWidth / 2) + BINDING_DISTANCE * 2
+      }));
+    });
+    this.Indicator = TDShapeUtil.Indicator(({ shape }) => {
+      const {
+        style,
+        size: [width, height]
+      } = shape;
+      const styles2 = getShapeStyle(style, false);
+      const sw = styles2.strokeWidth;
+      if (style.dash === DashStyle.Draw) {
+        return /* @__PURE__ */ React9.createElement("path", {
+          d: getRectangleIndicatorPathTDSnapshot2(shape)
+        });
+      }
+      return /* @__PURE__ */ React9.createElement("rect", {
+        x: sw,
+        y: sw,
+        rx: 1,
+        ry: 1,
+        width: Math.max(1, width - sw * 2),
+        height: Math.max(1, height - sw * 2)
+      });
+    });
+    this.getBounds = (shape) => {
+      return getBoundsRectangle(shape, this.boundsCache);
     };
-    this.hitTestPoint = (shape, point) => {
-      return import_core16.Utils.pointInBounds(point, this.getBounds(shape));
+    this.shouldRender = (prev, next) => {
+      return next.size !== prev.size || next.style !== prev.style;
     };
-    this.hitTestLineSegment = (shape, A, B) => {
-      return (0, import_intersect6.intersectLineSegmentBounds)(A, B, this.getBounds(shape)).length > 0;
-    };
+    this.transform = transformRectangle;
+    this.transformSingle = transformSingleRectangle;
   }
 };
+function getRectangleDrawPoints2(shape) {
+  const styles2 = getShapeStyle(shape.style);
+  const getRandom = import_core14.Utils.rng(shape.id);
+  const sw = styles2.strokeWidth;
+  const w = Math.max(0, shape.size[0]);
+  const h = Math.max(0, shape.size[1]);
+  const offsets = Array.from(Array(4)).map(() => {
+    return [getRandom() * sw * 0.75, getRandom() * sw * 0.75];
+  });
+  const tl = import_vec12.Vec.add([sw / 2, sw / 2], offsets[0]);
+  const tr = import_vec12.Vec.add([w - sw / 2, sw / 2], offsets[1]);
+  const br = import_vec12.Vec.add([w - sw / 2, h - sw / 2], offsets[2]);
+  const bl = import_vec12.Vec.add([sw / 2, h - sw / 2], offsets[3]);
+  const rm = Math.round(Math.abs(getRandom() * 2 * 4));
+  const rx = Math.min(w / 2, sw * 2);
+  const ry = Math.min(h / 2, sw * 2);
+  const px = Math.max(8, Math.floor(w / 16));
+  const py = Math.max(8, Math.floor(h / 16));
+  const lines = import_core14.Utils.rotateArray([
+    import_vec12.Vec.pointsBetween(import_vec12.Vec.add(tl, [rx, 0]), import_vec12.Vec.sub(tr, [rx, 0]), px),
+    import_vec12.Vec.pointsBetween(import_vec12.Vec.add(tr, [0, ry]), import_vec12.Vec.sub(br, [0, ry]), py),
+    import_vec12.Vec.pointsBetween(import_vec12.Vec.sub(br, [rx, 0]), import_vec12.Vec.add(bl, [rx, 0]), px),
+    import_vec12.Vec.pointsBetween(import_vec12.Vec.sub(bl, [0, ry]), import_vec12.Vec.add(tl, [0, ry]), py)
+  ], rm);
+  const points = [...lines.flat(), ...lines[0]].slice(5, Math.floor((rm % 2 === 0 ? px : py) / -2) + 3);
+  return {
+    points
+  };
+}
+function getDrawStrokeInfo2(shape) {
+  const { points } = getRectangleDrawPoints2(shape);
+  const { strokeWidth } = getShapeStyle(shape.style);
+  const options2 = {
+    size: strokeWidth,
+    thinning: 0.65,
+    streamline: 0.3,
+    smoothing: 1,
+    simulatePressure: false,
+    last: true
+  };
+  return { points, options: options2 };
+}
+function getRectanglePath2(shape) {
+  const { points, options: options2 } = getDrawStrokeInfo2(shape);
+  const stroke = (0, import_perfect_freehand5.getStroke)(points, options2);
+  return import_core14.Utils.getSvgPathFromStroke(stroke);
+}
+function getRectangleIndicatorPathTDSnapshot2(shape) {
+  const { points, options: options2 } = getDrawStrokeInfo2(shape);
+  const strokePoints = (0, import_perfect_freehand5.getStrokePoints)(points, options2);
+  return import_core14.Utils.getSvgPathFromStroke(strokePoints.map((pt) => pt.point.slice(0, 2)), false);
+}
 
 // src/state/shapes/index.ts
 var Rectangle = new RectangleUtil();
@@ -3410,10 +3419,10 @@ var _TLDR = class {
   }
   static screenToWorld(data, point) {
     const camera = _TLDR.getPageState(data, data.appState.currentPageId).camera;
-    return import_vec12.Vec.sub(import_vec12.Vec.div(point, camera.zoom), camera.point);
+    return import_vec13.Vec.sub(import_vec13.Vec.div(point, camera.zoom), camera.point);
   }
   static getCameraZoom(zoom) {
-    return import_core17.Utils.clamp(zoom, 0.1, 5);
+    return import_core15.Utils.clamp(zoom, 0.1, 5);
   }
   static getPage(data, pageId) {
     return data.document.pages[pageId];
@@ -3443,7 +3452,7 @@ var _TLDR = class {
     return _TLDR.getShapeUtil(shape).getRotatedBounds(shape);
   }
   static getSelectedBounds(data) {
-    return import_core17.Utils.getCommonBounds(_TLDR.getSelectedShapes(data, data.appState.currentPageId).map((shape) => _TLDR.getShapeUtil(shape).getBounds(shape)));
+    return import_core15.Utils.getCommonBounds(_TLDR.getSelectedShapes(data, data.appState.currentPageId).map((shape) => _TLDR.getShapeUtil(shape).getBounds(shape)));
   }
   static getParentId(data, id, pageId) {
     return _TLDR.getShape(data, id, pageId).parentId;
@@ -3459,14 +3468,14 @@ var _TLDR = class {
   }
   static getSelectedBranchSnapshot(data, pageId, fn) {
     const page = _TLDR.getPage(data, pageId);
-    const copies = _TLDR.getSelectedIds(data, pageId).flatMap((id) => _TLDR.getDocumentBranch(data, id, pageId).map((id2) => page.shapes[id2])).filter((shape) => !shape.isLocked).map(import_core17.Utils.deepClone);
+    const copies = _TLDR.getSelectedIds(data, pageId).flatMap((id) => _TLDR.getDocumentBranch(data, id, pageId).map((id2) => page.shapes[id2])).filter((shape) => !shape.isLocked).map(import_core15.Utils.deepClone);
     if (fn !== void 0) {
       return copies.map((shape) => __spreadValues({ id: shape.id }, fn(shape)));
     }
     return copies;
   }
   static getSelectedShapeSnapshot(data, pageId, fn) {
-    const copies = _TLDR.getSelectedShapes(data, pageId).filter((shape) => !shape.isLocked).map(import_core17.Utils.deepClone);
+    const copies = _TLDR.getSelectedShapes(data, pageId).filter((shape) => !shape.isLocked).map(import_core15.Utils.deepClone);
     if (fn !== void 0) {
       return copies.map((shape) => __spreadValues({ id: shape.id }, fn(shape)));
     }
@@ -3506,14 +3515,14 @@ var _TLDR = class {
     const page = __spreadValues({}, _TLDR.getPage(data, pageId));
     return Object.values(page.bindings).filter((binding) => binding.fromId === id || binding.toId === id).reduce((cTDSnapshot, binding) => {
       if (!beforeShapes[binding.fromId]) {
-        beforeShapes[binding.fromId] = import_core17.Utils.deepClone(_TLDR.getShape(cTDSnapshot, binding.fromId, pageId));
+        beforeShapes[binding.fromId] = import_core15.Utils.deepClone(_TLDR.getShape(cTDSnapshot, binding.fromId, pageId));
       }
       if (!beforeShapes[binding.toId]) {
-        beforeShapes[binding.toId] = import_core17.Utils.deepClone(_TLDR.getShape(cTDSnapshot, binding.toId, pageId));
+        beforeShapes[binding.toId] = import_core15.Utils.deepClone(_TLDR.getShape(cTDSnapshot, binding.toId, pageId));
       }
       _TLDR.onBindingChange(_TLDR.getShape(cTDSnapshot, binding.fromId, pageId), binding, _TLDR.getShape(cTDSnapshot, binding.toId, pageId));
-      afterShapes[binding.fromId] = import_core17.Utils.deepClone(_TLDR.getShape(cTDSnapshot, binding.fromId, pageId));
-      afterShapes[binding.toId] = import_core17.Utils.deepClone(_TLDR.getShape(cTDSnapshot, binding.toId, pageId));
+      afterShapes[binding.fromId] = import_core15.Utils.deepClone(_TLDR.getShape(cTDSnapshot, binding.fromId, pageId));
+      afterShapes[binding.toId] = import_core15.Utils.deepClone(_TLDR.getShape(cTDSnapshot, binding.toId, pageId));
       return cTDSnapshot;
     }, data);
   }
@@ -3621,7 +3630,7 @@ var _TLDR = class {
         afterShapes[id] = change;
       }
     });
-    const dataWithMutations = import_core17.Utils.deepMerge(data, {
+    const dataWithMutations = import_core15.Utils.deepMerge(data, {
       document: {
         pages: {
           [data.appState.currentPageId]: {
@@ -3775,17 +3784,17 @@ var _TLDR = class {
   }
   static getRotatedShapeMutation(shape, center, origin, delta) {
     var _a, _b;
-    const relativeCenter = import_vec12.Vec.sub(center, shape.point);
-    const rotatedCenter = import_vec12.Vec.rotWith(center, origin, delta);
-    const nextPoint = import_vec12.Vec.toFixed(import_vec12.Vec.sub(rotatedCenter, relativeCenter));
+    const relativeCenter = import_vec13.Vec.sub(center, shape.point);
+    const rotatedCenter = import_vec13.Vec.rotWith(center, origin, delta);
+    const nextPoint = import_vec13.Vec.toFixed(import_vec13.Vec.sub(rotatedCenter, relativeCenter));
     if (shape.handles !== void 0) {
       const change = (_b = (_a = this.getShapeUtil(shape)).onHandleChange) == null ? void 0 : _b.call(_a, __spreadProps(__spreadValues({}, shape), { point: nextPoint }), Object.fromEntries(Object.entries(shape.handles).map(([handleId, handle]) => {
-        const point = import_vec12.Vec.toFixed(import_vec12.Vec.rotWith(handle.point, relativeCenter, delta));
+        const point = import_vec13.Vec.toFixed(import_vec13.Vec.rotWith(handle.point, relativeCenter, delta));
         return [handleId, __spreadProps(__spreadValues({}, handle), { point })];
       })), { shiftKey: false });
       return change;
     }
-    const nextRotation = import_core17.Utils.clampRadians((shape.rotation || 0) + delta);
+    const nextRotation = import_core15.Utils.clampRadians((shape.rotation || 0) + delta);
     return {
       point: nextPoint,
       rotation: nextRotation
@@ -3912,8 +3921,8 @@ TLDR.getTopChildIndex = (data, pageId) => {
 TLDR.fixNewLines = /\r?\n|\r/g;
 
 // src/state/commands/alignShapes/alignShapes.ts
-var import_vec13 = __toModule(require("@tldraw/vec"));
-var import_core18 = __toModule(require("@tldraw/core"));
+var import_vec14 = __toModule(require("@tldraw/vec"));
+var import_core16 = __toModule(require("@tldraw/core"));
 function alignShapes(app, ids, type) {
   const { currentPageId } = app;
   const initialShapes = ids.map((id) => app.getShape(id));
@@ -3924,7 +3933,7 @@ function alignShapes(app, ids, type) {
       bounds: TLDR.getBounds(shape)
     };
   });
-  const commonBounds = import_core18.Utils.getCommonBounds(boundsForShapes.map(({ bounds }) => bounds));
+  const commonBounds = import_core16.Utils.getCommonBounds(boundsForShapes.map(({ bounds }) => bounds));
   const midX = commonBounds.minX + commonBounds.width / 2;
   const midY = commonBounds.minY + commonBounds.height / 2;
   const deltaMap = Object.fromEntries(boundsForShapes.map(({ id, point, bounds }) => {
@@ -3950,11 +3959,11 @@ function alignShapes(app, ids, type) {
   }, currentPageId);
   initialShapes.forEach((shape) => {
     if (shape.type === TDShapeType.Group) {
-      const delta = import_vec13.Vec.sub(after[shape.id].point, before[shape.id].point);
+      const delta = import_vec14.Vec.sub(after[shape.id].point, before[shape.id].point);
       shape.children.forEach((id) => {
         const child = app.getShape(id);
         before[child.id] = { point: child.point };
-        after[child.id] = { point: import_vec13.Vec.add(child.point, delta) };
+        after[child.id] = { point: import_vec14.Vec.add(child.point, delta) };
       });
       delete before[shape.id];
       delete after[shape.id];
@@ -4011,8 +4020,8 @@ function changePage(app, pageId) {
 }
 
 // src/state/commands/createPage/createPage.ts
-var import_core19 = __toModule(require("@tldraw/core"));
-function createPage(app, center, pageId = import_core19.Utils.uniqueId()) {
+var import_core17 = __toModule(require("@tldraw/core"));
+function createPage(app, center, pageId = import_core17.Utils.uniqueId()) {
   const { currentPageId } = app;
   const topPage = Object.values(app.state.document.pages).sort((a, b) => (b.childIndex || 0) - (a.childIndex || 0))[0];
   const nextChildIndex = (topPage == null ? void 0 : topPage.childIndex) ? (topPage == null ? void 0 : topPage.childIndex) + 1 : 1;
@@ -4271,8 +4280,8 @@ function deleteShapes(app, ids, pageId = app.currentPageId) {
 }
 
 // src/state/commands/distributeShapes/distributeShapes.ts
-var import_core20 = __toModule(require("@tldraw/core"));
-var import_vec14 = __toModule(require("@tldraw/vec"));
+var import_core18 = __toModule(require("@tldraw/core"));
+var import_vec15 = __toModule(require("@tldraw/vec"));
 function distributeShapes(app, ids, type) {
   const { currentPageId } = app;
   const initialShapes = ids.map((id) => app.getShape(id));
@@ -4280,11 +4289,11 @@ function distributeShapes(app, ids, type) {
   const { before, after } = TLDR.mutateShapes(app.state, ids.filter((id) => deltaMap[id] !== void 0), (shape) => ({ point: deltaMap[shape.id].next }), currentPageId);
   initialShapes.forEach((shape) => {
     if (shape.type === TDShapeType.Group) {
-      const delta = import_vec14.default.sub(after[shape.id].point, before[shape.id].point);
+      const delta = import_vec15.default.sub(after[shape.id].point, before[shape.id].point);
       shape.children.forEach((id) => {
         const child = app.getShape(id);
         before[child.id] = { point: child.point };
-        after[child.id] = { point: import_vec14.default.add(child.point, delta) };
+        after[child.id] = { point: import_vec15.default.add(child.point, delta) };
       });
       delete before[shape.id];
       delete after[shape.id];
@@ -4329,7 +4338,7 @@ function getDistributions(initialShapes, type) {
     };
   });
   const len = entries.length;
-  const commonBounds = import_core20.Utils.getCommonBounds(entries.map(({ bounds }) => bounds));
+  const commonBounds = import_core18.Utils.getCommonBounds(entries.map(({ bounds }) => bounds));
   const results = [];
   switch (type) {
     case DistributeType.Horizontal: {
@@ -4389,9 +4398,9 @@ function getDistributions(initialShapes, type) {
 }
 
 // src/state/commands/duplicatePage/duplicatePage.ts
-var import_core21 = __toModule(require("@tldraw/core"));
+var import_core19 = __toModule(require("@tldraw/core"));
 function duplicatePage(app, pageId) {
-  const newId = import_core21.Utils.uniqueId();
+  const newId = import_core19.Utils.uniqueId();
   const {
     currentPageId,
     page,
@@ -4449,8 +4458,8 @@ function duplicatePage(app, pageId) {
 }
 
 // src/state/commands/duplicateShapes/duplicateShapes.ts
-var import_core22 = __toModule(require("@tldraw/core"));
-var import_vec15 = __toModule(require("@tldraw/vec"));
+var import_core20 = __toModule(require("@tldraw/core"));
+var import_vec16 = __toModule(require("@tldraw/vec"));
 function duplicateShapes(app, ids, point) {
   const { selectedIds, currentPageId, page, shapes } = app;
   const before = {
@@ -4464,9 +4473,9 @@ function duplicateShapes(app, ids, point) {
   const duplicateMap = {};
   const shapesToDuplicate = ids.map((id) => app.getShape(id)).filter((shape) => !ids.includes(shape.parentId));
   shapesToDuplicate.forEach((shape) => {
-    const duplicatedId = import_core22.Utils.uniqueId();
+    const duplicatedId = import_core20.Utils.uniqueId();
     before.shapes[duplicatedId] = void 0;
-    after.shapes[duplicatedId] = __spreadProps(__spreadValues({}, import_core22.Utils.deepClone(shape)), {
+    after.shapes[duplicatedId] = __spreadProps(__spreadValues({}, import_core20.Utils.deepClone(shape)), {
       id: duplicatedId,
       childIndex: TLDR.getChildIndexAbove(app.state, shape.id, currentPageId)
     });
@@ -4489,10 +4498,10 @@ function duplicateShapes(app, ids, point) {
       shape.children.forEach((childId) => {
         var _a, _b;
         const child = app.getShape(childId);
-        const duplicatedId = import_core22.Utils.uniqueId();
+        const duplicatedId = import_core20.Utils.uniqueId();
         const duplicatedParentId = duplicateMap[shape.id];
         before.shapes[duplicatedId] = void 0;
-        after.shapes[duplicatedId] = __spreadProps(__spreadValues({}, import_core22.Utils.deepClone(child)), {
+        after.shapes[duplicatedId] = __spreadProps(__spreadValues({}, import_core20.Utils.deepClone(child)), {
           id: duplicatedId,
           parentId: duplicatedParentId,
           childIndex: TLDR.getChildIndexAbove(app.state, child.id, currentPageId)
@@ -4506,8 +4515,8 @@ function duplicateShapes(app, ids, point) {
   Object.values(page.bindings).filter((binding) => dupedShapeIds.has(binding.fromId) || dupedShapeIds.has(binding.toId)).forEach((binding) => {
     if (dupedShapeIds.has(binding.fromId)) {
       if (dupedShapeIds.has(binding.toId)) {
-        const duplicatedBindingId = import_core22.Utils.uniqueId();
-        const duplicatedBinding = __spreadProps(__spreadValues({}, import_core22.Utils.deepClone(binding)), {
+        const duplicatedBindingId = import_core20.Utils.uniqueId();
+        const duplicatedBinding = __spreadProps(__spreadValues({}, import_core20.Utils.deepClone(binding)), {
           id: duplicatedBindingId,
           fromId: duplicateMap[binding.fromId],
           toId: duplicateMap[binding.toId]
@@ -4532,19 +4541,19 @@ function duplicateShapes(app, ids, point) {
   });
   const shapesToMove = Object.values(after.shapes);
   if (point) {
-    const commonBounds = import_core22.Utils.getCommonBounds(shapesToMove.map((shape) => TLDR.getBounds(shape)));
-    const center = import_core22.Utils.getBoundsCenter(commonBounds);
+    const commonBounds = import_core20.Utils.getCommonBounds(shapesToMove.map((shape) => TLDR.getBounds(shape)));
+    const center = import_core20.Utils.getBoundsCenter(commonBounds);
     shapesToMove.forEach((shape) => {
       if (!shape.point)
         return;
-      shape.point = import_vec15.Vec.sub(point, import_vec15.Vec.sub(center, shape.point));
+      shape.point = import_vec16.Vec.sub(point, import_vec16.Vec.sub(center, shape.point));
     });
   } else {
     const offset = [16, 16];
     shapesToMove.forEach((shape) => {
       if (!shape.point)
         return;
-      shape.point = import_vec15.Vec.add(shape.point, offset);
+      shape.point = import_vec16.Vec.add(shape.point, offset);
     });
   }
   shapesToMove.forEach((shape) => {
@@ -4580,18 +4589,18 @@ function duplicateShapes(app, ids, point) {
 }
 
 // src/state/commands/flipShapes/flipShapes.ts
-var import_core23 = __toModule(require("@tldraw/core"));
+var import_core21 = __toModule(require("@tldraw/core"));
 function flipShapes(app, ids, type) {
   const { selectedIds, currentPageId, shapes } = app;
   const boundsForShapes = shapes.map((shape) => TLDR.getBounds(shape));
-  const commonBounds = import_core23.Utils.getCommonBounds(boundsForShapes);
+  const commonBounds = import_core21.Utils.getCommonBounds(boundsForShapes);
   const { before, after } = TLDR.mutateShapes(app.state, ids, (shape) => {
     const shapeBounds = TLDR.getBounds(shape);
     switch (type) {
       case FlipType.Horizontal: {
-        const newShapeBounds = import_core23.Utils.getRelativeTransformedBoundingBox(commonBounds, commonBounds, shapeBounds, true, false);
+        const newShapeBounds = import_core21.Utils.getRelativeTransformedBoundingBox(commonBounds, commonBounds, shapeBounds, true, false);
         return TLDR.getShapeUtil(shape).transform(shape, newShapeBounds, {
-          type: import_core23.TLBoundsCorner.TopLeft,
+          type: import_core21.TLBoundsCorner.TopLeft,
           scaleX: -1,
           scaleY: 1,
           initialShape: shape,
@@ -4599,9 +4608,9 @@ function flipShapes(app, ids, type) {
         });
       }
       case FlipType.Vertical: {
-        const newShapeBounds = import_core23.Utils.getRelativeTransformedBoundingBox(commonBounds, commonBounds, shapeBounds, false, true);
+        const newShapeBounds = import_core21.Utils.getRelativeTransformedBoundingBox(commonBounds, commonBounds, shapeBounds, false, true);
         return TLDR.getShapeUtil(shape).transform(shape, newShapeBounds, {
-          type: import_core23.TLBoundsCorner.TopLeft,
+          type: import_core21.TLBoundsCorner.TopLeft,
           scaleX: 1,
           scaleY: -1,
           initialShape: shape,
@@ -4640,7 +4649,7 @@ function flipShapes(app, ids, type) {
 }
 
 // src/state/commands/groupShapes/groupShapes.ts
-var import_core24 = __toModule(require("@tldraw/core"));
+var import_core22 = __toModule(require("@tldraw/core"));
 function groupShapes(app, ids, groupId, pageId) {
   var _a, _b;
   const beforeShapes = {};
@@ -4677,7 +4686,7 @@ function groupShapes(app, ids, groupId, pageId) {
   const sortedShapes = shapesToGroup.sort((a, b) => shapeIndexMap[a.id] - shapeIndexMap[b.id]);
   const groupParentId = pageId;
   const groupChildIndex = (sortedShapes.filter((shape) => shape.parentId === pageId)[0] || sortedShapes[0]).childIndex;
-  const groupBounds = import_core24.Utils.getCommonBounds(shapesToGroup.map((shape) => TLDR.getBounds(shape)));
+  const groupBounds = import_core22.Utils.getCommonBounds(shapesToGroup.map((shape) => TLDR.getBounds(shape)));
   beforeShapes[groupId] = void 0;
   afterShapes[groupId] = TLDR.getShapeUtil(TDShapeType.Group).create({
     id: groupId,
@@ -4785,8 +4794,8 @@ function groupShapes(app, ids, groupId, pageId) {
 }
 
 // src/state/commands/moveShapesToPage/moveShapesToPage.ts
-var import_core25 = __toModule(require("@tldraw/core"));
-var import_vec16 = __toModule(require("@tldraw/vec"));
+var import_core23 = __toModule(require("@tldraw/core"));
+var import_vec17 = __toModule(require("@tldraw/vec"));
 function moveShapesToPage(app, ids, viewportBounds, fromPageId, toPageId) {
   const { page } = app;
   const fromPage = {
@@ -4876,11 +4885,11 @@ function moveShapesToPage(app, ids, viewportBounds, fromPageId, toPageId) {
     }
   });
   const toPageState = app.state.document.pageStates[toPageId];
-  const bounds = import_core25.Utils.getCommonBounds(movingShapes.map((shape) => TLDR.getBounds(shape)));
+  const bounds = import_core23.Utils.getCommonBounds(movingShapes.map((shape) => TLDR.getBounds(shape)));
   const zoom = TLDR.getCameraZoom(viewportBounds.width < viewportBounds.height ? (viewportBounds.width - 128) / bounds.width : (viewportBounds.height - 128) / bounds.height);
   const mx = (viewportBounds.width - bounds.width * zoom) / 2 / zoom;
   const my = (viewportBounds.height - bounds.height * zoom) / 2 / zoom;
-  const point = import_vec16.Vec.toFixed(import_vec16.Vec.add([-bounds.minX, -bounds.minY], [mx, my]));
+  const point = import_vec17.Vec.toFixed(import_vec17.Vec.add([-bounds.minX, -bounds.minY], [mx, my]));
   return {
     id: "move_to_page",
     before: {
@@ -5121,7 +5130,7 @@ function resetBounds(app, ids, pageId) {
 }
 
 // src/state/commands/rotateShapes/rotateShapes.ts
-var import_core26 = __toModule(require("@tldraw/core"));
+var import_core24 = __toModule(require("@tldraw/core"));
 var PI22 = Math.PI * 2;
 function rotateShapes(app, ids, delta = -PI22 / 4) {
   const { currentPageId } = app;
@@ -5131,7 +5140,7 @@ function rotateShapes(app, ids, delta = -PI22 / 4) {
     const shape = app.getShape(id);
     return shape.children ? shape.children.map((childId) => app.getShape(childId)) : shape;
   }).filter((shape) => !shape.isLocked);
-  const origin = import_core26.Utils.getBoundsCenter(import_core26.Utils.getCommonBounds(shapesToRotate.map((shape) => TLDR.getBounds(shape))));
+  const origin = import_core24.Utils.getBoundsCenter(import_core24.Utils.getCommonBounds(shapesToRotate.map((shape) => TLDR.getBounds(shape))));
   shapesToRotate.forEach((shape) => {
     const change = TLDR.getRotatedShapeMutation(shape, TLDR.getCenter(shape), origin, delta);
     if (!change)
@@ -5169,12 +5178,12 @@ function rotateShapes(app, ids, delta = -PI22 / 4) {
 }
 
 // src/state/commands/stretchShapes/stretchShapes.ts
-var import_core27 = __toModule(require("@tldraw/core"));
+var import_core25 = __toModule(require("@tldraw/core"));
 function stretchShapes(app, ids, type) {
   const { currentPageId, selectedIds } = app;
   const initialShapes = ids.map((id) => app.getShape(id));
   const boundsForShapes = initialShapes.map((shape) => TLDR.getBounds(shape));
-  const commonBounds = import_core27.Utils.getCommonBounds(boundsForShapes);
+  const commonBounds = import_core25.Utils.getCommonBounds(boundsForShapes);
   const idsToMutate = ids.flatMap((id) => {
     const shape = app.getShape(id);
     return shape.children ? shape.children : shape.id;
@@ -5189,7 +5198,7 @@ function stretchShapes(app, ids, type) {
           width: commonBounds.width
         });
         return TLDR.getShapeUtil(shape).transformSingle(shape, newBounds, {
-          type: import_core27.TLBoundsCorner.TopLeft,
+          type: import_core25.TLBoundsCorner.TopLeft,
           scaleX: newBounds.width / bounds.width,
           scaleY: 1,
           initialShape: shape,
@@ -5203,7 +5212,7 @@ function stretchShapes(app, ids, type) {
           height: commonBounds.height
         });
         return TLDR.getShapeUtil(shape).transformSingle(shape, newBounds, {
-          type: import_core27.TLBoundsCorner.TopLeft,
+          type: import_core25.TLBoundsCorner.TopLeft,
           scaleX: 1,
           scaleY: newBounds.height / bounds.height,
           initialShape: shape,
@@ -5248,7 +5257,7 @@ function stretchShapes(app, ids, type) {
 }
 
 // src/state/commands/styleShapes/styleShapes.ts
-var import_vec17 = __toModule(require("@tldraw/vec"));
+var import_vec18 = __toModule(require("@tldraw/vec"));
 function styleShapes(app, ids, changes) {
   const { currentPageId, selectedIds } = app;
   const shapeIdsToMutate = ids.flatMap((id) => TLDR.getDocumentBranch(app.state, id, currentPageId)).filter((id) => !app.getShape(id).isLocked);
@@ -5263,7 +5272,7 @@ function styleShapes(app, ids, changes) {
     };
     if (shape.type === TDShapeType.Text) {
       beforeShapes[shape.id].point = shape.point;
-      afterShapes[shape.id].point = import_vec17.Vec.toFixed(import_vec17.Vec.add(shape.point, import_vec17.Vec.sub(app.getShapeUtil(shape).getCenter(shape), app.getShapeUtil(shape).getCenter(__spreadProps(__spreadValues({}, shape), {
+      afterShapes[shape.id].point = import_vec18.Vec.toFixed(import_vec18.Vec.add(shape.point, import_vec18.Vec.sub(app.getShapeUtil(shape).getCenter(shape), app.getShapeUtil(shape).getCenter(__spreadProps(__spreadValues({}, shape), {
         style: __spreadValues(__spreadValues({}, shape.style), changes)
       })))));
     }
@@ -5406,7 +5415,7 @@ function toggleShapeProp(app, ids, prop) {
 }
 
 // src/state/commands/translateShapes/translateShapes.ts
-var import_vec18 = __toModule(require("@tldraw/vec"));
+var import_vec19 = __toModule(require("@tldraw/vec"));
 function translateShapes(app, ids, delta) {
   const { currentPageId, selectedIds } = app;
   app.rotationInfo.selectedIds = [...selectedIds];
@@ -5423,7 +5432,7 @@ function translateShapes(app, ids, delta) {
     return shape.children ? shape.children : shape.id;
   }).filter((id) => !app.getShape(id).isLocked);
   const change = TLDR.mutateShapes(app.state, idsToMutate, (shape) => ({
-    point: import_vec18.Vec.toFixed(import_vec18.Vec.add(shape.point, delta))
+    point: import_vec19.Vec.toFixed(import_vec19.Vec.add(shape.point, delta))
   }), currentPageId);
   before.shapes = change.before;
   after.shapes = change.after;
@@ -5644,7 +5653,7 @@ function setShapesProps(app, ids, partial) {
 }
 
 // src/state/sessions/ArrowSession/ArrowSession.ts
-var import_vec19 = __toModule(require("@tldraw/vec"));
+var import_vec20 = __toModule(require("@tldraw/vec"));
 
 // src/state/sessions/BaseSession.ts
 var BaseSession = class {
@@ -5654,14 +5663,14 @@ var BaseSession = class {
 };
 
 // src/state/sessions/ArrowSession/ArrowSession.ts
-var import_core28 = __toModule(require("@tldraw/core"));
+var import_core26 = __toModule(require("@tldraw/core"));
 var ArrowSession = class extends BaseSession {
   constructor(app, shapeId, handleId, isCreate = false) {
     super(app);
     this.type = SessionType.Arrow;
     this.status = TDStatus.TranslatingHandle;
-    this.newStartBindingId = import_core28.Utils.uniqueId();
-    this.draggedBindingId = import_core28.Utils.uniqueId();
+    this.newStartBindingId = import_core26.Utils.uniqueId();
+    this.draggedBindingId = import_core26.Utils.uniqueId();
     this.didBind = false;
     this.start = () => void 0;
     this.update = () => {
@@ -5682,18 +5691,18 @@ var ArrowSession = class extends BaseSession {
       const handleId = this.handleId;
       if (!handles[handleId].canBind)
         return;
-      let delta = import_vec19.Vec.sub(currentPoint, handles[handleId].point);
+      let delta = import_vec20.Vec.sub(currentPoint, handles[handleId].point);
       if (shiftKey) {
         const A = handles[handleId === "start" ? "end" : "start"].point;
         const B = handles[handleId].point;
-        const C = import_vec19.Vec.toFixed(import_vec19.Vec.sub(import_vec19.Vec.add(B, delta), shape.point));
-        const angle = import_vec19.Vec.angle(A, C);
-        const adjusted = import_vec19.Vec.rotWith(C, A, import_core28.Utils.snapAngleToSegments(angle, 24) - angle);
-        delta = import_vec19.Vec.add(delta, import_vec19.Vec.sub(adjusted, C));
+        const C = import_vec20.Vec.toFixed(import_vec20.Vec.sub(import_vec20.Vec.add(B, delta), shape.point));
+        const angle = import_vec20.Vec.angle(A, C);
+        const adjusted = import_vec20.Vec.rotWith(C, A, import_core26.Utils.snapAngleToSegments(angle, 24) - angle);
+        delta = import_vec20.Vec.add(delta, import_vec20.Vec.sub(adjusted, C));
       }
-      const nextPoint = import_vec19.Vec.sub(import_vec19.Vec.add(handles[handleId].point, delta), shape.point);
+      const nextPoint = import_vec20.Vec.sub(import_vec20.Vec.add(handles[handleId].point, delta), shape.point);
       const handle = __spreadProps(__spreadValues({}, handles[handleId]), {
-        point: showGrid ? import_vec19.Vec.snap(nextPoint, currentGrid) : import_vec19.Vec.toFixed(nextPoint),
+        point: showGrid ? import_vec20.Vec.snap(nextPoint, currentGrid) : import_vec20.Vec.toFixed(nextPoint),
         bindingId: void 0
       });
       const utils = shapeUtils[TDShapeType.Arrow];
@@ -5703,7 +5712,7 @@ var ArrowSession = class extends BaseSession {
       if (!change)
         return;
       const next = {
-        shape: import_core28.Utils.deepMerge(shape, change),
+        shape: import_core26.Utils.deepMerge(shape, change),
         bindings: {}
       };
       if (this.initialBinding) {
@@ -5716,9 +5725,9 @@ var ArrowSession = class extends BaseSession {
         if (!metaKey) {
           const center = targetUtils.getCenter(target);
           const handle2 = next.shape.handles.start;
-          const rayPoint = import_vec19.Vec.add(handle2.point, next.shape.point);
+          const rayPoint = import_vec20.Vec.add(handle2.point, next.shape.point);
           const rayOrigin = center;
-          const rayDirection = import_vec19.Vec.uni(import_vec19.Vec.sub(rayPoint, rayOrigin));
+          const rayDirection = import_vec20.Vec.uni(import_vec20.Vec.sub(rayPoint, rayOrigin));
           startBinding = this.findBindingPoint(shape, target, "start", this.newStartBindingId, center, rayOrigin, rayDirection, false);
         }
         if (startBinding) {
@@ -5753,9 +5762,9 @@ var ArrowSession = class extends BaseSession {
       if (!metaKey) {
         const handle2 = next.shape.handles[this.handleId];
         const oppositeHandle = next.shape.handles[this.handleId === "start" ? "end" : "start"];
-        const rayOrigin = import_vec19.Vec.add(oppositeHandle.point, next.shape.point);
-        const rayPoint = import_vec19.Vec.add(handle2.point, next.shape.point);
-        const rayDirection = import_vec19.Vec.uni(import_vec19.Vec.sub(rayPoint, rayOrigin));
+        const rayOrigin = import_vec20.Vec.add(oppositeHandle.point, next.shape.point);
+        const rayPoint = import_vec20.Vec.add(handle2.point, next.shape.point);
+        const rayDirection = import_vec20.Vec.uni(import_vec20.Vec.sub(rayPoint, rayOrigin));
         const targets = this.bindableShapeIds.map((id) => this.app.page.shapes[id]);
         for (const target of targets) {
           draggedBinding = this.findBindingPoint(shape, target, this.handleId, this.draggedBindingId, rayPoint, rayOrigin, rayDirection, altKey);
@@ -5845,7 +5854,7 @@ var ArrowSession = class extends BaseSession {
       const { initialShape, initialBinding, newStartBindingId, startBindingShapeId, handleId } = this;
       const currentShape = TLDR.onSessionComplete(this.app.page.shapes[initialShape.id]);
       const currentBindingId = currentShape.handles[handleId].bindingId;
-      if (!(currentBindingId || initialBinding) && import_vec19.Vec.dist(currentShape.handles.start.point, currentShape.handles.end.point) < 4) {
+      if (!(currentBindingId || initialBinding) && import_vec20.Vec.dist(currentShape.handles.start.point, currentShape.handles.end.point) < 4) {
         return this.cancel();
       }
       const beforeBindings = {};
@@ -5917,7 +5926,7 @@ var ArrowSession = class extends BaseSession {
         fromId: shape.id,
         toId: target.id,
         handleId,
-        point: import_vec19.Vec.toFixed(bindingPoint.point),
+        point: import_vec20.Vec.toFixed(bindingPoint.point),
         distance: bindingPoint.distance
       };
     };
@@ -5930,7 +5939,7 @@ var ArrowSession = class extends BaseSession {
     this.bindableShapeIds = TLDR.getBindableShapeIds(app.state).filter((id) => !(id === this.initialShape.id || id === this.initialShape.parentId));
     const { originPoint } = this.app;
     if (this.isCreate) {
-      this.startBindingShapeId = (_a = this.bindableShapeIds.map((id) => page.shapes[id]).find((shape) => import_core28.Utils.pointInBounds(originPoint, TLDR.getShapeUtil(shape).getBounds(shape)))) == null ? void 0 : _a.id;
+      this.startBindingShapeId = (_a = this.bindableShapeIds.map((id) => page.shapes[id]).find((shape) => import_core26.Utils.pointInBounds(originPoint, TLDR.getShapeUtil(shape).getBounds(shape)))) == null ? void 0 : _a.id;
     } else {
       const initialBindingId = this.initialShape.handles[this.handleId].bindingId;
       if (initialBindingId) {
@@ -5943,7 +5952,7 @@ var ArrowSession = class extends BaseSession {
 };
 
 // src/state/sessions/BrushSession/BrushSession.ts
-var import_core29 = __toModule(require("@tldraw/core"));
+var import_core27 = __toModule(require("@tldraw/core"));
 var BrushSession = class extends BaseSession {
   constructor(app) {
     super(app);
@@ -5956,7 +5965,7 @@ var BrushSession = class extends BaseSession {
         shapesToTest,
         app: { originPoint, currentPoint }
       } = this;
-      const brush = import_core29.Utils.getBoundsFromPoints([originPoint, currentPoint]);
+      const brush = import_core27.Utils.getBoundsFromPoints([originPoint, currentPoint]);
       const hits = new Set();
       const selectedIds = new Set(initialSelectedIds);
       shapesToTest.forEach(({ id, selectId }) => {
@@ -5964,7 +5973,7 @@ var BrushSession = class extends BaseSession {
         const shape = this.app.getShape(id);
         if (!hits.has(selectId)) {
           const util = this.app.getShapeUtil(shape);
-          if (metaKey ? import_core29.Utils.boundsContain(brush, util.getBounds(shape)) : util.hitTestBounds(shape, brush)) {
+          if (metaKey ? import_core27.Utils.boundsContain(brush, util.getBounds(shape)) : util.hitTestBounds(shape, brush)) {
             hits.add(selectId);
             if (!selectedIds.has(selectId)) {
               selectedIds.add(selectId);
@@ -6023,8 +6032,8 @@ var BrushSession = class extends BaseSession {
 };
 
 // src/state/sessions/DrawSession/DrawSession.ts
-var import_core30 = __toModule(require("@tldraw/core"));
-var import_vec20 = __toModule(require("@tldraw/vec"));
+var import_core28 = __toModule(require("@tldraw/core"));
+var import_vec21 = __toModule(require("@tldraw/vec"));
 var DrawSession = class extends BaseSession {
   constructor(app, id) {
     super(app);
@@ -6036,7 +6045,7 @@ var DrawSession = class extends BaseSession {
       const { shapeId } = this;
       const { currentPoint, originPoint, shiftKey } = this.app;
       if (!this.lockedDirection && this.points.length > 1) {
-        const bounds = import_core30.Utils.getBoundsFromPoints(this.points);
+        const bounds = import_core28.Utils.getBoundsFromPoints(this.points);
         if (bounds.width > 8 || bounds.height > 8) {
           this.lockedDirection = bounds.width > bounds.height ? "horizontal" : "vertical";
         }
@@ -6044,7 +6053,7 @@ var DrawSession = class extends BaseSession {
       if (shiftKey) {
         if (!this.isLocked && this.points.length > 2) {
           if (!this.lockedDirection) {
-            const bounds = import_core30.Utils.getBoundsFromPoints(this.points);
+            const bounds = import_core28.Utils.getBoundsFromPoints(this.points);
             this.lockedDirection = bounds.width > bounds.height ? "horizontal" : "vertical";
           }
           this.isLocked = true;
@@ -6066,8 +6075,8 @@ var DrawSession = class extends BaseSession {
           currentPoint[1] = originPoint[1];
         }
       }
-      const newAdjustedPoint = import_vec20.Vec.toFixed(import_vec20.Vec.sub(currentPoint, originPoint)).concat(currentPoint[2]);
-      if (import_vec20.Vec.isEqual(this.lastAdjustedPoint, newAdjustedPoint))
+      const newAdjustedPoint = import_vec21.Vec.toFixed(import_vec21.Vec.sub(currentPoint, originPoint)).concat(currentPoint[2]);
+      if (import_vec21.Vec.isEqual(this.lastAdjustedPoint, newAdjustedPoint))
         return;
       this.points.push(newAdjustedPoint);
       this.lastAdjustedPoint = newAdjustedPoint;
@@ -6076,15 +6085,15 @@ var DrawSession = class extends BaseSession {
         Math.min(this.topLeft[0], currentPoint[0]),
         Math.min(this.topLeft[1], currentPoint[1])
       ];
-      const delta = import_vec20.Vec.sub(topLeft, originPoint);
+      const delta = import_vec21.Vec.sub(topLeft, originPoint);
       let points;
       if (prevTopLeft[0] !== topLeft[0] || prevTopLeft[1] !== topLeft[1]) {
         this.topLeft = topLeft;
         points = this.points.map((pt) => {
-          return import_vec20.Vec.toFixed(import_vec20.Vec.sub(pt, delta)).concat(pt[2]);
+          return import_vec21.Vec.toFixed(import_vec21.Vec.sub(pt, delta)).concat(pt[2]);
         });
       } else {
-        points = [...this.shiftedPoints, import_vec20.Vec.sub(newAdjustedPoint, delta).concat(newAdjustedPoint[2])];
+        points = [...this.shiftedPoints, import_vec21.Vec.sub(newAdjustedPoint, delta).concat(newAdjustedPoint[2])];
       }
       this.shiftedPoints = points;
       return {
@@ -6155,8 +6164,8 @@ var DrawSession = class extends BaseSession {
               [pageId]: {
                 shapes: {
                   [shapeId]: __spreadProps(__spreadValues({}, shape), {
-                    point: import_vec20.Vec.toFixed(shape.point),
-                    points: shape.points.map((pt) => import_vec20.Vec.toFixed(pt)),
+                    point: import_vec21.Vec.toFixed(shape.point),
+                    points: shape.points.map((pt) => import_vec21.Vec.toFixed(pt)),
                     isComplete: true
                   })
                 }
@@ -6181,7 +6190,7 @@ var DrawSession = class extends BaseSession {
 };
 
 // src/state/sessions/HandleSession/HandleSession.ts
-var import_vec21 = __toModule(require("@tldraw/vec"));
+var import_vec22 = __toModule(require("@tldraw/vec"));
 var HandleSession = class extends BaseSession {
   constructor(app, shapeId, handleId, commandId = "move_handle") {
     super(app);
@@ -6200,9 +6209,9 @@ var HandleSession = class extends BaseSession {
         return void 0;
       const handles = shape.handles;
       const handleId = this.handleId;
-      const delta = import_vec21.Vec.sub(currentPoint, handles[handleId].point);
+      const delta = import_vec22.Vec.sub(currentPoint, handles[handleId].point);
       const handle = __spreadProps(__spreadValues({}, handles[handleId]), {
-        point: import_vec21.Vec.sub(import_vec21.Vec.add(handles[handleId].point, delta), shape.point)
+        point: import_vec22.Vec.sub(import_vec22.Vec.add(handles[handleId].point, delta), shape.point)
       });
       const change = (_b = (_a = TLDR.getShapeUtil(shape)).onHandleChange) == null ? void 0 : _b.call(_a, shape, {
         [handleId]: handle
@@ -6278,8 +6287,8 @@ var HandleSession = class extends BaseSession {
 };
 
 // src/state/sessions/RotateSession/RotateSession.ts
-var import_core31 = __toModule(require("@tldraw/core"));
-var import_vec22 = __toModule(require("@tldraw/vec"));
+var import_core29 = __toModule(require("@tldraw/core"));
+var import_vec23 = __toModule(require("@tldraw/vec"));
 var RotateSession = class extends BaseSession {
   constructor(app) {
     super(app);
@@ -6295,15 +6304,15 @@ var RotateSession = class extends BaseSession {
         app: { currentPageId, currentPoint, shiftKey }
       } = this;
       const shapes = {};
-      let directionDelta = import_vec22.Vec.angle(commonBoundsCenter, currentPoint) - this.initialAngle;
+      let directionDelta = import_vec23.Vec.angle(commonBoundsCenter, currentPoint) - this.initialAngle;
       if (shiftKey) {
-        directionDelta = import_core31.Utils.snapAngleToSegments(directionDelta, 24);
+        directionDelta = import_core29.Utils.snapAngleToSegments(directionDelta, 24);
       }
       initialShapes.forEach(({ center, shape }) => {
         const { rotation = 0 } = shape;
         let shapeDelta = 0;
         if (shiftKey) {
-          const snappedRotation = import_core31.Utils.snapAngleToSegments(rotation, 24);
+          const snappedRotation = import_core29.Utils.snapAngleToSegments(rotation, 24);
           shapeDelta = snappedRotation - rotation;
         }
         const change = TLDR.getRotatedShapeMutation(shape, center, commonBoundsCenter, shiftKey ? directionDelta + shapeDelta : directionDelta);
@@ -6384,7 +6393,7 @@ var RotateSession = class extends BaseSession {
       }
       this.commonBoundsCenter = app.rotationInfo.center;
     } else {
-      this.commonBoundsCenter = import_core31.Utils.getBoundsCenter(import_core31.Utils.getCommonBounds(initialShapes.map(TLDR.getBounds)));
+      this.commonBoundsCenter = import_core29.Utils.getBoundsCenter(import_core29.Utils.getCommonBounds(initialShapes.map(TLDR.getBounds)));
       app.rotationInfo.selectedIds = pageState.selectedIds;
       app.rotationInfo.center = this.commonBoundsCenter;
     }
@@ -6394,15 +6403,15 @@ var RotateSession = class extends BaseSession {
         center: this.app.getShapeUtil(shape).getCenter(shape)
       };
     });
-    this.initialAngle = import_vec22.Vec.angle(this.commonBoundsCenter, originPoint);
+    this.initialAngle = import_vec23.Vec.angle(this.commonBoundsCenter, originPoint);
   }
 };
 
 // src/state/sessions/TransformSession/TransformSession.ts
-var import_core32 = __toModule(require("@tldraw/core"));
-var import_vec23 = __toModule(require("@tldraw/vec"));
+var import_core30 = __toModule(require("@tldraw/core"));
+var import_vec24 = __toModule(require("@tldraw/vec"));
 var TransformSession = class extends BaseSession {
-  constructor(app, transformType = import_core32.TLBoundsCorner.BottomRight, isCreate = false) {
+  constructor(app, transformType = import_core30.TLBoundsCorner.BottomRight, isCreate = false) {
     super(app);
     this.transformType = transformType;
     this.isCreate = isCreate;
@@ -6416,7 +6425,7 @@ var TransformSession = class extends BaseSession {
     this.start = () => {
       this.snapInfo = {
         state: "ready",
-        bounds: this.app.shapes.filter((shape) => !this.initialShapeIds.includes(shape.id)).map((shape) => import_core32.Utils.getBoundsWithCenter(TLDR.getRotatedBounds(shape)))
+        bounds: this.app.shapes.filter((shape) => !this.initialShapeIds.includes(shape.id)).map((shape) => import_core30.Utils.getBoundsWithCenter(TLDR.getRotatedBounds(shape)))
       };
       return void 0;
     };
@@ -6441,31 +6450,31 @@ var TransformSession = class extends BaseSession {
         }
       } = this;
       const shapes = {};
-      const delta = altKey ? import_vec23.Vec.mul(import_vec23.Vec.sub(currentPoint, originPoint), 2) : import_vec23.Vec.sub(currentPoint, originPoint);
-      let newBounds = import_core32.Utils.getTransformedBoundingBox(initialCommonBounds, transformType, delta, 0, shiftKey || isAllAspectRatioLocked);
+      const delta = altKey ? import_vec24.Vec.mul(import_vec24.Vec.sub(currentPoint, originPoint), 2) : import_vec24.Vec.sub(currentPoint, originPoint);
+      let newBounds = import_core30.Utils.getTransformedBoundingBox(initialCommonBounds, transformType, delta, 0, shiftKey || isAllAspectRatioLocked);
       if (altKey) {
-        newBounds = __spreadValues(__spreadValues({}, newBounds), import_core32.Utils.centerBounds(newBounds, import_core32.Utils.getBoundsCenter(initialCommonBounds)));
+        newBounds = __spreadValues(__spreadValues({}, newBounds), import_core30.Utils.centerBounds(newBounds, import_core30.Utils.getBoundsCenter(initialCommonBounds)));
       }
       if (showGrid) {
-        newBounds = __spreadValues(__spreadValues({}, newBounds), import_core32.Utils.snapBoundsToGrid(newBounds, currentGrid));
+        newBounds = __spreadValues(__spreadValues({}, newBounds), import_core30.Utils.snapBoundsToGrid(newBounds, currentGrid));
       }
-      const speed = import_vec23.Vec.dist(currentPoint, previousPoint);
+      const speed = import_vec24.Vec.dist(currentPoint, previousPoint);
       const speedChange = speed - this.speed;
       this.speed = this.speed + speedChange * (speedChange > 1 ? 0.5 : 0.15);
       let snapLines = [];
       if ((isSnapping && !metaKey || !isSnapping && metaKey) && this.speed * camera.zoom < SLOW_SPEED && this.snapInfo.state === "ready") {
-        const snapResult = import_core32.Utils.getSnapPoints(import_core32.Utils.getBoundsWithCenter(newBounds), this.snapInfo.bounds.filter((bounds) => import_core32.Utils.boundsContain(viewport, bounds) || import_core32.Utils.boundsCollide(viewport, bounds)), SNAP_DISTANCE / camera.zoom);
+        const snapResult = import_core30.Utils.getSnapPoints(import_core30.Utils.getBoundsWithCenter(newBounds), this.snapInfo.bounds.filter((bounds) => import_core30.Utils.boundsContain(viewport, bounds) || import_core30.Utils.boundsCollide(viewport, bounds)), SNAP_DISTANCE / camera.zoom);
         if (snapResult) {
           snapLines = snapResult.snapLines;
-          newBounds = import_core32.Utils.getTransformedBoundingBox(initialCommonBounds, transformType, import_vec23.Vec.sub(delta, snapResult.offset), 0, shiftKey || isAllAspectRatioLocked);
+          newBounds = import_core30.Utils.getTransformedBoundingBox(initialCommonBounds, transformType, import_vec24.Vec.sub(delta, snapResult.offset), 0, shiftKey || isAllAspectRatioLocked);
         }
       }
       this.scaleX = newBounds.scaleX;
       this.scaleY = newBounds.scaleY;
       shapeBounds.forEach(({ initialShape, initialShapeBounds, transformOrigin }) => {
-        let newShapeBounds = import_core32.Utils.getRelativeTransformedBoundingBox(newBounds, initialCommonBounds, initialShapeBounds, this.scaleX < 0, this.scaleY < 0);
+        let newShapeBounds = import_core30.Utils.getRelativeTransformedBoundingBox(newBounds, initialCommonBounds, initialShapeBounds, this.scaleX < 0, this.scaleY < 0);
         if (showGrid) {
-          newShapeBounds = import_core32.Utils.snapBoundsToGrid(newShapeBounds, currentGrid);
+          newShapeBounds = import_core30.Utils.snapBoundsToGrid(newShapeBounds, currentGrid);
         }
         const afterShape = TLDR.transform(this.app.getShape(initialShape.id), newShapeBounds, {
           type: this.transformType,
@@ -6596,11 +6605,11 @@ var TransformSession = class extends BaseSession {
     this.isAllAspectRatioLocked = this.initialShapes.every((shape) => shape.isAspectRatioLocked || TLDR.getShapeUtil(shape).isAspectRatioLocked);
     const shapesBounds = Object.fromEntries(this.initialShapes.map((shape) => [shape.id, TLDR.getBounds(shape)]));
     const boundsArr = Object.values(shapesBounds);
-    this.initialCommonBounds = import_core32.Utils.getCommonBounds(boundsArr);
-    const initialInnerBounds = import_core32.Utils.getBoundsFromPoints(boundsArr.map(import_core32.Utils.getBoundsCenter));
+    this.initialCommonBounds = import_core30.Utils.getCommonBounds(boundsArr);
+    const initialInnerBounds = import_core30.Utils.getBoundsFromPoints(boundsArr.map(import_core30.Utils.getBoundsCenter));
     this.shapeBounds = this.initialShapes.map((shape) => {
       const initialShapeBounds = shapesBounds[shape.id];
-      const ic = import_core32.Utils.getBoundsCenter(initialShapeBounds);
+      const ic = import_core30.Utils.getBoundsCenter(initialShapeBounds);
       const ix = (ic[0] - initialInnerBounds.minX) / initialInnerBounds.width;
       const iy = (ic[1] - initialInnerBounds.minY) / initialInnerBounds.height;
       return {
@@ -6613,8 +6622,8 @@ var TransformSession = class extends BaseSession {
 };
 
 // src/state/sessions/TransformSingleSession/TransformSingleSession.ts
-var import_core33 = __toModule(require("@tldraw/core"));
-var import_vec24 = __toModule(require("@tldraw/vec"));
+var import_core31 = __toModule(require("@tldraw/core"));
+var import_vec25 = __toModule(require("@tldraw/vec"));
 var TransformSingleSession = class extends BaseSession {
   constructor(app, id, transformType, isCreate = false) {
     super(app);
@@ -6628,7 +6637,7 @@ var TransformSingleSession = class extends BaseSession {
     this.start = () => {
       this.snapInfo = {
         state: "ready",
-        bounds: this.app.shapes.filter((shape) => shape.id !== this.initialShape.id).map((shape) => import_core33.Utils.getBoundsWithCenter(TLDR.getRotatedBounds(shape)))
+        bounds: this.app.shapes.filter((shape) => shape.id !== this.initialShape.id).map((shape) => import_core31.Utils.getBoundsWithCenter(TLDR.getRotatedBounds(shape)))
       };
       return void 0;
     };
@@ -6654,25 +6663,25 @@ var TransformSingleSession = class extends BaseSession {
       if (initialShape.isLocked)
         return void 0;
       const shapes = {};
-      const delta = altKey ? import_vec24.Vec.mul(import_vec24.Vec.sub(currentPoint, originPoint), 2) : import_vec24.Vec.sub(currentPoint, originPoint);
+      const delta = altKey ? import_vec25.Vec.mul(import_vec25.Vec.sub(currentPoint, originPoint), 2) : import_vec25.Vec.sub(currentPoint, originPoint);
       const shape = this.app.getShape(initialShape.id);
       const utils = TLDR.getShapeUtil(shape);
-      let newBounds = import_core33.Utils.getTransformedBoundingBox(initialShapeBounds, transformType, delta, shape.rotation, shiftKey || shape.isAspectRatioLocked || utils.isAspectRatioLocked);
+      let newBounds = import_core31.Utils.getTransformedBoundingBox(initialShapeBounds, transformType, delta, shape.rotation, shiftKey || shape.isAspectRatioLocked || utils.isAspectRatioLocked);
       if (altKey) {
-        newBounds = __spreadValues(__spreadValues({}, newBounds), import_core33.Utils.centerBounds(newBounds, import_core33.Utils.getBoundsCenter(initialShapeBounds)));
+        newBounds = __spreadValues(__spreadValues({}, newBounds), import_core31.Utils.centerBounds(newBounds, import_core31.Utils.getBoundsCenter(initialShapeBounds)));
       }
       if (showGrid) {
-        newBounds = __spreadValues(__spreadValues({}, newBounds), import_core33.Utils.snapBoundsToGrid(newBounds, currentGrid));
+        newBounds = __spreadValues(__spreadValues({}, newBounds), import_core31.Utils.snapBoundsToGrid(newBounds, currentGrid));
       }
-      const speed = import_vec24.Vec.dist(currentPoint, previousPoint);
+      const speed = import_vec25.Vec.dist(currentPoint, previousPoint);
       const speedChange = speed - this.speed;
       this.speed = this.speed + speedChange * (speedChange > 1 ? 0.5 : 0.15);
       let snapLines = [];
       if ((isSnapping && !metaKey || !isSnapping && metaKey) && !initialShape.rotation && this.speed * camera.zoom < SLOW_SPEED && this.snapInfo.state === "ready") {
-        const snapResult = import_core33.Utils.getSnapPoints(import_core33.Utils.getBoundsWithCenter(newBounds), this.snapInfo.bounds.filter((bounds) => import_core33.Utils.boundsContain(viewport, bounds) || import_core33.Utils.boundsCollide(viewport, bounds)), SNAP_DISTANCE / camera.zoom);
+        const snapResult = import_core31.Utils.getSnapPoints(import_core31.Utils.getBoundsWithCenter(newBounds), this.snapInfo.bounds.filter((bounds) => import_core31.Utils.boundsContain(viewport, bounds) || import_core31.Utils.boundsCollide(viewport, bounds)), SNAP_DISTANCE / camera.zoom);
         if (snapResult) {
           snapLines = snapResult.snapLines;
-          newBounds = import_core33.Utils.getTransformedBoundingBox(initialShapeBounds, transformType, import_vec24.Vec.sub(delta, snapResult.offset), shape.rotation, shiftKey || shape.isAspectRatioLocked || utils.isAspectRatioLocked);
+          newBounds = import_core31.Utils.getTransformedBoundingBox(initialShapeBounds, transformType, import_vec25.Vec.sub(delta, snapResult.offset), shape.rotation, shiftKey || shape.isAspectRatioLocked || utils.isAspectRatioLocked);
         }
       }
       const afterShape = TLDR.getShapeUtil(shape).transformSingle(shape, newBounds, {
@@ -6686,7 +6695,7 @@ var TransformSingleSession = class extends BaseSession {
         shapes[shape.id] = afterShape;
       }
       if (showGrid && afterShape && afterShape.point) {
-        afterShape.point = import_vec24.Vec.snap(afterShape.point, currentGrid);
+        afterShape.point = import_vec25.Vec.snap(afterShape.point, currentGrid);
       }
       return {
         appState: {
@@ -6794,8 +6803,8 @@ var TransformSingleSession = class extends BaseSession {
 };
 
 // src/state/sessions/TranslateSession/TranslateSession.ts
-var import_core34 = __toModule(require("@tldraw/core"));
-var import_vec25 = __toModule(require("@tldraw/vec"));
+var import_core32 = __toModule(require("@tldraw/core"));
+var import_vec26 = __toModule(require("@tldraw/vec"));
 var TranslateSession = class extends BaseSession {
   constructor(app, isCreate = false, link = false) {
     super(app);
@@ -6822,7 +6831,7 @@ var TranslateSession = class extends BaseSession {
       const allBounds = [];
       const otherBounds = [];
       Object.values(page.shapes).forEach((shape) => {
-        const bounds = import_core34.Utils.getBoundsWithCenter(TLDR.getRotatedBounds(shape));
+        const bounds = import_core32.Utils.getBoundsWithCenter(TLDR.getRotatedBounds(shape));
         allBounds.push(bounds);
         if (!initialIds.has(shape.id)) {
           otherBounds.push(bounds);
@@ -6871,7 +6880,7 @@ var TranslateSession = class extends BaseSession {
       const nextBindings = {};
       const nextShapes = {};
       const nextPageState = {};
-      let delta = import_vec25.Vec.sub(currentPoint, originPoint);
+      let delta = import_vec26.Vec.sub(currentPoint, originPoint);
       let didChangeCloning = false;
       if (!this.isCreate) {
         if (altKey && !this.isCloning) {
@@ -6889,15 +6898,15 @@ var TranslateSession = class extends BaseSession {
           delta[1] = 0;
         }
       }
-      const speed = import_vec25.Vec.dist(currentPoint, previousPoint);
+      const speed = import_vec26.Vec.dist(currentPoint, previousPoint);
       const change = speed - this.speed;
       this.speed = this.speed + change * (change > 1 ? 0.5 : 0.15);
       this.snapLines = [];
       if ((isSnapping && !metaKey || !isSnapping && metaKey) && this.speed * camera.zoom < SLOW_SPEED && this.snapInfo.state === "ready") {
-        const snapResult = import_core34.Utils.getSnapPoints(import_core34.Utils.getBoundsWithCenter(showGrid ? import_core34.Utils.snapBoundsToGrid(import_core34.Utils.translateBounds(initialCommonBounds, delta), currentGrid) : import_core34.Utils.translateBounds(initialCommonBounds, delta)), (this.isCloning ? this.snapInfo.bounds : this.snapInfo.others).filter((bounds) => import_core34.Utils.boundsContain(viewport, bounds) || import_core34.Utils.boundsCollide(viewport, bounds)), SNAP_DISTANCE / camera.zoom);
+        const snapResult = import_core32.Utils.getSnapPoints(import_core32.Utils.getBoundsWithCenter(showGrid ? import_core32.Utils.snapBoundsToGrid(import_core32.Utils.translateBounds(initialCommonBounds, delta), currentGrid) : import_core32.Utils.translateBounds(initialCommonBounds, delta)), (this.isCloning ? this.snapInfo.bounds : this.snapInfo.others).filter((bounds) => import_core32.Utils.boundsContain(viewport, bounds) || import_core32.Utils.boundsCollide(viewport, bounds)), SNAP_DISTANCE / camera.zoom);
         if (snapResult) {
           this.snapLines = snapResult.snapLines;
-          delta = import_vec25.Vec.sub(delta, snapResult.offset);
+          delta = import_vec26.Vec.sub(delta, snapResult.offset);
         }
       }
       this.prev = delta;
@@ -6931,7 +6940,7 @@ var TranslateSession = class extends BaseSession {
           nextPageState.selectedIds = clones.map((clone) => clone.id);
           clones.forEach((clone) => {
             nextShapes[clone.id] = __spreadProps(__spreadValues({}, clone), {
-              point: showGrid ? import_vec25.Vec.snap(import_vec25.Vec.toFixed(import_vec25.Vec.add(clone.point, delta)), currentGrid) : import_vec25.Vec.toFixed(import_vec25.Vec.add(clone.point, delta))
+              point: showGrid ? import_vec26.Vec.snap(import_vec26.Vec.toFixed(import_vec26.Vec.add(clone.point, delta)), currentGrid) : import_vec26.Vec.toFixed(import_vec26.Vec.add(clone.point, delta))
             });
           });
         } else {
@@ -6940,7 +6949,7 @@ var TranslateSession = class extends BaseSession {
           const { clones } = this.cloneInfo;
           clones.forEach((clone) => {
             nextShapes[clone.id] = {
-              point: showGrid ? import_vec25.Vec.snap(import_vec25.Vec.toFixed(import_vec25.Vec.add(clone.point, delta)), currentGrid) : import_vec25.Vec.toFixed(import_vec25.Vec.add(clone.point, delta))
+              point: showGrid ? import_vec26.Vec.snap(import_vec26.Vec.toFixed(import_vec26.Vec.add(clone.point, delta)), currentGrid) : import_vec26.Vec.toFixed(import_vec26.Vec.add(clone.point, delta))
             };
           });
         }
@@ -6961,7 +6970,7 @@ var TranslateSession = class extends BaseSession {
           clones.forEach((clone) => nextShapes[clone.id] = void 0);
           initialShapes.forEach((shape) => {
             nextShapes[shape.id] = {
-              point: showGrid ? import_vec25.Vec.snap(import_vec25.Vec.toFixed(import_vec25.Vec.add(shape.point, delta)), currentGrid) : import_vec25.Vec.toFixed(import_vec25.Vec.add(shape.point, delta))
+              point: showGrid ? import_vec26.Vec.snap(import_vec26.Vec.toFixed(import_vec26.Vec.add(shape.point, delta)), currentGrid) : import_vec26.Vec.toFixed(import_vec26.Vec.add(shape.point, delta))
             };
           });
           for (const binding of clonedBindings) {
@@ -6971,7 +6980,7 @@ var TranslateSession = class extends BaseSession {
         } else {
           initialShapes.forEach((shape) => {
             nextShapes[shape.id] = {
-              point: showGrid ? import_vec25.Vec.snap(import_vec25.Vec.toFixed(import_vec25.Vec.add(shape.point, delta)), currentGrid) : import_vec25.Vec.toFixed(import_vec25.Vec.add(shape.point, delta))
+              point: showGrid ? import_vec26.Vec.snap(import_vec26.Vec.toFixed(import_vec26.Vec.add(shape.point, delta)), currentGrid) : import_vec26.Vec.toFixed(import_vec26.Vec.add(shape.point, delta))
             };
           });
         }
@@ -7147,10 +7156,10 @@ var TranslateSession = class extends BaseSession {
       const clonedBindings = [];
       const clones = [];
       initialShapes.forEach((shape) => {
-        const newId = import_core34.Utils.uniqueId();
+        const newId = import_core32.Utils.uniqueId();
         initialParentChildren[newId] = initialParentChildren[shape.id];
         cloneMap[shape.id] = newId;
-        const clone = __spreadProps(__spreadValues({}, import_core34.Utils.deepClone(shape)), {
+        const clone = __spreadProps(__spreadValues({}, import_core32.Utils.deepClone(shape)), {
           id: newId,
           parentId: shape.parentId,
           childIndex: TLDR.getChildIndexAbove(this.app.state, shape.id, currentPageId)
@@ -7171,8 +7180,8 @@ var TranslateSession = class extends BaseSession {
       Object.values(page.bindings).filter((binding) => clonedShapeIds.has(binding.fromId) || clonedShapeIds.has(binding.toId)).forEach((binding) => {
         if (clonedShapeIds.has(binding.fromId)) {
           if (clonedShapeIds.has(binding.toId)) {
-            const cloneId = import_core34.Utils.uniqueId();
-            const cloneBinding = __spreadProps(__spreadValues({}, import_core34.Utils.deepClone(binding)), {
+            const cloneId = import_core32.Utils.uniqueId();
+            const cloneBinding = __spreadProps(__spreadValues({}, import_core32.Utils.deepClone(binding)), {
               id: cloneId,
               fromId: cloneMap[binding.fromId] || binding.fromId,
               toId: cloneMap[binding.toId] || binding.toId
@@ -7227,13 +7236,13 @@ var TranslateSession = class extends BaseSession {
     this.initialShapes.map((s) => s.parentId).filter((id) => id !== page.id).forEach((id) => {
       this.initialParentChildren[id] = this.app.getShape(id).children;
     });
-    this.initialCommonBounds = import_core34.Utils.getCommonBounds(this.initialShapes.map(TLDR.getRotatedBounds));
+    this.initialCommonBounds = import_core32.Utils.getCommonBounds(this.initialShapes.map(TLDR.getRotatedBounds));
     this.app.rotationInfo.selectedIds = [...this.app.selectedIds];
   }
 };
 
 // src/state/sessions/EraseSession/EraseSession.ts
-var import_vec26 = __toModule(require("@tldraw/vec"));
+var import_vec27 = __toModule(require("@tldraw/vec"));
 var EraseSession = class extends BaseSession {
   constructor(app) {
     super(app);
@@ -7245,9 +7254,9 @@ var EraseSession = class extends BaseSession {
     this.update = () => {
       const { page, shiftKey, originPoint, currentPoint } = this.app;
       if (shiftKey) {
-        if (!this.isLocked && import_vec26.Vec.dist(originPoint, currentPoint) > 4) {
+        if (!this.isLocked && import_vec27.Vec.dist(originPoint, currentPoint) > 4) {
           if (!this.lockedDirection) {
-            const delta = import_vec26.Vec.sub(currentPoint, originPoint);
+            const delta = import_vec27.Vec.sub(currentPoint, originPoint);
             this.lockedDirection = delta[0] > delta[1] ? "horizontal" : "vertical";
           }
           this.isLocked = true;
@@ -7262,7 +7271,7 @@ var EraseSession = class extends BaseSession {
           currentPoint[1] = originPoint[1];
         }
       }
-      const newPoint = import_vec26.Vec.toFixed(import_vec26.Vec.add(originPoint, import_vec26.Vec.sub(currentPoint, originPoint)));
+      const newPoint = import_vec27.Vec.toFixed(import_vec27.Vec.add(originPoint, import_vec27.Vec.sub(currentPoint, originPoint)));
       const deletedShapeIds = new Set([]);
       for (const shape of this.erasableShapes) {
         if (this.erasedShapes.has(shape))
@@ -7387,8 +7396,8 @@ var EraseSession = class extends BaseSession {
 };
 
 // src/state/sessions/GridSession/GridSession.ts
-var import_core35 = __toModule(require("@tldraw/core"));
-var import_vec27 = __toModule(require("@tldraw/vec"));
+var import_core33 = __toModule(require("@tldraw/core"));
+var import_vec28 = __toModule(require("@tldraw/vec"));
 var GridSession = class extends BaseSession {
   constructor(app, id) {
     super(app);
@@ -7403,8 +7412,8 @@ var GridSession = class extends BaseSession {
       const { currentPageId, altKey, shiftKey, currentPoint } = this.app;
       const nextShapes = {};
       const nextPageState = {};
-      const center = import_core35.Utils.getBoundsCenter(this.bounds);
-      const offset = import_vec27.Vec.sub(currentPoint, center);
+      const center = import_core33.Utils.getBoundsCenter(this.bounds);
+      const offset = import_vec28.Vec.sub(currentPoint, center);
       if (shiftKey) {
         if (Math.abs(offset[0]) < Math.abs(offset[1])) {
           offset[0] = 0;
@@ -7435,7 +7444,7 @@ var GridSession = class extends BaseSession {
             continue;
           if (x === 0 && y === 0)
             continue;
-          const clone = this.getClone(import_vec27.Vec.add(this.shape.point, [x * gapX, y * gapY]), isCopying);
+          const clone = this.getClone(import_vec28.Vec.add(this.shape.point, [x * gapX, y * gapY]), isCopying);
           nextShapes[clone.id] = clone;
           this.grid[position] = clone.id;
         }
@@ -7550,7 +7559,7 @@ var GridSession = class extends BaseSession {
     };
     this.getClone = (point, copy) => {
       const clone = __spreadProps(__spreadValues({}, this.shape), {
-        id: import_core35.Utils.uniqueId(),
+        id: import_core33.Utils.uniqueId(),
         point
       });
       if (!copy) {
@@ -7589,10 +7598,10 @@ var getSession = (type) => {
 };
 
 // src/state/tools/SelectTool/SelectTool.ts
-var import_core37 = __toModule(require("@tldraw/core"));
+var import_core35 = __toModule(require("@tldraw/core"));
 
 // src/state/tools/BaseTool.ts
-var import_core36 = __toModule(require("@tldraw/core"));
+var import_core34 = __toModule(require("@tldraw/core"));
 var Status;
 (function(Status4) {
   Status4["Idle"] = "idle";
@@ -7635,7 +7644,7 @@ var BaseTool = class extends TDEventHandler {
       this.setStatus(Status.Pinching);
     };
     this.onPinchEnd = () => {
-      if (import_core36.Utils.isMobileSafari()) {
+      if (import_core34.Utils.isMobileSafari()) {
         this.app.undoSelect();
       }
       this.setStatus(Status.Idle);
@@ -7682,7 +7691,7 @@ var BaseTool = class extends TDEventHandler {
 };
 
 // src/state/tools/SelectTool/SelectTool.ts
-var import_vec28 = __toModule(require("@tldraw/vec"));
+var import_vec29 = __toModule(require("@tldraw/vec"));
 var Status2;
 (function(Status4) {
   Status4["Idle"] = "idle";
@@ -7718,14 +7727,14 @@ var SelectTool = class extends BaseTool {
       if (this.app.selectedIds.length === 0)
         return;
       const shapes = this.app.selectedIds.map((id) => this.app.getShape(id));
-      const bounds = import_core37.Utils.expandBounds(import_core37.Utils.getCommonBounds(shapes.map(TLDR.getBounds)), 16);
-      const center = import_core37.Utils.getBoundsCenter(bounds);
+      const bounds = import_core35.Utils.expandBounds(import_core35.Utils.getCommonBounds(shapes.map(TLDR.getBounds)), 16);
+      const center = import_core35.Utils.getBoundsCenter(bounds);
       const size = [bounds.width, bounds.height];
       const gridPoint = [
         center[0] + size[0] * Math.floor((point[0] + size[0] / 2 - center[0]) / size[0]),
         center[1] + size[1] * Math.floor((point[1] + size[1] / 2 - center[1]) / size[1])
       ];
-      const centeredBounds = import_core37.Utils.centerBounds(bounds, gridPoint);
+      const centeredBounds = import_core35.Utils.centerBounds(bounds, gridPoint);
       const hit = this.app.shapes.some((shape) => TLDR.getShapeUtil(shape).hitTestBounds(shape, centeredBounds));
       if (!hit) {
         this.app.duplicate(this.app.selectedIds, gridPoint);
@@ -7757,11 +7766,11 @@ var SelectTool = class extends BaseTool {
           bottomRight: [bounds.maxX + CLONING_DISTANCE, bounds.maxY + CLONING_DISTANCE]
         }[side];
         if (shape.rotation !== 0) {
-          const newCenter = import_vec28.default.add(point, [bounds.width / 2, bounds.height / 2]);
-          const rotatedCenter = import_vec28.default.rotWith(newCenter, center, shape.rotation || 0);
-          point = import_vec28.default.sub(rotatedCenter, [bounds.width / 2, bounds.height / 2]);
+          const newCenter = import_vec29.default.add(point, [bounds.width / 2, bounds.height / 2]);
+          const rotatedCenter = import_vec29.default.rotWith(newCenter, center, shape.rotation || 0);
+          point = import_vec29.default.sub(rotatedCenter, [bounds.width / 2, bounds.height / 2]);
         }
-        const id2 = import_core37.Utils.uniqueId();
+        const id2 = import_core35.Utils.uniqueId();
         const clone = __spreadProps(__spreadValues({}, shape), {
           id: id2,
           point
@@ -7824,13 +7833,13 @@ var SelectTool = class extends BaseTool {
       var _a, _b;
       const { originPoint, currentPoint } = this.app;
       if (this.status === Status2.SpacePanning && e.buttons === 1 || this.status === Status2.MiddleWheelPanning && e.buttons === 4) {
-        (_b = (_a = this.app).onPan) == null ? void 0 : _b.call(_a, __spreadProps(__spreadValues({}, info), { delta: import_vec28.default.neg(info.delta) }), e);
+        (_b = (_a = this.app).onPan) == null ? void 0 : _b.call(_a, __spreadProps(__spreadValues({}, info), { delta: import_vec29.default.neg(info.delta) }), e);
         return;
       }
       if (this.status === Status2.PointingBoundsHandle) {
         if (!this.pointedBoundsHandle)
           throw Error("No pointed bounds handle");
-        if (import_vec28.default.dist(originPoint, currentPoint) > DEAD_ZONE) {
+        if (import_vec29.default.dist(originPoint, currentPoint) > DEAD_ZONE) {
           if (this.pointedBoundsHandle === "rotate") {
             this.setStatus(Status2.Rotating);
             this.app.startSession(SessionType.Rotate);
@@ -7851,14 +7860,14 @@ var SelectTool = class extends BaseTool {
         return;
       }
       if (this.status === Status2.PointingCanvas) {
-        if (import_vec28.default.dist(originPoint, currentPoint) > DEAD_ZONE) {
+        if (import_vec29.default.dist(originPoint, currentPoint) > DEAD_ZONE) {
           this.app.startSession(SessionType.Brush);
           this.setStatus(Status2.Brushing);
         }
         return;
       }
       if (this.status === Status2.PointingClone) {
-        if (import_vec28.default.dist(originPoint, currentPoint) > DEAD_ZONE) {
+        if (import_vec29.default.dist(originPoint, currentPoint) > DEAD_ZONE) {
           this.setStatus(Status2.TranslatingClone);
           this.app.startSession(SessionType.Translate);
           this.app.updateSession();
@@ -7866,7 +7875,7 @@ var SelectTool = class extends BaseTool {
         return;
       }
       if (this.status === Status2.PointingBounds) {
-        if (import_vec28.default.dist(originPoint, currentPoint) > DEAD_ZONE) {
+        if (import_vec29.default.dist(originPoint, currentPoint) > DEAD_ZONE) {
           this.setStatus(Status2.Translating);
           this.app.startSession(SessionType.Translate);
           this.app.updateSession();
@@ -7876,7 +7885,7 @@ var SelectTool = class extends BaseTool {
       if (this.status === Status2.PointingHandle) {
         if (!this.pointedHandleId)
           throw Error("No pointed handle");
-        if (import_vec28.default.dist(originPoint, currentPoint) > DEAD_ZONE) {
+        if (import_vec29.default.dist(originPoint, currentPoint) > DEAD_ZONE) {
           this.setStatus(Status2.TranslatingHandle);
           const selectedShape = this.app.getShape(this.app.selectedIds[0]);
           if (!selectedShape)
@@ -8131,7 +8140,7 @@ var SelectTool = class extends BaseTool {
 };
 
 // src/state/tools/EraseTool/EraseTool.ts
-var import_vec29 = __toModule(require("@tldraw/vec"));
+var import_vec30 = __toModule(require("@tldraw/vec"));
 var Status3;
 (function(Status4) {
   Status4["Idle"] = "idle";
@@ -8151,7 +8160,10 @@ var EraseTool = class extends BaseTool {
     this.onPointerMove = (info) => {
       switch (this.status) {
         case Status3.Pointing: {
-          if (import_vec29.default.dist(info.origin, info.point) > DEAD_ZONE) {
+          console.log(`vec = ${import_vec30.default.dist(info.origin, info.point)}`);
+          console.log(`info.origin = ${info.origin}`);
+          console.log(`info.point = ${info.point}`);
+          if (import_vec30.default.dist(info.origin, info.point) > DEAD_ZONE) {
             this.app.startSession(SessionType.Erase);
             this.app.updateSession();
             this.setStatus(Status3.Erasing);
@@ -8192,7 +8204,7 @@ var EraseTool = class extends BaseTool {
 };
 
 // src/state/tools/TextTool/TextTool.ts
-var import_vec30 = __toModule(require("@tldraw/vec"));
+var import_vec31 = __toModule(require("@tldraw/vec"));
 var TextTool = class extends BaseTool {
   constructor() {
     super(...arguments);
@@ -8218,7 +8230,7 @@ var TextTool = class extends BaseTool {
           currentGrid,
           settings: { showGrid }
         } = this.app;
-        this.app.createTextShapeAtPoint(showGrid ? import_vec30.default.snap(currentPoint, currentGrid) : currentPoint);
+        this.app.createTextShapeAtPoint(showGrid ? import_vec31.default.snap(currentPoint, currentGrid) : currentPoint);
         this.setStatus(Status.Creating);
         return;
       }
@@ -8239,7 +8251,7 @@ var TextTool = class extends BaseTool {
 };
 
 // src/state/tools/DrawTool/DrawTool.ts
-var import_core38 = __toModule(require("@tldraw/core"));
+var import_core36 = __toModule(require("@tldraw/core"));
 var DrawTool = class extends BaseTool {
   constructor() {
     super(...arguments);
@@ -8252,7 +8264,7 @@ var DrawTool = class extends BaseTool {
         appState: { currentPageId, currentStyle }
       } = this.app;
       const childIndex = this.getNextChildIndex();
-      const id = import_core38.Utils.uniqueId();
+      const id = import_core36.Utils.uniqueId();
       const newShape = Draw.create({
         id,
         parentId: currentPageId,
@@ -8279,8 +8291,8 @@ var DrawTool = class extends BaseTool {
 };
 
 // src/state/tools/EllipseTool/EllipseTool.ts
-var import_core39 = __toModule(require("@tldraw/core"));
-var import_vec31 = __toModule(require("@tldraw/vec"));
+var import_core37 = __toModule(require("@tldraw/core"));
+var import_vec32 = __toModule(require("@tldraw/vec"));
 var EllipseTool = class extends BaseTool {
   constructor() {
     super(...arguments);
@@ -8295,24 +8307,24 @@ var EllipseTool = class extends BaseTool {
         appState: { currentPageId, currentStyle }
       } = this.app;
       const childIndex = this.getNextChildIndex();
-      const id = import_core39.Utils.uniqueId();
+      const id = import_core37.Utils.uniqueId();
       const newShape = Ellipse.create({
         id,
         parentId: currentPageId,
         childIndex,
-        point: showGrid ? import_vec31.default.snap(currentPoint, currentGrid) : currentPoint,
+        point: showGrid ? import_vec32.default.snap(currentPoint, currentGrid) : currentPoint,
         style: __spreadValues({}, currentStyle)
       });
       this.app.patchCreate([newShape]);
-      this.app.startSession(SessionType.TransformSingle, newShape.id, import_core39.TLBoundsCorner.BottomRight, true);
+      this.app.startSession(SessionType.TransformSingle, newShape.id, import_core37.TLBoundsCorner.BottomRight, true);
       this.setStatus(Status.Creating);
     };
   }
 };
 
 // src/state/tools/RectangleTool/RectangleTool.ts
-var import_core40 = __toModule(require("@tldraw/core"));
-var import_vec32 = __toModule(require("@tldraw/vec"));
+var import_core38 = __toModule(require("@tldraw/core"));
+var import_vec33 = __toModule(require("@tldraw/vec"));
 var RectangleTool = class extends BaseTool {
   constructor() {
     super(...arguments);
@@ -8327,24 +8339,24 @@ var RectangleTool = class extends BaseTool {
         appState: { currentPageId, currentStyle }
       } = this.app;
       const childIndex = this.getNextChildIndex();
-      const id = import_core40.Utils.uniqueId();
+      const id = import_core38.Utils.uniqueId();
       const newShape = Rectangle.create({
         id,
         parentId: currentPageId,
         childIndex,
-        point: showGrid ? import_vec32.default.snap(currentPoint, currentGrid) : currentPoint,
+        point: showGrid ? import_vec33.default.snap(currentPoint, currentGrid) : currentPoint,
         style: __spreadValues({}, currentStyle)
       });
       this.app.patchCreate([newShape]);
-      this.app.startSession(SessionType.TransformSingle, newShape.id, import_core40.TLBoundsCorner.BottomRight, true);
+      this.app.startSession(SessionType.TransformSingle, newShape.id, import_core38.TLBoundsCorner.BottomRight, true);
       this.setStatus(Status.Creating);
     };
   }
 };
 
 // src/state/tools/LineTool/LineTool.ts
-var import_core41 = __toModule(require("@tldraw/core"));
-var import_vec33 = __toModule(require("@tldraw/vec"));
+var import_core39 = __toModule(require("@tldraw/core"));
+var import_vec34 = __toModule(require("@tldraw/vec"));
 var LineTool = class extends BaseTool {
   constructor() {
     super(...arguments);
@@ -8359,12 +8371,12 @@ var LineTool = class extends BaseTool {
         appState: { currentPageId, currentStyle }
       } = this.app;
       const childIndex = this.getNextChildIndex();
-      const id = import_core41.Utils.uniqueId();
+      const id = import_core39.Utils.uniqueId();
       const newShape = Arrow.create({
         id,
         parentId: currentPageId,
         childIndex,
-        point: showGrid ? import_vec33.default.snap(currentPoint, currentGrid) : currentPoint,
+        point: showGrid ? import_vec34.default.snap(currentPoint, currentGrid) : currentPoint,
         decorations: {
           start: void 0,
           end: void 0
@@ -8379,8 +8391,8 @@ var LineTool = class extends BaseTool {
 };
 
 // src/state/tools/ArrowTool/ArrowTool.ts
-var import_core42 = __toModule(require("@tldraw/core"));
-var import_vec34 = __toModule(require("@tldraw/vec"));
+var import_core40 = __toModule(require("@tldraw/core"));
+var import_vec35 = __toModule(require("@tldraw/vec"));
 var ArrowTool = class extends BaseTool {
   constructor() {
     super(...arguments);
@@ -8395,12 +8407,12 @@ var ArrowTool = class extends BaseTool {
         appState: { currentPageId, currentStyle }
       } = this.app;
       const childIndex = this.getNextChildIndex();
-      const id = import_core42.Utils.uniqueId();
+      const id = import_core40.Utils.uniqueId();
       const newShape = Arrow.create({
         id,
         parentId: currentPageId,
         childIndex,
-        point: showGrid ? import_vec34.default.snap(currentPoint, currentGrid) : currentPoint,
+        point: showGrid ? import_vec35.default.snap(currentPoint, currentGrid) : currentPoint,
         style: __spreadValues({}, currentStyle)
       });
       this.app.patchCreate([newShape]);
@@ -8411,8 +8423,8 @@ var ArrowTool = class extends BaseTool {
 };
 
 // src/state/tools/StickyTool/StickyTool.ts
-var import_vec35 = __toModule(require("@tldraw/vec"));
-var import_core43 = __toModule(require("@tldraw/core"));
+var import_vec36 = __toModule(require("@tldraw/vec"));
+var import_core41 = __toModule(require("@tldraw/core"));
 var StickyTool = class extends BaseTool {
   constructor() {
     super(...arguments);
@@ -8433,17 +8445,17 @@ var StickyTool = class extends BaseTool {
           appState: { currentPageId, currentStyle }
         } = this.app;
         const childIndex = this.getNextChildIndex();
-        const id = import_core43.Utils.uniqueId();
+        const id = import_core41.Utils.uniqueId();
         this.shapeId = id;
         const newShape = Sticky.create({
           id,
           parentId: currentPageId,
           childIndex,
-          point: showGrid ? import_vec35.default.snap(currentPoint, currentGrid) : currentPoint,
+          point: showGrid ? import_vec36.default.snap(currentPoint, currentGrid) : currentPoint,
           style: __spreadValues({}, currentStyle)
         });
         const bounds = Sticky.getBounds(newShape);
-        newShape.point = import_vec35.default.sub(newShape.point, [bounds.width / 2, bounds.height / 2]);
+        newShape.point = import_vec36.default.sub(newShape.point, [bounds.width / 2, bounds.height / 2]);
         this.app.createShapes(newShape);
         this.app.startSession(SessionType.Translate);
         this.setStatus(Status.Creating);
@@ -8497,7 +8509,7 @@ function deepCopy(target) {
 }
 
 // src/state/StateManager/StateManager.ts
-var import_core44 = __toModule(require("@tldraw/core"));
+var import_core42 = __toModule(require("@tldraw/core"));
 var StateManager = class {
   constructor(initialState, id, version, update) {
     this.pointer = -1;
@@ -8514,7 +8526,7 @@ var StateManager = class {
     };
     this.applyPatch = (patch, id) => {
       const prev = this._state;
-      const next = import_core44.Utils.deepMerge(this._state, patch);
+      const next = import_core42.Utils.deepMerge(this._state, patch);
       const final = this.cleanup(next, prev, patch, id);
       if (this.onStateWillChange) {
         this.onStateWillChange(final, id);
@@ -8688,7 +8700,7 @@ var StateManager = class {
 };
 
 // src/state/TldrawApp.ts
-var uuid = import_core45.Utils.uniqueId();
+var uuid = import_core43.Utils.uniqueId();
 var _TldrawApp = class extends StateManager {
   constructor(id, callbacks = {}) {
     super(_TldrawApp.defaultState, id, _TldrawApp.version, (prev, next, prevVersion) => {
@@ -8722,11 +8734,11 @@ var _TldrawApp = class extends StateManager {
     this.spaceKey = false;
     this.editingStartTime = -1;
     this.fileSystemHandle = null;
-    this.viewport = import_core45.Utils.getBoundsFromPoints([
+    this.viewport = import_core43.Utils.getBoundsFromPoints([
       [0, 0],
       [100, 100]
     ]);
-    this.rendererBounds = import_core45.Utils.getBoundsFromPoints([
+    this.rendererBounds = import_core43.Utils.getBoundsFromPoints([
       [0, 0],
       [100, 100]
     ]);
@@ -8828,7 +8840,7 @@ var _TldrawApp = class extends StateManager {
               if (!group)
                 throw Error("no group!");
               const children = group.children.filter((id) => page.shapes[id] !== void 0);
-              const commonBounds = import_core45.Utils.getCommonBounds(children.map((id) => page.shapes[id]).filter(Boolean).map((shape) => TLDR.getRotatedBounds(shape)));
+              const commonBounds = import_core43.Utils.getCommonBounds(children.map((id) => page.shapes[id]).filter(Boolean).map((shape) => TLDR.getRotatedBounds(shape)));
               page.shapes[group.id] = __spreadProps(__spreadValues({}, group), {
                 point: [commonBounds.minX, commonBounds.minY],
                 size: [commonBounds.width, commonBounds.height],
@@ -9051,7 +9063,7 @@ var _TldrawApp = class extends StateManager {
           if (shape.type !== TDShapeType.Group)
             return;
           const children = shape.children.filter((id) => page.shapes[id] !== void 0);
-          const commonBounds = import_core45.Utils.getCommonBounds(children.map((id) => page.shapes[id]).filter(Boolean).map((shape2) => TLDR.getRotatedBounds(shape2)));
+          const commonBounds = import_core43.Utils.getCommonBounds(children.map((id) => page.shapes[id]).filter(Boolean).map((shape2) => TLDR.getRotatedBounds(shape2)));
           page.shapes[shape.id] = __spreadProps(__spreadValues({}, shape), {
             point: [commonBounds.minX, commonBounds.minY],
             size: [commonBounds.width, commonBounds.height],
@@ -9073,8 +9085,8 @@ var _TldrawApp = class extends StateManager {
     };
     this.updateViewport = (point, zoom) => {
       const { width, height } = this.rendererBounds;
-      const [minX, minY] = import_vec36.Vec.sub(import_vec36.Vec.div([0, 0], zoom), point);
-      const [maxX, maxY] = import_vec36.Vec.sub(import_vec36.Vec.div([width, height], zoom), point);
+      const [minX, minY] = import_vec37.Vec.sub(import_vec37.Vec.div([0, 0], zoom), point);
+      const [maxX, maxY] = import_vec37.Vec.sub(import_vec37.Vec.div([width, height], zoom), point);
       this.viewport = {
         minX,
         minY,
@@ -9422,7 +9434,7 @@ var _TldrawApp = class extends StateManager {
     };
     this.getPagePoint = (point, pageId = this.currentPageId) => {
       const { camera } = this.getPageState(pageId);
-      return import_vec36.Vec.sub(import_vec36.Vec.div(point, camera.zoom), camera.point);
+      return import_vec37.Vec.sub(import_vec37.Vec.div(point, camera.zoom), camera.point);
     };
     this.createPage = (id) => {
       if (this.readOnly)
@@ -9452,7 +9464,7 @@ var _TldrawApp = class extends StateManager {
     };
     this.copy = (ids = this.selectedIds) => {
       const copyingShapeIds = ids.flatMap((id) => TLDR.getDocumentBranch(this.state, id, this.currentPageId));
-      const copyingShapes = copyingShapeIds.map((id) => import_core45.Utils.deepClone(this.getShape(id, this.currentPageId)));
+      const copyingShapes = copyingShapeIds.map((id) => import_core43.Utils.deepClone(this.getShape(id, this.currentPageId)));
       if (copyingShapes.length === 0)
         return this;
       const copyingBindings = Object.values(this.page.bindings).filter((binding) => copyingShapeIds.includes(binding.fromId) && copyingShapeIds.includes(binding.toId));
@@ -9485,8 +9497,8 @@ var _TldrawApp = class extends StateManager {
         return;
       const pasteInCurrentPage = (shapes, bindings) => {
         const idsMap = {};
-        shapes.forEach((shape) => idsMap[shape.id] = import_core45.Utils.uniqueId());
-        bindings.forEach((binding) => idsMap[binding.id] = import_core45.Utils.uniqueId());
+        shapes.forEach((shape) => idsMap[shape.id] = import_core43.Utils.uniqueId());
+        bindings.forEach((binding) => idsMap[binding.id] = import_core43.Utils.uniqueId());
         let startIndex = TLDR.getTopChildIndex(this.state, this.currentPageId);
         const shapesToPaste = shapes.sort((a, b) => a.childIndex - b.childIndex).map((shape) => {
           const parentShapeId = idsMap[shape.parentId];
@@ -9515,19 +9527,19 @@ var _TldrawApp = class extends StateManager {
           toId: idsMap[binding.toId],
           fromId: idsMap[binding.fromId]
         }));
-        const commonBounds = import_core45.Utils.getCommonBounds(shapesToPaste.map(TLDR.getBounds));
-        let center = import_vec36.Vec.toFixed(this.getPagePoint(point || this.centerPoint));
-        if (import_vec36.Vec.dist(center, this.pasteInfo.center) < 2 || import_vec36.Vec.dist(center, import_vec36.Vec.toFixed(import_core45.Utils.getBoundsCenter(commonBounds))) < 2) {
-          center = import_vec36.Vec.add(center, this.pasteInfo.offset);
-          this.pasteInfo.offset = import_vec36.Vec.add(this.pasteInfo.offset, [GRID_SIZE, GRID_SIZE]);
+        const commonBounds = import_core43.Utils.getCommonBounds(shapesToPaste.map(TLDR.getBounds));
+        let center = import_vec37.Vec.toFixed(this.getPagePoint(point || this.centerPoint));
+        if (import_vec37.Vec.dist(center, this.pasteInfo.center) < 2 || import_vec37.Vec.dist(center, import_vec37.Vec.toFixed(import_core43.Utils.getBoundsCenter(commonBounds))) < 2) {
+          center = import_vec37.Vec.add(center, this.pasteInfo.offset);
+          this.pasteInfo.offset = import_vec37.Vec.add(this.pasteInfo.offset, [GRID_SIZE, GRID_SIZE]);
         } else {
           this.pasteInfo.center = center;
           this.pasteInfo.offset = [0, 0];
         }
-        const centeredBounds = import_core45.Utils.centerBounds(commonBounds, center);
-        const delta = import_vec36.Vec.sub(import_core45.Utils.getBoundsCenter(centeredBounds), import_core45.Utils.getBoundsCenter(commonBounds));
+        const centeredBounds = import_core43.Utils.centerBounds(commonBounds, center);
+        const delta = import_vec37.Vec.sub(import_core43.Utils.getBoundsCenter(centeredBounds), import_core43.Utils.getBoundsCenter(commonBounds));
         this.create(shapesToPaste.map((shape) => TLDR.getShapeUtil(shape.type).create(__spreadProps(__spreadValues({}, shape), {
-          point: import_vec36.Vec.toFixed(import_vec36.Vec.add(shape.point, delta)),
+          point: import_vec37.Vec.toFixed(import_vec37.Vec.add(shape.point, delta)),
           parentId: shape.parentId || this.currentPageId
         }))), bindingsToPaste);
       };
@@ -9544,7 +9556,7 @@ var _TldrawApp = class extends StateManager {
             pasteInCurrentPage(data.shapes, data.bindings);
           } catch (e) {
             TLDR.warn(e);
-            const shapeId = import_core45.Utils.uniqueId();
+            const shapeId = import_core43.Utils.uniqueId();
             this.createShapes({
               id: shapeId,
               type: TDShapeType.Text,
@@ -9569,7 +9581,7 @@ var _TldrawApp = class extends StateManager {
       if (ids.length === 0)
         return;
       const shapes = ids.map((id) => this.getShape(id, pageId));
-      const commonBounds = import_core45.Utils.getCommonBounds(shapes.map(TLDR.getRotatedBounds));
+      const commonBounds = import_core43.Utils.getCommonBounds(shapes.map(TLDR.getRotatedBounds));
       const padding = 16;
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
@@ -9633,21 +9645,21 @@ var _TldrawApp = class extends StateManager {
     };
     this.pan = (delta) => {
       const { camera } = this.pageState;
-      return this.setCamera(import_vec36.Vec.toFixed(import_vec36.Vec.sub(camera.point, delta)), camera.zoom, `panned`);
+      return this.setCamera(import_vec37.Vec.toFixed(import_vec37.Vec.sub(camera.point, delta)), camera.zoom, `panned`);
     };
     this.pinchZoom = (point, delta, zoom) => {
       const { camera } = this.pageState;
-      const nextPoint = import_vec36.Vec.sub(camera.point, import_vec36.Vec.div(delta, camera.zoom));
+      const nextPoint = import_vec37.Vec.sub(camera.point, import_vec37.Vec.div(delta, camera.zoom));
       const nextZoom = zoom;
-      const p0 = import_vec36.Vec.sub(import_vec36.Vec.div(point, camera.zoom), nextPoint);
-      const p1 = import_vec36.Vec.sub(import_vec36.Vec.div(point, nextZoom), nextPoint);
-      return this.setCamera(import_vec36.Vec.toFixed(import_vec36.Vec.add(nextPoint, import_vec36.Vec.sub(p1, p0))), nextZoom, `pinch_zoomed`);
+      const p0 = import_vec37.Vec.sub(import_vec37.Vec.div(point, camera.zoom), nextPoint);
+      const p1 = import_vec37.Vec.sub(import_vec37.Vec.div(point, nextZoom), nextPoint);
+      return this.setCamera(import_vec37.Vec.toFixed(import_vec37.Vec.add(nextPoint, import_vec37.Vec.sub(p1, p0))), nextZoom, `pinch_zoomed`);
     };
     this.zoomTo = (next, center = this.centerPoint) => {
       const { zoom, point } = this.pageState.camera;
-      const p0 = import_vec36.Vec.sub(import_vec36.Vec.div(center, zoom), point);
-      const p1 = import_vec36.Vec.sub(import_vec36.Vec.div(center, next), point);
-      return this.setCamera(import_vec36.Vec.toFixed(import_vec36.Vec.add(point, import_vec36.Vec.sub(p1, p0))), next, `zoomed_camera`);
+      const p0 = import_vec37.Vec.sub(import_vec37.Vec.div(center, zoom), point);
+      const p1 = import_vec37.Vec.sub(import_vec37.Vec.div(center, next), point);
+      return this.setCamera(import_vec37.Vec.toFixed(import_vec37.Vec.add(point, import_vec37.Vec.sub(p1, p0))), next, `zoomed_camera`);
     };
     this.zoomIn = () => {
       const i = Math.round(this.pageState.camera.zoom * 100 / 25);
@@ -9664,12 +9676,12 @@ var _TldrawApp = class extends StateManager {
       if (shapes.length === 0)
         return this;
       const { rendererBounds } = this;
-      const commonBounds = import_core45.Utils.getCommonBounds(shapes.map(TLDR.getBounds));
+      const commonBounds = import_core43.Utils.getCommonBounds(shapes.map(TLDR.getBounds));
       let zoom = TLDR.getCameraZoom(Math.min((rendererBounds.width - FIT_TO_SCREEN_PADDING) / commonBounds.width, (rendererBounds.height - FIT_TO_SCREEN_PADDING) / commonBounds.height));
       zoom = this.pageState.camera.zoom === zoom || this.pageState.camera.zoom < 1 ? Math.min(1, zoom) : zoom;
       const mx = (rendererBounds.width - commonBounds.width * zoom) / 2 / zoom;
       const my = (rendererBounds.height - commonBounds.height * zoom) / 2 / zoom;
-      return this.setCamera(import_vec36.Vec.toFixed(import_vec36.Vec.sub([mx, my], [commonBounds.minX, commonBounds.minY])), zoom, `zoomed_to_fit`);
+      return this.setCamera(import_vec37.Vec.toFixed(import_vec37.Vec.sub([mx, my], [commonBounds.minX, commonBounds.minY])), zoom, `zoomed_to_fit`);
     };
     this.zoomToSelection = () => {
       if (this.selectedIds.length === 0)
@@ -9680,7 +9692,7 @@ var _TldrawApp = class extends StateManager {
       zoom = this.pageState.camera.zoom === zoom || this.pageState.camera.zoom < 1 ? Math.min(1, zoom) : zoom;
       const mx = (rendererBounds.width - selectedBounds.width * zoom) / 2 / zoom;
       const my = (rendererBounds.height - selectedBounds.height * zoom) / 2 / zoom;
-      return this.setCamera(import_vec36.Vec.toFixed(import_vec36.Vec.sub([mx, my], [selectedBounds.minX, selectedBounds.minY])), zoom, `zoomed_to_selection`);
+      return this.setCamera(import_vec37.Vec.toFixed(import_vec37.Vec.sub([mx, my], [selectedBounds.minX, selectedBounds.minY])), zoom, `zoomed_to_selection`);
     };
     this.zoomToContent = () => {
       const shapes = this.shapes;
@@ -9689,15 +9701,15 @@ var _TldrawApp = class extends StateManager {
         return this;
       const { rendererBounds } = this;
       const { zoom } = pageState.camera;
-      const commonBounds = import_core45.Utils.getCommonBounds(shapes.map(TLDR.getBounds));
+      const commonBounds = import_core43.Utils.getCommonBounds(shapes.map(TLDR.getBounds));
       const mx = (rendererBounds.width - commonBounds.width * zoom) / 2 / zoom;
       const my = (rendererBounds.height - commonBounds.height * zoom) / 2 / zoom;
-      return this.setCamera(import_vec36.Vec.toFixed(import_vec36.Vec.sub([mx, my], [commonBounds.minX, commonBounds.minY])), this.pageState.camera.zoom, `zoomed_to_content`);
+      return this.setCamera(import_vec37.Vec.toFixed(import_vec37.Vec.sub([mx, my], [commonBounds.minX, commonBounds.minY])), this.pageState.camera.zoom, `zoomed_to_content`);
     };
     this.resetZoom = () => {
       return this.zoomTo(1);
     };
-    this.zoomBy = import_core45.Utils.throttle((delta, center) => {
+    this.zoomBy = import_core43.Utils.throttle((delta, center) => {
       const { zoom } = this.pageState.camera;
       const nextZoom = TLDR.getCameraZoom(zoom - delta * zoom);
       return this.zoomTo(nextZoom, center);
@@ -9975,7 +9987,7 @@ var _TldrawApp = class extends StateManager {
       if (ids.length === 0)
         return this;
       const size = isMajor ? this.settings.showGrid ? this.currentGrid * 4 : 10 : this.settings.showGrid ? this.currentGrid : 1;
-      return this.setState(translateShapes(this, ids, import_vec36.Vec.mul(delta, size)));
+      return this.setState(translateShapes(this, ids, import_vec37.Vec.mul(delta, size)));
     };
     this.duplicate = (ids = this.selectedIds, point) => {
       if (this.readOnly)
@@ -10019,7 +10031,7 @@ var _TldrawApp = class extends StateManager {
         return this;
       return this.setState(change);
     };
-    this.group = (ids = this.selectedIds, groupId = import_core45.Utils.uniqueId(), pageId = this.currentPageId) => {
+    this.group = (ids = this.selectedIds, groupId = import_core43.Utils.uniqueId(), pageId = this.currentPageId) => {
       if (this.readOnly)
         return this;
       if (ids.length === 1 && this.getShape(ids[0], pageId).type === TDShapeType.Group) {
@@ -10164,10 +10176,10 @@ var _TldrawApp = class extends StateManager {
     this.onPan = (info, e) => {
       if (this.appState.status === "pinching")
         return;
-      const delta = import_vec36.Vec.div(info.delta, this.pageState.camera.zoom);
+      const delta = import_vec37.Vec.div(info.delta, this.pageState.camera.zoom);
       const prev = this.pageState.camera.point;
-      const next = import_vec36.Vec.sub(prev, delta);
-      if (import_vec36.Vec.isEqual(next, prev))
+      const next = import_vec37.Vec.sub(prev, delta);
+      if (import_vec37.Vec.isEqual(next, prev))
         return;
       this.pan(delta);
       if (!info.spaceKey && !(e.buttons === 4)) {
@@ -10483,14 +10495,14 @@ var _TldrawApp = class extends StateManager {
     const childIndex = shapes.length === 0 ? 1 : shapes.filter((shape) => shape.parentId === currentPageId).sort((a, b) => b.childIndex - a.childIndex)[0].childIndex + 1;
     const Text2 = shapeUtils[TDShapeType.Text];
     const newShape = Text2.create({
-      id: id || import_core45.Utils.uniqueId(),
+      id: id || import_core43.Utils.uniqueId(),
       parentId: currentPageId,
       childIndex,
       point,
       style: __spreadValues({}, currentStyle)
     });
     const bounds = Text2.getBounds(newShape);
-    newShape.point = import_vec36.Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2]);
+    newShape.point = import_vec37.Vec.sub(newShape.point, [bounds.width / 2, bounds.height / 2]);
     this.createShapes(newShape);
     this.setEditingId(newShape.id);
     return this;
@@ -10514,7 +10526,7 @@ var _TldrawApp = class extends StateManager {
   }
   get centerPoint() {
     const { width, height } = this.rendererBounds;
-    return import_vec36.Vec.toFixed([width / 2, height / 2]);
+    return import_vec37.Vec.toFixed([width / 2, height / 2]);
   }
   get currentGrid() {
     const { zoom } = this.pageState.camera;
@@ -10597,11 +10609,11 @@ var tools = {
 };
 
 // src/hooks/useKeyboardShortcuts.tsx
-var React11 = __toModule(require("react"));
+var React10 = __toModule(require("react"));
 var import_react_hotkeys_hook = __toModule(require("react-hotkeys-hook"));
 function useKeyboardShortcuts(ref) {
   const app = useTldrawApp();
-  const canHandleEvent = React11.useCallback((ignoreMenus = false) => {
+  const canHandleEvent = React10.useCallback((ignoreMenus = false) => {
     const elm = ref.current;
     if (ignoreMenus && app.isMenuOpen())
       return true;
@@ -10896,22 +10908,22 @@ function useKeyboardShortcuts(ref) {
 }
 
 // src/hooks/useTldrawApp.tsx
-var React12 = __toModule(require("react"));
-var TldrawContext = React12.createContext({});
+var React11 = __toModule(require("react"));
+var TldrawContext = React11.createContext({});
 function useTldrawApp() {
-  const context = React12.useContext(TldrawContext);
+  const context = React11.useContext(TldrawContext);
   return context;
 }
 
 // src/hooks/useStylesheet.ts
-var React13 = __toModule(require("react"));
+var React12 = __toModule(require("react"));
 var styles = new Map();
 var UID = `Tldraw-fonts`;
 var CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Source+Code+Pro&family=Source+Sans+Pro&family=Source+Serif+Pro&display=swap');
 `;
 function useStylesheet() {
-  React13.useLayoutEffect(() => {
+  React12.useLayoutEffect(() => {
     if (styles.get(UID))
       return;
     const style = document.createElement("style");
@@ -10929,28 +10941,28 @@ function useStylesheet() {
 }
 
 // src/hooks/useFileSystemHandlers.ts
-var React14 = __toModule(require("react"));
+var React13 = __toModule(require("react"));
 function useFileSystemHandlers() {
   const app = useTldrawApp();
-  const onNewProject = React14.useCallback((e) => __async(this, null, function* () {
+  const onNewProject = React13.useCallback((e) => __async(this, null, function* () {
     var _a, _b;
     if (e && app.callbacks.onOpenProject)
       e.preventDefault();
     (_b = (_a = app.callbacks).onNewProject) == null ? void 0 : _b.call(_a, app);
   }), [app]);
-  const onSaveProject = React14.useCallback((e) => {
+  const onSaveProject = React13.useCallback((e) => {
     var _a, _b;
     if (e && app.callbacks.onOpenProject)
       e.preventDefault();
     (_b = (_a = app.callbacks).onSaveProject) == null ? void 0 : _b.call(_a, app);
   }, [app]);
-  const onSaveProjectAs = React14.useCallback((e) => {
+  const onSaveProjectAs = React13.useCallback((e) => {
     var _a, _b;
     if (e && app.callbacks.onOpenProject)
       e.preventDefault();
     (_b = (_a = app.callbacks).onSaveProjectAs) == null ? void 0 : _b.call(_a, app);
   }, [app]);
-  const onOpenProject = React14.useCallback((e) => __async(this, null, function* () {
+  const onOpenProject = React13.useCallback((e) => __async(this, null, function* () {
     var _a, _b;
     if (e && app.callbacks.onOpenProject)
       e.preventDefault();
@@ -10965,9 +10977,9 @@ function useFileSystemHandlers() {
 }
 
 // src/hooks/useFileSystem.ts
-var React15 = __toModule(require("react"));
+var React14 = __toModule(require("react"));
 function useFileSystem() {
-  const promptSaveBeforeChange = React15.useCallback((app) => __async(this, null, function* () {
+  const promptSaveBeforeChange = React14.useCallback((app) => __async(this, null, function* () {
     if (app.isDirty) {
       if (app.fileSystemHandle) {
         if (window.confirm("Do you want to save changes to your current project?")) {
@@ -10980,19 +10992,19 @@ function useFileSystem() {
       }
     }
   }), []);
-  const onNewProject = React15.useCallback((app) => __async(this, null, function* () {
+  const onNewProject = React14.useCallback((app) => __async(this, null, function* () {
     if (window.confirm("Do you want to create a new project?")) {
       yield promptSaveBeforeChange(app);
       app.newProject();
     }
   }), [promptSaveBeforeChange]);
-  const onSaveProject = React15.useCallback((app) => {
+  const onSaveProject = React14.useCallback((app) => {
     app.saveProject();
   }, []);
-  const onSaveProjectAs = React15.useCallback((app) => {
+  const onSaveProjectAs = React14.useCallback((app) => {
     app.saveProjectAs();
   }, []);
-  const onOpenProject = React15.useCallback((app) => __async(this, null, function* () {
+  const onOpenProject = React14.useCallback((app) => __async(this, null, function* () {
     yield promptSaveBeforeChange(app);
     app.openProject();
   }), [promptSaveBeforeChange]);
@@ -11005,10 +11017,10 @@ function useFileSystem() {
 }
 
 // src/components/ToolsPanel/ToolsPanel.tsx
-var React49 = __toModule(require("react"));
+var React48 = __toModule(require("react"));
 
 // src/components/ToolsPanel/StatusBar.tsx
-var React16 = __toModule(require("react"));
+var React15 = __toModule(require("react"));
 
 // src/components/breakpoints.tsx
 var breakpoints = {
@@ -11026,9 +11038,9 @@ function StatusBar() {
   const app = useTldrawApp();
   const status = app.useStore(statusSelector);
   const activeTool = app.useStore(activeToolSelector);
-  return /* @__PURE__ */ React16.createElement(StyledStatusBar, {
+  return /* @__PURE__ */ React15.createElement(StyledStatusBar, {
     bp: breakpoints
-  }, /* @__PURE__ */ React16.createElement(StyledSection, null, activeTool, " | ", status));
+  }, /* @__PURE__ */ React15.createElement(StyledSection, null, activeTool, " | ", status));
 }
 var StyledStatusBar = styled("div", {
   height: 40,
@@ -11058,25 +11070,25 @@ var StyledSection = styled("div", {
 });
 
 // src/components/ToolsPanel/BackToContent.tsx
-var React19 = __toModule(require("react"));
+var React18 = __toModule(require("react"));
 
 // src/components/Primitives/RowButton/RowButton.tsx
 var import_react_dropdown_menu = __toModule(require("@radix-ui/react-dropdown-menu"));
 var import_react_icons = __toModule(require("@radix-ui/react-icons"));
-var React18 = __toModule(require("react"));
+var React17 = __toModule(require("react"));
 
 // src/components/Primitives/Kbd/Kbd.tsx
-var React17 = __toModule(require("react"));
-var import_core46 = __toModule(require("@tldraw/core"));
-var commandKey = () => import_core46.Utils.isDarwin() ? "\u2318" : "Ctrl";
+var React16 = __toModule(require("react"));
+var import_core44 = __toModule(require("@tldraw/core"));
+var commandKey = () => import_core44.Utils.isDarwin() ? "\u2318" : "Ctrl";
 function Kbd({
   variant,
   children
 }) {
-  return /* @__PURE__ */ React17.createElement(StyledKbd, {
+  return /* @__PURE__ */ React16.createElement(StyledKbd, {
     variant
   }, children.split("").map((k, i) => {
-    return /* @__PURE__ */ React17.createElement("span", {
+    return /* @__PURE__ */ React16.createElement("span", {
       key: i
     }, k.replace("#", commandKey()));
   }));
@@ -11142,7 +11154,7 @@ var SmallIcon = styled("div", {
 });
 
 // src/components/Primitives/RowButton/RowButton.tsx
-var RowButton = React18.forwardRef((_a, ref) => {
+var RowButton = React17.forwardRef((_a, ref) => {
   var _b = _a, {
     onClick,
     isActive = false,
@@ -11166,7 +11178,7 @@ var RowButton = React18.forwardRef((_a, ref) => {
     "kbd",
     "children"
   ]);
-  return /* @__PURE__ */ React18.createElement(StyledRowButton, __spreadValues({
+  return /* @__PURE__ */ React17.createElement(StyledRowButton, __spreadValues({
     ref,
     bp: breakpoints,
     isWarning,
@@ -11175,11 +11187,11 @@ var RowButton = React18.forwardRef((_a, ref) => {
     disabled,
     onClick,
     variant
-  }, rest), /* @__PURE__ */ React18.createElement(StyledRowButtonInner, null, children, kbd ? /* @__PURE__ */ React18.createElement(Kbd, {
+  }, rest), /* @__PURE__ */ React17.createElement(StyledRowButtonInner, null, children, kbd ? /* @__PURE__ */ React17.createElement(Kbd, {
     variant: "menu"
-  }, kbd) : void 0, hasIndicator && /* @__PURE__ */ React18.createElement(import_react_dropdown_menu.ItemIndicator, {
+  }, kbd) : void 0, hasIndicator && /* @__PURE__ */ React17.createElement(import_react_dropdown_menu.ItemIndicator, {
     dir: "ltr"
-  }, /* @__PURE__ */ React18.createElement(SmallIcon, null, /* @__PURE__ */ React18.createElement(import_react_icons.CheckIcon, null))), hasArrow && /* @__PURE__ */ React18.createElement(SmallIcon, null, /* @__PURE__ */ React18.createElement(import_react_icons.ChevronRightIcon, null))));
+  }, /* @__PURE__ */ React17.createElement(SmallIcon, null, /* @__PURE__ */ React17.createElement(import_react_icons.CheckIcon, null))), hasArrow && /* @__PURE__ */ React17.createElement(SmallIcon, null, /* @__PURE__ */ React17.createElement(import_react_icons.ChevronRightIcon, null))));
 });
 var StyledRowButtonInner = styled("div", {
   height: "100%",
@@ -11317,12 +11329,12 @@ var MenuContent = styled("div", {
 
 // src/components/ToolsPanel/BackToContent.tsx
 var isEmptyCanvasSelector = (s) => Object.keys(s.document.pages[s.appState.currentPageId].shapes).length > 0 && s.appState.isEmptyCanvas;
-var BackToContent = React19.memo(function BackToContent2() {
+var BackToContent = React18.memo(function BackToContent2() {
   const app = useTldrawApp();
   const isEmptyCanvas = app.useStore(isEmptyCanvasSelector);
   if (!isEmptyCanvas)
     return null;
-  return /* @__PURE__ */ React19.createElement(BackToContentContainer, null, /* @__PURE__ */ React19.createElement(RowButton, {
+  return /* @__PURE__ */ React18.createElement(BackToContentContainer, null, /* @__PURE__ */ React18.createElement(RowButton, {
     onClick: app.zoomToContent
   }, "Back to content"));
 });
@@ -11336,31 +11348,31 @@ var BackToContentContainer = styled(MenuContent, {
 });
 
 // src/components/ToolsPanel/PrimaryTools.tsx
-var React40 = __toModule(require("react"));
+var React39 = __toModule(require("react"));
 var import_react_icons3 = __toModule(require("@radix-ui/react-icons"));
 
 // src/components/Primitives/ToolButton/ToolButton.tsx
-var React21 = __toModule(require("react"));
+var React20 = __toModule(require("react"));
 
 // src/components/Primitives/Tooltip/Tooltip.tsx
 var RadixTooltip = __toModule(require("@radix-ui/react-tooltip"));
-var React20 = __toModule(require("react"));
+var React19 = __toModule(require("react"));
 function Tooltip({
   children,
   label,
   kbd: kbdProp,
   side = "top"
 }) {
-  return /* @__PURE__ */ React20.createElement(RadixTooltip.Root, null, /* @__PURE__ */ React20.createElement(RadixTooltip.Trigger, {
+  return /* @__PURE__ */ React19.createElement(RadixTooltip.Root, null, /* @__PURE__ */ React19.createElement(RadixTooltip.Trigger, {
     dir: "ltr",
     asChild: true
-  }, /* @__PURE__ */ React20.createElement("span", null, children)), /* @__PURE__ */ React20.createElement(StyledContent, {
+  }, /* @__PURE__ */ React19.createElement("span", null, children)), /* @__PURE__ */ React19.createElement(StyledContent, {
     dir: "ltr",
     side,
     sideOffset: 8
-  }, label, kbdProp ? /* @__PURE__ */ React20.createElement(Kbd, {
+  }, label, kbdProp ? /* @__PURE__ */ React19.createElement(Kbd, {
     variant: "tooltip"
-  }, kbdProp) : null, /* @__PURE__ */ React20.createElement(StyledArrow, null)));
+  }, kbdProp) : null, /* @__PURE__ */ React19.createElement(StyledArrow, null)));
 }
 var StyledContent = styled(RadixTooltip.Content, {
   borderRadius: 3,
@@ -11380,7 +11392,7 @@ var StyledArrow = styled(RadixTooltip.Arrow, {
 });
 
 // src/components/Primitives/ToolButton/ToolButton.tsx
-var ToolButton = React21.forwardRef((_a, ref) => {
+var ToolButton = React20.forwardRef((_a, ref) => {
   var _b = _a, {
     onSelect,
     onClick,
@@ -11402,7 +11414,7 @@ var ToolButton = React21.forwardRef((_a, ref) => {
     "isActive",
     "isSponsor"
   ]);
-  return /* @__PURE__ */ React21.createElement(StyledToolButton, __spreadValues({
+  return /* @__PURE__ */ React20.createElement(StyledToolButton, __spreadValues({
     ref,
     isActive,
     isSponsor,
@@ -11412,7 +11424,7 @@ var ToolButton = React21.forwardRef((_a, ref) => {
     onPointerDown: onSelect,
     onDoubleClick,
     bp: breakpoints
-  }, rest), /* @__PURE__ */ React21.createElement(StyledToolButtonInner, null, children), isToolLocked && /* @__PURE__ */ React21.createElement(ToolLockIndicator, null));
+  }, rest), /* @__PURE__ */ React20.createElement(StyledToolButtonInner, null, children), isToolLocked && /* @__PURE__ */ React20.createElement(ToolLockIndicator, null));
 });
 function ToolButtonWithTooltip(_a) {
   var _b = _a, {
@@ -11425,13 +11437,13 @@ function ToolButtonWithTooltip(_a) {
     "isLocked"
   ]);
   const app = useTldrawApp();
-  const handleDoubleClick = React21.useCallback(() => {
+  const handleDoubleClick = React20.useCallback(() => {
     app.toggleToolLock();
   }, []);
-  return /* @__PURE__ */ React21.createElement(Tooltip, {
+  return /* @__PURE__ */ React20.createElement(Tooltip, {
     label: label[0].toUpperCase() + label.slice(1),
     kbd
-  }, /* @__PURE__ */ React21.createElement(ToolButton, __spreadProps(__spreadValues({}, rest), {
+  }, /* @__PURE__ */ React20.createElement(ToolButton, __spreadProps(__spreadValues({}, rest), {
     variant: "primary",
     isToolLocked: isLocked && rest.isActive,
     onDoubleClick: handleDoubleClick
@@ -11620,21 +11632,21 @@ var Panel = styled("div", {
 });
 
 // src/components/ToolsPanel/ShapesMenu.tsx
-var React39 = __toModule(require("react"));
+var React38 = __toModule(require("react"));
 var DropdownMenu = __toModule(require("@radix-ui/react-dropdown-menu"));
 var import_react_icons2 = __toModule(require("@radix-ui/react-icons"));
 
 // src/components/Primitives/icons/BoxIcon.tsx
-var React22 = __toModule(require("react"));
+var React21 = __toModule(require("react"));
 
 // src/components/Primitives/icons/CircleIcon.tsx
-var React23 = __toModule(require("react"));
+var React22 = __toModule(require("react"));
 function CircleIcon(props) {
   const _a = props, { size = 16 } = _a, rest = __objRest(_a, ["size"]);
-  return /* @__PURE__ */ React23.createElement("svg", __spreadValues({
+  return /* @__PURE__ */ React22.createElement("svg", __spreadValues({
     width: 24,
     height: 24
-  }, rest), /* @__PURE__ */ React23.createElement("circle", {
+  }, rest), /* @__PURE__ */ React22.createElement("circle", {
     cx: 12,
     cy: 12,
     r: size / 2
@@ -11642,8 +11654,28 @@ function CircleIcon(props) {
 }
 
 // src/components/Primitives/icons/DashDashedIcon.tsx
-var React24 = __toModule(require("react"));
+var React23 = __toModule(require("react"));
 function DashDashedIcon() {
+  return /* @__PURE__ */ React23.createElement("svg", {
+    width: "24",
+    height: "24",
+    stroke: "currentColor",
+    xmlns: "http://www.w3.org/2000/svg"
+  }, /* @__PURE__ */ React23.createElement("circle", {
+    cx: 12,
+    cy: 12,
+    r: 8,
+    fill: "none",
+    strokeWidth: 2.5,
+    strokeLinecap: "round",
+    strokeDasharray: 50.26548 * 0.1
+  }));
+}
+
+// src/components/Primitives/icons/DashDottedIcon.tsx
+var React24 = __toModule(require("react"));
+var dottedDasharray = `${50.26548 * 0.025} ${50.26548 * 0.1}`;
+function DashDottedIcon() {
   return /* @__PURE__ */ React24.createElement("svg", {
     width: "24",
     height: "24",
@@ -11656,55 +11688,35 @@ function DashDashedIcon() {
     fill: "none",
     strokeWidth: 2.5,
     strokeLinecap: "round",
-    strokeDasharray: 50.26548 * 0.1
-  }));
-}
-
-// src/components/Primitives/icons/DashDottedIcon.tsx
-var React25 = __toModule(require("react"));
-var dottedDasharray = `${50.26548 * 0.025} ${50.26548 * 0.1}`;
-function DashDottedIcon() {
-  return /* @__PURE__ */ React25.createElement("svg", {
-    width: "24",
-    height: "24",
-    stroke: "currentColor",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, /* @__PURE__ */ React25.createElement("circle", {
-    cx: 12,
-    cy: 12,
-    r: 8,
-    fill: "none",
-    strokeWidth: 2.5,
-    strokeLinecap: "round",
     strokeDasharray: dottedDasharray
   }));
 }
 
 // src/components/Primitives/icons/DashDrawIcon.tsx
-var React26 = __toModule(require("react"));
+var React25 = __toModule(require("react"));
 function DashDrawIcon() {
-  return /* @__PURE__ */ React26.createElement("svg", {
+  return /* @__PURE__ */ React25.createElement("svg", {
     width: "24",
     height: "24",
     viewBox: "1 1.5 21 22",
     fill: "currentColor",
     stroke: "currentColor",
     xmlns: "http://www.w3.org/2000/svg"
-  }, /* @__PURE__ */ React26.createElement("path", {
+  }, /* @__PURE__ */ React25.createElement("path", {
     d: "M10.0162 19.2768C10.0162 19.2768 9.90679 19.2517 9.6879 19.2017C9.46275 19.1454 9.12816 19.0422 8.68413 18.8921C8.23384 18.7358 7.81482 18.545 7.42707 18.3199C7.03307 18.101 6.62343 17.7883 6.19816 17.3818C5.77289 16.9753 5.33511 16.3718 4.88482 15.5713C4.43453 14.7645 4.1531 13.8545 4.04053 12.8414C3.92795 11.822 4.04991 10.8464 4.40639 9.91451C4.76286 8.98266 5.39452 8.10084 6.30135 7.26906C7.21444 6.44353 8.29325 5.83377 9.5378 5.43976C10.7823 5.05202 11.833 4.92068 12.6898 5.04576C13.5466 5.16459 14.3878 5.43664 15.2133 5.86191C16.0388 6.28718 16.7768 6.8688 17.4272 7.60678C18.0714 8.34475 18.5404 9.21406 18.8344 10.2147C19.1283 11.2153 19.1721 12.2598 18.9657 13.348C18.7593 14.4299 18.2872 15.4337 17.5492 16.3593C16.8112 17.2849 15.9263 18.0072 14.8944 18.5263C13.8624 19.0391 12.9056 19.3174 12.0238 19.3612C11.142 19.405 10.2101 19.2705 9.22823 18.9578C8.24635 18.6451 7.35828 18.151 6.56402 17.4756C5.77601 16.8002 6.08871 16.8658 7.50212 17.6726C8.90927 18.4731 10.1444 18.8484 11.2076 18.7983C12.2645 18.7545 13.2965 18.4825 14.3034 17.9822C15.3102 17.4819 16.1264 16.8221 16.7518 16.0028C17.3772 15.1835 17.7681 14.3111 17.9244 13.3855C18.0808 12.4599 18.0401 11.5781 17.8025 10.74C17.5586 9.902 17.1739 9.15464 16.6486 8.49797C16.1233 7.8413 15.2289 7.27844 13.9656 6.80939C12.7086 6.34034 11.4203 6.20901 10.1007 6.41539C8.78732 6.61552 7.69599 7.06893 6.82669 7.77564C5.96363 8.48859 5.34761 9.26409 4.97863 10.1021C4.60964 10.9402 4.45329 11.8376 4.50958 12.7945C4.56586 13.7513 4.79101 14.6238 5.18501 15.4118C5.57276 16.1998 5.96363 16.8002 6.35764 17.2129C6.75164 17.6257 7.13313 17.9509 7.50212 18.1886C7.87736 18.4325 8.28074 18.642 8.71227 18.8171C9.15005 18.9922 9.47839 19.111 9.69728 19.1736C9.91617 19.2361 10.0256 19.2705 10.0256 19.2768H10.0162Z",
     strokeWidth: "2"
   }));
 }
 
 // src/components/Primitives/icons/DashSolidIcon.tsx
-var React27 = __toModule(require("react"));
+var React26 = __toModule(require("react"));
 function DashSolidIcon() {
-  return /* @__PURE__ */ React27.createElement("svg", {
+  return /* @__PURE__ */ React26.createElement("svg", {
     width: "24",
     height: "24",
     stroke: "currentColor",
     xmlns: "http://www.w3.org/2000/svg"
-  }, /* @__PURE__ */ React27.createElement("circle", {
+  }, /* @__PURE__ */ React26.createElement("circle", {
     cx: 12,
     cy: 12,
     r: 8,
@@ -11715,40 +11727,40 @@ function DashSolidIcon() {
 }
 
 // src/components/Primitives/icons/IsFilledIcon.tsx
-var React28 = __toModule(require("react"));
+var React27 = __toModule(require("react"));
 
 // src/components/Primitives/icons/RedoIcon.tsx
-var React29 = __toModule(require("react"));
+var React28 = __toModule(require("react"));
 function RedoIcon(props) {
-  return /* @__PURE__ */ React29.createElement("svg", __spreadValues({
+  return /* @__PURE__ */ React28.createElement("svg", __spreadValues({
     width: 32,
     height: 32,
     viewBox: "0 0 15 15",
     fill: "currentColor",
     xmlns: "http://www.w3.org/2000/svg"
-  }, props), /* @__PURE__ */ React29.createElement("path", {
+  }, props), /* @__PURE__ */ React28.createElement("path", {
     d: "M4.32978 8.5081C4.32978 10.1923 5.70009 11.5625 7.38418 11.5625H8.46539C8.64456 11.5625 8.78975 11.4173 8.78975 11.2382V11.13C8.78975 10.9508 8.64457 10.8057 8.46539 10.8057H7.38418C6.11736 10.8057 5.08662 9.77492 5.08662 8.5081C5.08662 7.24128 6.11736 6.21054 7.38418 6.21054H9.37894L8.00515 7.58433C7.8576 7.73183 7.8576 7.97195 8.00515 8.11944C8.14833 8.26251 8.39751 8.2623 8.54036 8.11944L10.56 6.09971C10.6315 6.02824 10.6709 5.93321 10.6709 5.8321C10.6709 5.73106 10.6315 5.63598 10.56 5.56454L8.54025 3.54472C8.3974 3.40176 8.14801 3.40176 8.00513 3.54472C7.85758 3.69218 7.85758 3.93234 8.00513 4.07979L9.37892 5.45368H7.38418C5.70009 5.45368 4.32978 6.82393 4.32978 8.5081Z"
   }));
 }
 
 // src/components/Primitives/icons/TrashIcon.tsx
-var React30 = __toModule(require("react"));
+var React29 = __toModule(require("react"));
 function TrashIcon(props) {
-  return /* @__PURE__ */ React30.createElement("svg", __spreadValues({
+  return /* @__PURE__ */ React29.createElement("svg", __spreadValues({
     width: 18,
     height: 18,
     viewBox: "0 0 15 15",
     fill: "currentColor",
     xmlns: "http://www.w3.org/2000/svg"
-  }, props), /* @__PURE__ */ React30.createElement("path", {
+  }, props), /* @__PURE__ */ React29.createElement("path", {
     fillRule: "evenodd",
     clipRule: "evenodd",
     d: "M2 4.656a.5.5 0 01.5-.5h9.7a.5.5 0 010 1H2.5a.5.5 0 01-.5-.5z"
-  }), /* @__PURE__ */ React30.createElement("path", {
+  }), /* @__PURE__ */ React29.createElement("path", {
     fillRule: "evenodd",
     clipRule: "evenodd",
     d: "M6.272 3a.578.578 0 00-.578.578v.578h3.311v-.578A.578.578 0 008.428 3H6.272zm3.733 1.156v-.578A1.578 1.578 0 008.428 2H6.272a1.578 1.578 0 00-1.578 1.578v.578H3.578a.5.5 0 00-.5.5V12.2a1.578 1.578 0 001.577 1.578h5.39a1.578 1.578 0 001.577-1.578V4.656a.5.5 0 00-.5-.5h-1.117zm-5.927 1V12.2a.578.578 0 00.577.578h5.39a.578.578 0 00.577-.578V5.156H4.078z"
-  }), /* @__PURE__ */ React30.createElement("path", {
+  }), /* @__PURE__ */ React29.createElement("path", {
     fillRule: "evenodd",
     clipRule: "evenodd",
     d: "M6.272 6.85a.5.5 0 01.5.5v3.233a.5.5 0 11-1 0V7.35a.5.5 0 01.5-.5zM8.428 6.85a.5.5 0 01.5.5v3.233a.5.5 0 11-1 0V7.35a.5.5 0 01.5-.5z"
@@ -11756,22 +11768,36 @@ function TrashIcon(props) {
 }
 
 // src/components/Primitives/icons/UndoIcon.tsx
-var React31 = __toModule(require("react"));
+var React30 = __toModule(require("react"));
 function UndoIcon(props) {
-  return /* @__PURE__ */ React31.createElement("svg", __spreadValues({
+  return /* @__PURE__ */ React30.createElement("svg", __spreadValues({
     width: 32,
     height: 32,
     viewBox: "0 0 15 15",
     fill: "currentColor",
     xmlns: "http://www.w3.org/2000/svg"
-  }, props), /* @__PURE__ */ React31.createElement("path", {
+  }, props), /* @__PURE__ */ React30.createElement("path", {
     d: "M10.6707 8.5081C10.6707 10.1923 9.3004 11.5625 7.61631 11.5625H6.5351C6.35593 11.5625 6.21074 11.4173 6.21074 11.2382V11.13C6.21074 10.9508 6.35591 10.8057 6.5351 10.8057H7.61631C8.88313 10.8057 9.91387 9.77492 9.91387 8.5081C9.91387 7.24128 8.88313 6.21054 7.61631 6.21054H5.62155L6.99534 7.58433C7.14289 7.73183 7.14289 7.97195 6.99534 8.11944C6.85216 8.26251 6.60298 8.2623 6.46013 8.11944L4.44045 6.09971C4.36898 6.02824 4.32959 5.93321 4.32959 5.8321C4.32959 5.73106 4.36898 5.63598 4.44045 5.56454L6.46024 3.54472C6.60309 3.40176 6.85248 3.40176 6.99535 3.54472C7.14291 3.69218 7.14291 3.93234 6.99535 4.07979L5.62156 5.45368H7.61631C9.3004 5.45368 10.6707 6.82393 10.6707 8.5081Z"
   }));
 }
 
 // src/components/Primitives/icons/SizeSmallIcon.tsx
-var React32 = __toModule(require("react"));
+var React31 = __toModule(require("react"));
 function SizeSmallIcon(props) {
+  return /* @__PURE__ */ React31.createElement("svg", __spreadValues({
+    width: 24,
+    height: 24,
+    viewBox: "-2 -2 28 28",
+    fill: "currentColor",
+    xmlns: "http://www.w3.org/2000/svg"
+  }, props), /* @__PURE__ */ React31.createElement("path", {
+    d: "M12.4239 4.62C13.3572 4.62 14.1572 4.73333 14.8239 4.96C15.4906 5.17333 15.9772 5.43333 16.2839 5.74C16.3639 5.82 16.4039 5.94 16.4039 6.1V8.86H14.0639C13.9172 8.86 13.8439 8.78666 13.8439 8.64V7.26C13.4306 7.12666 12.9572 7.06 12.4239 7.06C11.6506 7.06 11.0639 7.18 10.6639 7.42C10.2639 7.66 10.0639 8.04666 10.0639 8.58V9C10.0639 9.38666 10.1639 9.69333 10.3639 9.92C10.5772 10.1333 11.0306 10.3467 11.7239 10.56L13.6439 11.14C14.4706 11.38 15.1172 11.66 15.5839 11.98C16.0506 12.3 16.3772 12.68 16.5639 13.12C16.7639 13.5467 16.8639 14.0733 16.8639 14.7V15.62C16.8639 16.7933 16.4039 17.7133 15.4839 18.38C14.5639 19.0467 13.2839 19.38 11.6439 19.38C10.6706 19.38 9.79723 19.2867 9.0239 19.1C8.2639 18.9133 7.71056 18.6533 7.3639 18.32C7.3239 18.28 7.29056 18.24 7.2639 18.2C7.25056 18.1467 7.2439 18.06 7.2439 17.94V15.74H7.6239C8.2239 16.1533 8.85056 16.4533 9.5039 16.64C10.1572 16.8267 10.9306 16.92 11.8239 16.92C12.6506 16.92 13.2506 16.7867 13.6239 16.52C14.0106 16.2533 14.2039 15.9333 14.2039 15.56V14.88C14.2039 14.6667 14.1639 14.48 14.0839 14.32C14.0172 14.16 13.8706 14.0133 13.6439 13.88C13.4172 13.7467 13.0572 13.6067 12.5639 13.46L10.6639 12.88C9.7839 12.6133 9.11056 12.3 8.6439 11.94C8.17723 11.58 7.85056 11.18 7.6639 10.74C7.49056 10.3 7.4039 9.83333 7.4039 9.34V8.38C7.4039 7.64666 7.61056 7 8.0239 6.44C8.43723 5.88 9.01723 5.44 9.7639 5.12C10.5239 4.78666 11.4106 4.62 12.4239 4.62Z"
+  }));
+}
+
+// src/components/Primitives/icons/SizeMediumIcon.tsx
+var React32 = __toModule(require("react"));
+function SizeMediumIcon(props) {
   return /* @__PURE__ */ React32.createElement("svg", __spreadValues({
     width: 24,
     height: 24,
@@ -11779,13 +11805,13 @@ function SizeSmallIcon(props) {
     fill: "currentColor",
     xmlns: "http://www.w3.org/2000/svg"
   }, props), /* @__PURE__ */ React32.createElement("path", {
-    d: "M12.4239 4.62C13.3572 4.62 14.1572 4.73333 14.8239 4.96C15.4906 5.17333 15.9772 5.43333 16.2839 5.74C16.3639 5.82 16.4039 5.94 16.4039 6.1V8.86H14.0639C13.9172 8.86 13.8439 8.78666 13.8439 8.64V7.26C13.4306 7.12666 12.9572 7.06 12.4239 7.06C11.6506 7.06 11.0639 7.18 10.6639 7.42C10.2639 7.66 10.0639 8.04666 10.0639 8.58V9C10.0639 9.38666 10.1639 9.69333 10.3639 9.92C10.5772 10.1333 11.0306 10.3467 11.7239 10.56L13.6439 11.14C14.4706 11.38 15.1172 11.66 15.5839 11.98C16.0506 12.3 16.3772 12.68 16.5639 13.12C16.7639 13.5467 16.8639 14.0733 16.8639 14.7V15.62C16.8639 16.7933 16.4039 17.7133 15.4839 18.38C14.5639 19.0467 13.2839 19.38 11.6439 19.38C10.6706 19.38 9.79723 19.2867 9.0239 19.1C8.2639 18.9133 7.71056 18.6533 7.3639 18.32C7.3239 18.28 7.29056 18.24 7.2639 18.2C7.25056 18.1467 7.2439 18.06 7.2439 17.94V15.74H7.6239C8.2239 16.1533 8.85056 16.4533 9.5039 16.64C10.1572 16.8267 10.9306 16.92 11.8239 16.92C12.6506 16.92 13.2506 16.7867 13.6239 16.52C14.0106 16.2533 14.2039 15.9333 14.2039 15.56V14.88C14.2039 14.6667 14.1639 14.48 14.0839 14.32C14.0172 14.16 13.8706 14.0133 13.6439 13.88C13.4172 13.7467 13.0572 13.6067 12.5639 13.46L10.6639 12.88C9.7839 12.6133 9.11056 12.3 8.6439 11.94C8.17723 11.58 7.85056 11.18 7.6639 10.74C7.49056 10.3 7.4039 9.83333 7.4039 9.34V8.38C7.4039 7.64666 7.61056 7 8.0239 6.44C8.43723 5.88 9.01723 5.44 9.7639 5.12C10.5239 4.78666 11.4106 4.62 12.4239 4.62Z"
+    d: "M8.16191 19H5.68191C5.53525 19 5.46191 18.9267 5.46191 18.78V5H8.76191C8.88191 5 8.97525 5.03333 9.04191 5.1C9.10858 5.15333 9.17525 5.27333 9.24191 5.46C9.72191 6.59333 10.1686 7.7 10.5819 8.78C11.0086 9.84667 11.4352 10.98 11.8619 12.18H12.1619C12.6019 10.9667 13.0352 9.79333 13.4619 8.66C13.8886 7.52667 14.3552 6.30667 14.8619 5H18.3219C18.4686 5 18.5419 5.07333 18.5419 5.22V19H16.0619C15.9152 19 15.8419 18.9267 15.8419 18.78V16.26C15.8419 15.5267 15.8486 14.8133 15.8619 14.12C15.8886 13.4267 15.9286 12.6867 15.9819 11.9C16.0486 11.1 16.1419 10.1933 16.2619 9.18H15.9019C15.4352 10.3533 14.9486 11.5667 14.4419 12.82C13.9486 14.06 13.4819 15.2333 13.0419 16.34H11.1019C11.0619 16.34 11.0152 16.3333 10.9619 16.32C10.9219 16.2933 10.8886 16.2467 10.8619 16.18C10.4619 15.18 10.0086 14.06 9.50191 12.82C9.00858 11.58 8.53525 10.3667 8.08191 9.18H7.70191C7.83525 10.18 7.93525 11.0733 8.00191 11.86C8.06858 12.6467 8.10858 13.3933 8.12191 14.1C8.14858 14.8067 8.16191 15.5267 8.16191 16.26V19Z"
   }));
 }
 
-// src/components/Primitives/icons/SizeMediumIcon.tsx
+// src/components/Primitives/icons/SizeLargeIcon.tsx
 var React33 = __toModule(require("react"));
-function SizeMediumIcon(props) {
+function SizeLargeIcon(props) {
   return /* @__PURE__ */ React33.createElement("svg", __spreadValues({
     width: 24,
     height: 24,
@@ -11793,44 +11819,30 @@ function SizeMediumIcon(props) {
     fill: "currentColor",
     xmlns: "http://www.w3.org/2000/svg"
   }, props), /* @__PURE__ */ React33.createElement("path", {
-    d: "M8.16191 19H5.68191C5.53525 19 5.46191 18.9267 5.46191 18.78V5H8.76191C8.88191 5 8.97525 5.03333 9.04191 5.1C9.10858 5.15333 9.17525 5.27333 9.24191 5.46C9.72191 6.59333 10.1686 7.7 10.5819 8.78C11.0086 9.84667 11.4352 10.98 11.8619 12.18H12.1619C12.6019 10.9667 13.0352 9.79333 13.4619 8.66C13.8886 7.52667 14.3552 6.30667 14.8619 5H18.3219C18.4686 5 18.5419 5.07333 18.5419 5.22V19H16.0619C15.9152 19 15.8419 18.9267 15.8419 18.78V16.26C15.8419 15.5267 15.8486 14.8133 15.8619 14.12C15.8886 13.4267 15.9286 12.6867 15.9819 11.9C16.0486 11.1 16.1419 10.1933 16.2619 9.18H15.9019C15.4352 10.3533 14.9486 11.5667 14.4419 12.82C13.9486 14.06 13.4819 15.2333 13.0419 16.34H11.1019C11.0619 16.34 11.0152 16.3333 10.9619 16.32C10.9219 16.2933 10.8886 16.2467 10.8619 16.18C10.4619 15.18 10.0086 14.06 9.50191 12.82C9.00858 11.58 8.53525 10.3667 8.08191 9.18H7.70191C7.83525 10.18 7.93525 11.0733 8.00191 11.86C8.06858 12.6467 8.10858 13.3933 8.12191 14.1C8.14858 14.8067 8.16191 15.5267 8.16191 16.26V19Z"
-  }));
-}
-
-// src/components/Primitives/icons/SizeLargeIcon.tsx
-var React34 = __toModule(require("react"));
-function SizeLargeIcon(props) {
-  return /* @__PURE__ */ React34.createElement("svg", __spreadValues({
-    width: 24,
-    height: 24,
-    viewBox: "-2 -2 28 28",
-    fill: "currentColor",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, props), /* @__PURE__ */ React34.createElement("path", {
     d: "M7.68191 19C7.53525 19 7.46191 18.9267 7.46191 18.78V5H10.1219C10.2686 5 10.3419 5.07333 10.3419 5.22V16.56H13.4419V15.02H15.7619C15.9086 15.02 15.9819 15.0933 15.9819 15.24V19H7.68191Z"
   }));
 }
 
 // src/components/Primitives/icons/EraserIcon.tsx
-var React35 = __toModule(require("react"));
+var React34 = __toModule(require("react"));
 function EraserIcon() {
-  return /* @__PURE__ */ React35.createElement("svg", {
+  return /* @__PURE__ */ React34.createElement("svg", {
     width: "15",
     height: "15",
     viewBox: "0 0 15 15",
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg"
-  }, /* @__PURE__ */ React35.createElement("path", {
+  }, /* @__PURE__ */ React34.createElement("path", {
     d: "M1.72838 9.33987L8.84935 2.34732C9.23874 1.96494 9.86279 1.96539 10.2516 2.34831L13.5636 5.60975C13.9655 6.00555 13.9607 6.65526 13.553 7.04507L8.13212 12.2278C7.94604 12.4057 7.69851 12.505 7.44107 12.505L6.06722 12.505L3.83772 12.505C3.5673 12.505 3.30842 12.3954 3.12009 12.2014L1.7114 10.7498C1.32837 10.3551 1.33596 9.72521 1.72838 9.33987Z",
     stroke: "currentColor"
-  }), /* @__PURE__ */ React35.createElement("line", {
+  }), /* @__PURE__ */ React34.createElement("line", {
     x1: "6.01807",
     y1: "12.5",
     x2: "10.7959",
     y2: "12.5",
     stroke: "currentColor",
     strokeLinecap: "round"
-  }), /* @__PURE__ */ React35.createElement("line", {
+  }), /* @__PURE__ */ React34.createElement("line", {
     x1: "5.50834",
     y1: "5.74606",
     x2: "10.1984",
@@ -11840,21 +11852,21 @@ function EraserIcon() {
 }
 
 // src/components/Primitives/icons/MultiplayerIcon.tsx
-var React36 = __toModule(require("react"));
+var React35 = __toModule(require("react"));
 
 // src/components/Primitives/icons/DiscordIcon.tsx
-var React37 = __toModule(require("react"));
+var React36 = __toModule(require("react"));
 
 // src/components/Primitives/icons/LineIcon.tsx
-var React38 = __toModule(require("react"));
+var React37 = __toModule(require("react"));
 function LineIcon() {
-  return /* @__PURE__ */ React38.createElement("svg", {
+  return /* @__PURE__ */ React37.createElement("svg", {
     width: "15",
     height: "15",
     viewBox: "0 0 15 15",
     fill: "currentColor",
     xmlns: "http://www.w3.org/2000/svg"
-  }, /* @__PURE__ */ React38.createElement("path", {
+  }, /* @__PURE__ */ React37.createElement("path", {
     d: "M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L11.1464 3.14645C11.3417 2.95118 11.6583 2.95118 11.8536 3.14645C12.0488 3.34171 12.0488 3.65829 11.8536 3.85355L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
   }));
 }
@@ -11862,53 +11874,53 @@ function LineIcon() {
 // src/components/ToolsPanel/ShapesMenu.tsx
 var shapeShapes = [TDShapeType.Rectangle, TDShapeType.Ellipse, TDShapeType.Line];
 var shapeShapeIcons = {
-  [TDShapeType.Rectangle]: /* @__PURE__ */ React39.createElement(import_react_icons2.SquareIcon, null),
-  [TDShapeType.Ellipse]: /* @__PURE__ */ React39.createElement(import_react_icons2.CircleIcon, null),
-  [TDShapeType.Line]: /* @__PURE__ */ React39.createElement(LineIcon, null)
+  [TDShapeType.Rectangle]: /* @__PURE__ */ React38.createElement(import_react_icons2.SquareIcon, null),
+  [TDShapeType.Ellipse]: /* @__PURE__ */ React38.createElement(import_react_icons2.CircleIcon, null),
+  [TDShapeType.Line]: /* @__PURE__ */ React38.createElement(LineIcon, null)
 };
-var ShapesMenu = React39.memo(function ShapesMenu2({
+var ShapesMenu = React38.memo(function ShapesMenu2({
   activeTool,
   isToolLocked
 }) {
   const app = useTldrawApp();
-  const [lastActiveTool, setLastActiveTool] = React39.useState(TDShapeType.Rectangle);
-  React39.useEffect(() => {
+  const [lastActiveTool, setLastActiveTool] = React38.useState(TDShapeType.Rectangle);
+  React38.useEffect(() => {
     if (shapeShapes.includes(activeTool) && lastActiveTool !== activeTool) {
       setLastActiveTool(activeTool);
     }
   }, [activeTool]);
-  const selectShapeTool = React39.useCallback(() => {
+  const selectShapeTool = React38.useCallback(() => {
     app.selectTool(lastActiveTool);
   }, [activeTool, app]);
-  const handleDoubleClick = React39.useCallback(() => {
+  const handleDoubleClick = React38.useCallback(() => {
     app.toggleToolLock();
   }, [app]);
   const isActive = shapeShapes.includes(activeTool);
-  return /* @__PURE__ */ React39.createElement(DropdownMenu.Root, {
+  return /* @__PURE__ */ React38.createElement(DropdownMenu.Root, {
     dir: "ltr",
     onOpenChange: selectShapeTool
-  }, /* @__PURE__ */ React39.createElement(DropdownMenu.Trigger, {
+  }, /* @__PURE__ */ React38.createElement(DropdownMenu.Trigger, {
     dir: "ltr",
     asChild: true
-  }, /* @__PURE__ */ React39.createElement(ToolButton, {
+  }, /* @__PURE__ */ React38.createElement(ToolButton, {
     variant: "primary",
     onDoubleClick: handleDoubleClick,
     isToolLocked: isActive && isToolLocked,
     isActive
-  }, shapeShapeIcons[lastActiveTool])), /* @__PURE__ */ React39.createElement(DropdownMenu.Content, {
+  }, shapeShapeIcons[lastActiveTool])), /* @__PURE__ */ React38.createElement(DropdownMenu.Content, {
     asChild: true,
     dir: "ltr",
     side: "top",
     sideOffset: 12
-  }, /* @__PURE__ */ React39.createElement(Panel, {
+  }, /* @__PURE__ */ React38.createElement(Panel, {
     side: "center"
-  }, shapeShapes.map((shape, i) => /* @__PURE__ */ React39.createElement(Tooltip, {
+  }, shapeShapes.map((shape, i) => /* @__PURE__ */ React38.createElement(Tooltip, {
     key: shape,
     label: shape[0].toUpperCase() + shape.slice(1),
     kbd: (4 + i).toString()
-  }, /* @__PURE__ */ React39.createElement(DropdownMenu.Item, {
+  }, /* @__PURE__ */ React38.createElement(DropdownMenu.Item, {
     asChild: true
-  }, /* @__PURE__ */ React39.createElement(ToolButton, {
+  }, /* @__PURE__ */ React38.createElement(ToolButton, {
     variant: "primary",
     onClick: () => {
       app.selectTool(shape);
@@ -11920,70 +11932,70 @@ var ShapesMenu = React39.memo(function ShapesMenu2({
 // src/components/ToolsPanel/PrimaryTools.tsx
 var activeToolSelector2 = (s) => s.appState.activeTool;
 var toolLockedSelector = (s) => s.appState.isToolLocked;
-var PrimaryTools = React40.memo(function PrimaryTools2() {
+var PrimaryTools = React39.memo(function PrimaryTools2() {
   const app = useTldrawApp();
   const activeTool = app.useStore(activeToolSelector2);
   const isToolLocked = app.useStore(toolLockedSelector);
-  const selectSelectTool = React40.useCallback(() => {
+  const selectSelectTool = React39.useCallback(() => {
     app.selectTool("select");
   }, [app]);
-  const selectEraseTool = React40.useCallback(() => {
+  const selectEraseTool = React39.useCallback(() => {
     app.selectTool("erase");
   }, [app]);
-  const selectDrawTool = React40.useCallback(() => {
+  const selectDrawTool = React39.useCallback(() => {
     app.selectTool(TDShapeType.Draw);
   }, [app]);
-  const selectArrowTool = React40.useCallback(() => {
+  const selectArrowTool = React39.useCallback(() => {
     app.selectTool(TDShapeType.Arrow);
   }, [app]);
-  const selectTextTool = React40.useCallback(() => {
+  const selectTextTool = React39.useCallback(() => {
     app.selectTool(TDShapeType.Text);
   }, [app]);
-  const selectStickyTool = React40.useCallback(() => {
+  const selectStickyTool = React39.useCallback(() => {
     app.selectTool(TDShapeType.Sticky);
   }, [app]);
-  return /* @__PURE__ */ React40.createElement(Panel, {
+  return /* @__PURE__ */ React39.createElement(Panel, {
     side: "center"
-  }, /* @__PURE__ */ React40.createElement(ToolButtonWithTooltip, {
+  }, /* @__PURE__ */ React39.createElement(ToolButtonWithTooltip, {
     kbd: "1",
     label: "select",
     onClick: selectSelectTool,
     isActive: activeTool === "select"
-  }, /* @__PURE__ */ React40.createElement(import_react_icons3.CursorArrowIcon, null)), /* @__PURE__ */ React40.createElement(ToolButtonWithTooltip, {
+  }, /* @__PURE__ */ React39.createElement(import_react_icons3.CursorArrowIcon, null)), /* @__PURE__ */ React39.createElement(ToolButtonWithTooltip, {
     kbd: "2",
     label: TDShapeType.Draw,
     onClick: selectDrawTool,
     isActive: activeTool === TDShapeType.Draw
-  }, /* @__PURE__ */ React40.createElement(import_react_icons3.Pencil1Icon, null)), /* @__PURE__ */ React40.createElement(ToolButtonWithTooltip, {
+  }, /* @__PURE__ */ React39.createElement(import_react_icons3.Pencil1Icon, null)), /* @__PURE__ */ React39.createElement(ToolButtonWithTooltip, {
     kbd: "3",
     label: "eraser",
     onClick: selectEraseTool,
     isActive: activeTool === "erase"
-  }, /* @__PURE__ */ React40.createElement(EraserIcon, null)), /* @__PURE__ */ React40.createElement(ShapesMenu, {
+  }, /* @__PURE__ */ React39.createElement(EraserIcon, null)), /* @__PURE__ */ React39.createElement(ShapesMenu, {
     activeTool,
     isToolLocked
-  }), /* @__PURE__ */ React40.createElement(ToolButtonWithTooltip, {
+  }), /* @__PURE__ */ React39.createElement(ToolButtonWithTooltip, {
     kbd: "7",
     label: TDShapeType.Arrow,
     onClick: selectArrowTool,
     isLocked: isToolLocked,
     isActive: activeTool === TDShapeType.Arrow
-  }, /* @__PURE__ */ React40.createElement(import_react_icons3.ArrowTopRightIcon, null)), /* @__PURE__ */ React40.createElement(ToolButtonWithTooltip, {
+  }, /* @__PURE__ */ React39.createElement(import_react_icons3.ArrowTopRightIcon, null)), /* @__PURE__ */ React39.createElement(ToolButtonWithTooltip, {
     kbd: "8",
     label: TDShapeType.Text,
     onClick: selectTextTool,
     isLocked: isToolLocked,
     isActive: activeTool === TDShapeType.Text
-  }, /* @__PURE__ */ React40.createElement(import_react_icons3.TextIcon, null)), /* @__PURE__ */ React40.createElement(ToolButtonWithTooltip, {
+  }, /* @__PURE__ */ React39.createElement(import_react_icons3.TextIcon, null)), /* @__PURE__ */ React39.createElement(ToolButtonWithTooltip, {
     kbd: "9",
     label: TDShapeType.Sticky,
     onClick: selectStickyTool,
     isActive: activeTool === TDShapeType.Sticky
-  }, /* @__PURE__ */ React40.createElement(import_react_icons3.Pencil2Icon, null)));
+  }, /* @__PURE__ */ React39.createElement(import_react_icons3.Pencil2Icon, null)));
 });
 
 // src/components/ToolsPanel/ActionButton.tsx
-var React47 = __toModule(require("react"));
+var React46 = __toModule(require("react"));
 var DropdownMenu2 = __toModule(require("@radix-ui/react-dropdown-menu"));
 var import_react_icons4 = __toModule(require("@radix-ui/react-icons"));
 
@@ -11992,7 +12004,7 @@ var import_react_dropdown_menu2 = __toModule(require("@radix-ui/react-dropdown-m
 var DMArrow = styled(import_react_dropdown_menu2.Arrow, { fill: "$panel", bp: breakpoints });
 
 // src/components/Primitives/DropdownMenu/DMItem.tsx
-var React41 = __toModule(require("react"));
+var React40 = __toModule(require("react"));
 var import_react_dropdown_menu3 = __toModule(require("@radix-ui/react-dropdown-menu"));
 function DMItem(_a) {
   var _b = _a, {
@@ -12000,15 +12012,15 @@ function DMItem(_a) {
   } = _b, rest = __objRest(_b, [
     "onSelect"
   ]);
-  return /* @__PURE__ */ React41.createElement(import_react_dropdown_menu3.Item, {
+  return /* @__PURE__ */ React40.createElement(import_react_dropdown_menu3.Item, {
     dir: "ltr",
     asChild: true,
     onSelect
-  }, /* @__PURE__ */ React41.createElement(RowButton, __spreadValues({}, rest)));
+  }, /* @__PURE__ */ React40.createElement(RowButton, __spreadValues({}, rest)));
 }
 
 // src/components/Primitives/DropdownMenu/DMCheckboxItem.tsx
-var React42 = __toModule(require("react"));
+var React41 = __toModule(require("react"));
 var import_react_dropdown_menu4 = __toModule(require("@radix-ui/react-dropdown-menu"));
 
 // src/components/preventEvent.ts
@@ -12023,14 +12035,14 @@ function DMCheckboxItem({
   kbd,
   children
 }) {
-  return /* @__PURE__ */ React42.createElement(import_react_dropdown_menu4.CheckboxItem, {
+  return /* @__PURE__ */ React41.createElement(import_react_dropdown_menu4.CheckboxItem, {
     dir: "ltr",
     onSelect: preventEvent,
     onCheckedChange,
     checked,
     disabled,
     asChild: true
-  }, /* @__PURE__ */ React42.createElement(RowButton, {
+  }, /* @__PURE__ */ React41.createElement(RowButton, {
     kbd,
     variant,
     hasIndicator: true
@@ -12038,7 +12050,7 @@ function DMCheckboxItem({
 }
 
 // src/components/Primitives/DropdownMenu/DMContent.tsx
-var React43 = __toModule(require("react"));
+var React42 = __toModule(require("react"));
 var import_react_dropdown_menu5 = __toModule(require("@radix-ui/react-dropdown-menu"));
 function DMContent({
   sideOffset = 8,
@@ -12046,13 +12058,13 @@ function DMContent({
   align,
   variant
 }) {
-  return /* @__PURE__ */ React43.createElement(import_react_dropdown_menu5.Content, {
+  return /* @__PURE__ */ React42.createElement(import_react_dropdown_menu5.Content, {
     dir: "ltr",
     align,
     sideOffset,
     onEscapeKeyDown: stopPropagation,
     asChild: true
-  }, /* @__PURE__ */ React43.createElement(StyledContent2, {
+  }, /* @__PURE__ */ React42.createElement(StyledContent2, {
     variant
   }, children));
 }
@@ -12129,21 +12141,21 @@ var DMRadioItem = styled(import_react_dropdown_menu7.RadioItem, {
 });
 
 // src/components/Primitives/DropdownMenu/DMSubMenu.tsx
-var React44 = __toModule(require("react"));
+var React43 = __toModule(require("react"));
 var import_react_dropdown_menu8 = __toModule(require("@radix-ui/react-dropdown-menu"));
 
 // src/components/Primitives/DropdownMenu/DMTriggerIcon.tsx
-var React45 = __toModule(require("react"));
+var React44 = __toModule(require("react"));
 var import_react_dropdown_menu9 = __toModule(require("@radix-ui/react-dropdown-menu"));
 function DMTriggerIcon(_a) {
   var _b = _a, { children } = _b, rest = __objRest(_b, ["children"]);
-  return /* @__PURE__ */ React45.createElement(import_react_dropdown_menu9.Trigger, {
+  return /* @__PURE__ */ React44.createElement(import_react_dropdown_menu9.Trigger, {
     asChild: true
-  }, /* @__PURE__ */ React45.createElement(ToolButton, __spreadValues({}, rest), children));
+  }, /* @__PURE__ */ React44.createElement(ToolButton, __spreadValues({}, rest), children));
 }
 
 // src/components/Primitives/Divider/Divider.tsx
-var React46 = __toModule(require("react"));
+var React45 = __toModule(require("react"));
 var Divider = styled("hr", {
   height: 1,
   marginTop: "$1",
@@ -12189,168 +12201,168 @@ function ActionButton() {
   const selectedShapesCount = app.useStore(selectedShapesCountSelector);
   const hasTwoOrMore = selectedShapesCount > 1;
   const hasThreeOrMore = selectedShapesCount > 2;
-  const handleRotate = React47.useCallback(() => {
+  const handleRotate = React46.useCallback(() => {
     app.rotate();
   }, [app]);
-  const handleDuplicate = React47.useCallback(() => {
+  const handleDuplicate = React46.useCallback(() => {
     app.duplicate();
   }, [app]);
-  const handleToggleLocked = React47.useCallback(() => {
+  const handleToggleLocked = React46.useCallback(() => {
     app.toggleLocked();
   }, [app]);
-  const handleToggleAspectRatio = React47.useCallback(() => {
+  const handleToggleAspectRatio = React46.useCallback(() => {
     app.toggleAspectRatioLocked();
   }, [app]);
-  const handleGroup = React47.useCallback(() => {
+  const handleGroup = React46.useCallback(() => {
     app.group();
   }, [app]);
-  const handleMoveToBack = React47.useCallback(() => {
+  const handleMoveToBack = React46.useCallback(() => {
     app.moveToBack();
   }, [app]);
-  const handleMoveBackward = React47.useCallback(() => {
+  const handleMoveBackward = React46.useCallback(() => {
     app.moveBackward();
   }, [app]);
-  const handleMoveForward = React47.useCallback(() => {
+  const handleMoveForward = React46.useCallback(() => {
     app.moveForward();
   }, [app]);
-  const handleMoveToFront = React47.useCallback(() => {
+  const handleMoveToFront = React46.useCallback(() => {
     app.moveToFront();
   }, [app]);
-  const handleResetAngle = React47.useCallback(() => {
+  const handleResetAngle = React46.useCallback(() => {
     app.setShapeProps({ rotation: 0 });
   }, [app]);
-  const alignTop = React47.useCallback(() => {
+  const alignTop = React46.useCallback(() => {
     app.align(AlignType.Top);
   }, [app]);
-  const alignCenterVertical = React47.useCallback(() => {
+  const alignCenterVertical = React46.useCallback(() => {
     app.align(AlignType.CenterVertical);
   }, [app]);
-  const alignBottom = React47.useCallback(() => {
+  const alignBottom = React46.useCallback(() => {
     app.align(AlignType.Bottom);
   }, [app]);
-  const stretchVertically = React47.useCallback(() => {
+  const stretchVertically = React46.useCallback(() => {
     app.stretch(StretchType.Vertical);
   }, [app]);
-  const distributeVertically = React47.useCallback(() => {
+  const distributeVertically = React46.useCallback(() => {
     app.distribute(DistributeType.Vertical);
   }, [app]);
-  const alignLeft = React47.useCallback(() => {
+  const alignLeft = React46.useCallback(() => {
     app.align(AlignType.Left);
   }, [app]);
-  const alignCenterHorizontal = React47.useCallback(() => {
+  const alignCenterHorizontal = React46.useCallback(() => {
     app.align(AlignType.CenterHorizontal);
   }, [app]);
-  const alignRight = React47.useCallback(() => {
+  const alignRight = React46.useCallback(() => {
     app.align(AlignType.Right);
   }, [app]);
-  const stretchHorizontally = React47.useCallback(() => {
+  const stretchHorizontally = React46.useCallback(() => {
     app.stretch(StretchType.Horizontal);
   }, [app]);
-  const distributeHorizontally = React47.useCallback(() => {
+  const distributeHorizontally = React46.useCallback(() => {
     app.distribute(DistributeType.Horizontal);
   }, [app]);
-  const handleMenuOpenChange = React47.useCallback((open) => {
+  const handleMenuOpenChange = React46.useCallback((open) => {
     app.setMenuOpen(open);
   }, [app]);
-  return /* @__PURE__ */ React47.createElement(DropdownMenu2.Root, {
+  return /* @__PURE__ */ React46.createElement(DropdownMenu2.Root, {
     dir: "ltr",
     onOpenChange: handleMenuOpenChange
-  }, /* @__PURE__ */ React47.createElement(DropdownMenu2.Trigger, {
+  }, /* @__PURE__ */ React46.createElement(DropdownMenu2.Trigger, {
     dir: "ltr",
     asChild: true
-  }, /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(ToolButton, {
     variant: "circle"
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.DotsHorizontalIcon, null))), /* @__PURE__ */ React47.createElement(DMContent, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.DotsHorizontalIcon, null))), /* @__PURE__ */ React46.createElement(DMContent, {
     sideOffset: 16
-  }, /* @__PURE__ */ React47.createElement(React47.Fragment, null, /* @__PURE__ */ React47.createElement(ButtonsRow, null, /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(React46.Fragment, null, /* @__PURE__ */ React46.createElement(ButtonsRow, null, /* @__PURE__ */ React46.createElement(ToolButton, {
     variant: "icon",
     disabled: !hasSelection,
     onClick: handleDuplicate
-  }, /* @__PURE__ */ React47.createElement(Tooltip, {
+  }, /* @__PURE__ */ React46.createElement(Tooltip, {
     label: "Duplicate",
     kbd: `#D`
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.CopyIcon, null))), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.CopyIcon, null))), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasSelection,
     onClick: handleRotate
-  }, /* @__PURE__ */ React47.createElement(Tooltip, {
+  }, /* @__PURE__ */ React46.createElement(Tooltip, {
     label: "Rotate"
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.RotateCounterClockwiseIcon, null))), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.RotateCounterClockwiseIcon, null))), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasSelection,
     onClick: handleToggleLocked
-  }, /* @__PURE__ */ React47.createElement(Tooltip, {
+  }, /* @__PURE__ */ React46.createElement(Tooltip, {
     label: "Toggle Locked",
     kbd: `#L`
-  }, isAllLocked ? /* @__PURE__ */ React47.createElement(import_react_icons4.LockClosedIcon, null) : /* @__PURE__ */ React47.createElement(import_react_icons4.LockOpen1Icon, null))), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, isAllLocked ? /* @__PURE__ */ React46.createElement(import_react_icons4.LockClosedIcon, null) : /* @__PURE__ */ React46.createElement(import_react_icons4.LockOpen1Icon, null))), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasSelection,
     onClick: handleToggleAspectRatio
-  }, /* @__PURE__ */ React47.createElement(Tooltip, {
+  }, /* @__PURE__ */ React46.createElement(Tooltip, {
     label: "Toggle Aspect Ratio Lock"
-  }, isAllAspectLocked ? /* @__PURE__ */ React47.createElement(import_react_icons4.AspectRatioIcon, null) : /* @__PURE__ */ React47.createElement(import_react_icons4.BoxIcon, null))), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, isAllAspectLocked ? /* @__PURE__ */ React46.createElement(import_react_icons4.AspectRatioIcon, null) : /* @__PURE__ */ React46.createElement(import_react_icons4.BoxIcon, null))), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasSelection || !isAllGrouped && !hasMultipleSelection,
     onClick: handleGroup
-  }, /* @__PURE__ */ React47.createElement(Tooltip, {
+  }, /* @__PURE__ */ React46.createElement(Tooltip, {
     label: "Group",
     kbd: `#G`
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.GroupIcon, null)))), /* @__PURE__ */ React47.createElement(ButtonsRow, null, /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.GroupIcon, null)))), /* @__PURE__ */ React46.createElement(ButtonsRow, null, /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasSelection,
     onClick: handleMoveToBack
-  }, /* @__PURE__ */ React47.createElement(Tooltip, {
+  }, /* @__PURE__ */ React46.createElement(Tooltip, {
     label: "Move to Back",
     kbd: `#\u21E7[`
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.PinBottomIcon, null))), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.PinBottomIcon, null))), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasSelection,
     onClick: handleMoveBackward
-  }, /* @__PURE__ */ React47.createElement(Tooltip, {
+  }, /* @__PURE__ */ React46.createElement(Tooltip, {
     label: "Move Backward",
     kbd: `#[`
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.ArrowDownIcon, null))), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.ArrowDownIcon, null))), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasSelection,
     onClick: handleMoveForward
-  }, /* @__PURE__ */ React47.createElement(Tooltip, {
+  }, /* @__PURE__ */ React46.createElement(Tooltip, {
     label: "Move Forward",
     kbd: `#]`
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.ArrowUpIcon, null))), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.ArrowUpIcon, null))), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasSelection,
     onClick: handleMoveToFront
-  }, /* @__PURE__ */ React47.createElement(Tooltip, {
+  }, /* @__PURE__ */ React46.createElement(Tooltip, {
     label: "Move to Front",
     kbd: `#\u21E7]`
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.PinTopIcon, null))), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.PinTopIcon, null))), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasSelection,
     onClick: handleResetAngle
-  }, /* @__PURE__ */ React47.createElement(Tooltip, {
+  }, /* @__PURE__ */ React46.createElement(Tooltip, {
     label: "Reset Angle"
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.AngleIcon, null)))), /* @__PURE__ */ React47.createElement(Divider, null), /* @__PURE__ */ React47.createElement(ButtonsRow, null, /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.AngleIcon, null)))), /* @__PURE__ */ React46.createElement(Divider, null), /* @__PURE__ */ React46.createElement(ButtonsRow, null, /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasTwoOrMore,
     onClick: alignLeft
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.AlignLeftIcon, null)), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.AlignLeftIcon, null)), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasTwoOrMore,
     onClick: alignCenterHorizontal
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.AlignCenterHorizontallyIcon, null)), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.AlignCenterHorizontallyIcon, null)), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasTwoOrMore,
     onClick: alignRight
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.AlignRightIcon, null)), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.AlignRightIcon, null)), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasTwoOrMore,
     onClick: stretchHorizontally
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.StretchHorizontallyIcon, null)), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.StretchHorizontallyIcon, null)), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasThreeOrMore,
     onClick: distributeHorizontally
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.SpaceEvenlyHorizontallyIcon, null))), /* @__PURE__ */ React47.createElement(ButtonsRow, null, /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.SpaceEvenlyHorizontallyIcon, null))), /* @__PURE__ */ React46.createElement(ButtonsRow, null, /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasTwoOrMore,
     onClick: alignTop
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.AlignTopIcon, null)), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.AlignTopIcon, null)), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasTwoOrMore,
     onClick: alignCenterVertical
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.AlignCenterVerticallyIcon, null)), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.AlignCenterVerticallyIcon, null)), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasTwoOrMore,
     onClick: alignBottom
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.AlignBottomIcon, null)), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.AlignBottomIcon, null)), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasTwoOrMore,
     onClick: stretchVertically
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.StretchVerticallyIcon, null)), /* @__PURE__ */ React47.createElement(ToolButton, {
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.StretchVerticallyIcon, null)), /* @__PURE__ */ React46.createElement(ToolButton, {
     disabled: !hasThreeOrMore,
     onClick: distributeVertically
-  }, /* @__PURE__ */ React47.createElement(import_react_icons4.SpaceEvenlyVerticallyIcon, null))))));
+  }, /* @__PURE__ */ React46.createElement(import_react_icons4.SpaceEvenlyVerticallyIcon, null))))));
 }
 var ButtonsRow = styled("div", {
   position: "relative",
@@ -12366,31 +12378,31 @@ var ButtonsRow = styled("div", {
 });
 
 // src/components/ToolsPanel/DeleteButton.tsx
-var React48 = __toModule(require("react"));
+var React47 = __toModule(require("react"));
 function DeleteButton() {
   const app = useTldrawApp();
-  const handleDelete = React48.useCallback(() => {
+  const handleDelete = React47.useCallback(() => {
     app.delete();
   }, [app]);
   const hasSelection = app.useStore((s) => s.appState.status === "idle" && s.document.pageStates[s.appState.currentPageId].selectedIds.length > 0);
-  return /* @__PURE__ */ React48.createElement(Tooltip, {
+  return /* @__PURE__ */ React47.createElement(Tooltip, {
     label: "Delete",
     kbd: "\u232B"
-  }, /* @__PURE__ */ React48.createElement(ToolButton, {
+  }, /* @__PURE__ */ React47.createElement(ToolButton, {
     variant: "circle",
     disabled: !hasSelection,
     onSelect: handleDelete
-  }, /* @__PURE__ */ React48.createElement(TrashIcon, null)));
+  }, /* @__PURE__ */ React47.createElement(TrashIcon, null)));
 }
 
 // src/components/ToolsPanel/ToolsPanel.tsx
 var isDebugModeSelector = (s) => s.settings.isDebugMode;
-var ToolsPanel = React49.memo(function ToolsPanel2({ onBlur }) {
+var ToolsPanel = React48.memo(function ToolsPanel2({ onBlur }) {
   const app = useTldrawApp();
   const isDebugMode = app.useStore(isDebugModeSelector);
-  return /* @__PURE__ */ React49.createElement(StyledToolsPanelContainer, {
+  return /* @__PURE__ */ React48.createElement(StyledToolsPanelContainer, {
     onBlur
-  }, /* @__PURE__ */ React49.createElement(StyledCenterWrap, null, /* @__PURE__ */ React49.createElement(BackToContent, null), /* @__PURE__ */ React49.createElement(StyledPrimaryTools, null, /* @__PURE__ */ React49.createElement(ActionButton, null), /* @__PURE__ */ React49.createElement(PrimaryTools, null), /* @__PURE__ */ React49.createElement(DeleteButton, null))), isDebugMode && /* @__PURE__ */ React49.createElement(StyledStatusWrap, null, /* @__PURE__ */ React49.createElement(StatusBar, null)));
+  }, /* @__PURE__ */ React48.createElement(StyledCenterWrap, null, /* @__PURE__ */ React48.createElement(BackToContent, null), /* @__PURE__ */ React48.createElement(StyledPrimaryTools, null, /* @__PURE__ */ React48.createElement(ActionButton, null), /* @__PURE__ */ React48.createElement(PrimaryTools, null), /* @__PURE__ */ React48.createElement(DeleteButton, null))), isDebugMode && /* @__PURE__ */ React48.createElement(StyledStatusWrap, null, /* @__PURE__ */ React48.createElement(StatusBar, null)));
 });
 var StyledToolsPanelContainer = styled("div", {
   position: "absolute",
@@ -12434,81 +12446,81 @@ var StyledPrimaryTools = styled("div", {
 });
 
 // src/components/TopPanel/TopPanel.tsx
-var React57 = __toModule(require("react"));
+var React56 = __toModule(require("react"));
 
 // src/components/TopPanel/Menu/Menu.tsx
-var React52 = __toModule(require("react"));
+var React51 = __toModule(require("react"));
 var import_react_icons5 = __toModule(require("@radix-ui/react-icons"));
 var DropdownMenu3 = __toModule(require("@radix-ui/react-dropdown-menu"));
 
 // src/components/TopPanel/PreferencesMenu/PreferencesMenu.tsx
-var React50 = __toModule(require("react"));
+var React49 = __toModule(require("react"));
 
 // src/components/Primitives/icons/HeartIcon.tsx
-var React51 = __toModule(require("react"));
+var React50 = __toModule(require("react"));
 
 // src/components/TopPanel/Menu/Menu.tsx
 var numberOfSelectedIdsSelector = (s) => {
   return s.document.pageStates[s.appState.currentPageId].selectedIds.length;
 };
-var Menu = React52.memo(function Menu2({ showSponsorLink, readOnly }) {
+var Menu = React51.memo(function Menu2({ showSponsorLink, readOnly }) {
   const app = useTldrawApp();
   const numberOfSelectedIds = app.useStore(numberOfSelectedIdsSelector);
   const { onNewProject, onOpenProject, onSaveProject, onSaveProjectAs } = useFileSystemHandlers();
-  const handleSignIn = React52.useCallback(() => {
+  const handleSignIn = React51.useCallback(() => {
     var _a, _b;
     (_b = (_a = app.callbacks).onSignIn) == null ? void 0 : _b.call(_a, app);
   }, [app]);
-  const handleSignOut = React52.useCallback(() => {
+  const handleSignOut = React51.useCallback(() => {
     var _a, _b;
     (_b = (_a = app.callbacks).onSignOut) == null ? void 0 : _b.call(_a, app);
   }, [app]);
-  const handleCut = React52.useCallback(() => {
+  const handleCut = React51.useCallback(() => {
     app.cut();
   }, [app]);
-  const handleCopy = React52.useCallback(() => {
+  const handleCopy = React51.useCallback(() => {
     app.copy();
   }, [app]);
-  const handlePaste = React52.useCallback(() => {
+  const handlePaste = React51.useCallback(() => {
     app.paste();
   }, [app]);
-  const handleCopySvg = React52.useCallback(() => {
+  const handleCopySvg = React51.useCallback(() => {
     app.copySvg();
   }, [app]);
-  const handleCopyJson = React52.useCallback(() => {
+  const handleCopyJson = React51.useCallback(() => {
     app.copyJson();
   }, [app]);
-  const handleSelectAll = React52.useCallback(() => {
+  const handleSelectAll = React51.useCallback(() => {
     app.selectAll();
   }, [app]);
-  const handleselectNone = React52.useCallback(() => {
+  const handleselectNone = React51.useCallback(() => {
     app.selectNone();
   }, [app]);
   const showFileMenu = app.callbacks.onNewProject || app.callbacks.onOpenProject || app.callbacks.onSaveProject || app.callbacks.onSaveProjectAs;
   const showSignInOutMenu = app.callbacks.onSignIn || app.callbacks.onSignOut || showSponsorLink;
   const hasSelection = numberOfSelectedIds > 0;
-  return /* @__PURE__ */ React52.createElement(DropdownMenu3.Root, {
+  return /* @__PURE__ */ React51.createElement(DropdownMenu3.Root, {
     dir: "ltr"
-  }, /* @__PURE__ */ React52.createElement(DMTriggerIcon, {
+  }, /* @__PURE__ */ React51.createElement(DMTriggerIcon, {
     isSponsor: showSponsorLink
-  }, /* @__PURE__ */ React52.createElement(import_react_icons5.HamburgerMenuIcon, null)), /* @__PURE__ */ React52.createElement(DMContent, {
+  }, /* @__PURE__ */ React51.createElement(import_react_icons5.HamburgerMenuIcon, null)), /* @__PURE__ */ React51.createElement(DMContent, {
     variant: "menu"
-  }, /* @__PURE__ */ React52.createElement(DMItem, {
+  }, /* @__PURE__ */ React51.createElement(DMItem, {
     onClick: onSaveProject,
     kbd: "#S"
-  }, "\u4FDD\u5B58"), /* @__PURE__ */ React52.createElement(DMItem, {
+  }, "\u4FDD\u5B58"), /* @__PURE__ */ React51.createElement(DMItem, {
     onClick: onSaveProjectAs,
     kbd: "#\u21E7S"
   }, "\u63D0\u51FA")));
 });
 
 // src/components/TopPanel/PageMenu/PageMenu.tsx
-var React54 = __toModule(require("react"));
+var React53 = __toModule(require("react"));
 var DropdownMenu4 = __toModule(require("@radix-ui/react-dropdown-menu"));
 var import_react_icons7 = __toModule(require("@radix-ui/react-icons"));
 
 // src/components/TopPanel/PageOptionsDialog/PageOptionsDialog.tsx
-var React53 = __toModule(require("react"));
+var React52 = __toModule(require("react"));
 var Dialog = __toModule(require("@radix-ui/react-alert-dialog"));
 var import_react_icons6 = __toModule(require("@radix-ui/react-icons"));
 
@@ -12594,20 +12606,20 @@ var canDeleteSelector = (s) => {
 };
 function PageOptionsDialog({ page, onOpen, onClose }) {
   const app = useTldrawApp();
-  const [isOpen, setIsOpen] = React53.useState(false);
+  const [isOpen, setIsOpen] = React52.useState(false);
   const canDelete = app.useStore(canDeleteSelector);
-  const rInput = React53.useRef(null);
-  const handleDuplicate = React53.useCallback(() => {
+  const rInput = React52.useRef(null);
+  const handleDuplicate = React52.useCallback(() => {
     app.duplicatePage(page.id);
     onClose == null ? void 0 : onClose();
   }, [app]);
-  const handleDelete = React53.useCallback(() => {
+  const handleDelete = React52.useCallback(() => {
     if (window.confirm(`Are you sure you want to delete this page?`)) {
       app.deletePage(page.id);
       onClose == null ? void 0 : onClose();
     }
   }, [app]);
-  const handleOpenChange = React53.useCallback((isOpen2) => {
+  const handleOpenChange = React52.useCallback((isOpen2) => {
     setIsOpen(isOpen2);
     if (isOpen2) {
       onOpen == null ? void 0 : onOpen();
@@ -12621,7 +12633,7 @@ function PageOptionsDialog({ page, onOpen, onClose }) {
     const nextName = window.prompt("New name:", page.name);
     app.renamePage(page.id, nextName || page.name || "Page");
   }
-  React53.useEffect(() => {
+  React52.useEffect(() => {
     if (isOpen) {
       requestAnimationFrame(() => {
         const elm = rInput.current;
@@ -12632,28 +12644,28 @@ function PageOptionsDialog({ page, onOpen, onClose }) {
       });
     }
   }, [isOpen]);
-  return /* @__PURE__ */ React53.createElement(Dialog.Root, {
+  return /* @__PURE__ */ React52.createElement(Dialog.Root, {
     open: isOpen,
     onOpenChange: handleOpenChange
-  }, /* @__PURE__ */ React53.createElement(Dialog.Trigger, {
+  }, /* @__PURE__ */ React52.createElement(Dialog.Trigger, {
     asChild: true,
     "data-shy": "true"
-  }, /* @__PURE__ */ React53.createElement(IconButton, {
+  }, /* @__PURE__ */ React52.createElement(IconButton, {
     bp: breakpoints
-  }, /* @__PURE__ */ React53.createElement(SmallIcon, null, /* @__PURE__ */ React53.createElement(import_react_icons6.MixerVerticalIcon, null)))), /* @__PURE__ */ React53.createElement(StyledDialogOverlay, null), /* @__PURE__ */ React53.createElement(StyledDialogContent, {
+  }, /* @__PURE__ */ React52.createElement(SmallIcon, null, /* @__PURE__ */ React52.createElement(import_react_icons6.MixerVerticalIcon, null)))), /* @__PURE__ */ React52.createElement(StyledDialogOverlay, null), /* @__PURE__ */ React52.createElement(StyledDialogContent, {
     dir: "ltr",
     onKeyDown: stopPropagation2,
     onKeyUp: stopPropagation2
-  }, /* @__PURE__ */ React53.createElement(DialogAction, {
+  }, /* @__PURE__ */ React52.createElement(DialogAction, {
     onSelect: handleRename
-  }, "Rename"), /* @__PURE__ */ React53.createElement(DialogAction, {
+  }, "Rename"), /* @__PURE__ */ React52.createElement(DialogAction, {
     onSelect: handleDuplicate
-  }, "Duplicate"), /* @__PURE__ */ React53.createElement(DialogAction, {
+  }, "Duplicate"), /* @__PURE__ */ React52.createElement(DialogAction, {
     disabled: !canDelete,
     onSelect: handleDelete
-  }, "Delete"), /* @__PURE__ */ React53.createElement(Divider, null), /* @__PURE__ */ React53.createElement(Dialog.Cancel, {
+  }, "Delete"), /* @__PURE__ */ React52.createElement(Divider, null), /* @__PURE__ */ React52.createElement(Dialog.Cancel, {
     asChild: true
-  }, /* @__PURE__ */ React53.createElement(RowButton, null, "Cancel"))));
+  }, /* @__PURE__ */ React52.createElement(RowButton, null, "Cancel"))));
 }
 var StyledDialogContent = styled(Dialog.Content, {
   position: "fixed",
@@ -12689,11 +12701,11 @@ function DialogAction(_a) {
   } = _b, rest = __objRest(_b, [
     "onSelect"
   ]);
-  return /* @__PURE__ */ React53.createElement(Dialog.Action, {
+  return /* @__PURE__ */ React52.createElement(Dialog.Action, {
     asChild: true,
     onClick: onSelect,
     onSelect
-  }, /* @__PURE__ */ React53.createElement(RowButton, __spreadValues({}, rest)));
+  }, /* @__PURE__ */ React52.createElement(RowButton, __spreadValues({}, rest)));
 }
 
 // src/components/TopPanel/PageMenu/PageMenu.tsx
@@ -12702,35 +12714,35 @@ var currentPageNameSelector = (s) => s.document.pages[s.appState.currentPageId].
 var currentPageIdSelector = (s) => s.document.pages[s.appState.currentPageId].id;
 function PageMenu() {
   const app = useTldrawApp();
-  const rIsOpen = React54.useRef(false);
-  const [isOpen, setIsOpen] = React54.useState(false);
-  React54.useEffect(() => {
+  const rIsOpen = React53.useRef(false);
+  const [isOpen, setIsOpen] = React53.useState(false);
+  React53.useEffect(() => {
     if (rIsOpen.current !== isOpen) {
       rIsOpen.current = isOpen;
     }
   }, [isOpen]);
-  const handleClose = React54.useCallback(() => {
+  const handleClose = React53.useCallback(() => {
     setIsOpen(false);
   }, [setIsOpen]);
-  const handleOpenChange = React54.useCallback((isOpen2) => {
+  const handleOpenChange = React53.useCallback((isOpen2) => {
     if (rIsOpen.current !== isOpen2) {
       setIsOpen(isOpen2);
     }
   }, [setIsOpen]);
   const currentPageName = app.useStore(currentPageNameSelector);
-  return /* @__PURE__ */ React54.createElement(DropdownMenu4.Root, {
+  return /* @__PURE__ */ React53.createElement(DropdownMenu4.Root, {
     dir: "ltr",
     open: isOpen,
     onOpenChange: handleOpenChange
-  }, /* @__PURE__ */ React54.createElement(DropdownMenu4.Trigger, {
+  }, /* @__PURE__ */ React53.createElement(DropdownMenu4.Trigger, {
     dir: "ltr",
     asChild: true
-  }, /* @__PURE__ */ React54.createElement(ToolButton, {
+  }, /* @__PURE__ */ React53.createElement(ToolButton, {
     variant: "text"
-  }, currentPageName || "Page")), /* @__PURE__ */ React54.createElement(DMContent, {
+  }, currentPageName || "Page")), /* @__PURE__ */ React53.createElement(DMContent, {
     variant: "menu",
     align: "start"
-  }, isOpen && /* @__PURE__ */ React54.createElement(PageMenuContent, {
+  }, isOpen && /* @__PURE__ */ React53.createElement(PageMenuContent, {
     onClose: handleClose
   })));
 }
@@ -12738,31 +12750,31 @@ function PageMenuContent({ onClose }) {
   const app = useTldrawApp();
   const sortedPages = app.useStore(sortedSelector);
   const currentPageId = app.useStore(currentPageIdSelector);
-  const handleCreatePage = React54.useCallback(() => {
+  const handleCreatePage = React53.useCallback(() => {
     app.createPage();
   }, [app]);
-  const handleChangePage = React54.useCallback((id) => {
+  const handleChangePage = React53.useCallback((id) => {
     onClose();
     app.changePage(id);
   }, [app]);
-  return /* @__PURE__ */ React54.createElement(React54.Fragment, null, /* @__PURE__ */ React54.createElement(DropdownMenu4.RadioGroup, {
+  return /* @__PURE__ */ React53.createElement(React53.Fragment, null, /* @__PURE__ */ React53.createElement(DropdownMenu4.RadioGroup, {
     dir: "ltr",
     value: currentPageId,
     onValueChange: handleChangePage
-  }, sortedPages.map((page) => /* @__PURE__ */ React54.createElement(ButtonWithOptions, {
+  }, sortedPages.map((page) => /* @__PURE__ */ React53.createElement(ButtonWithOptions, {
     key: page.id
-  }, /* @__PURE__ */ React54.createElement(DropdownMenu4.RadioItem, {
+  }, /* @__PURE__ */ React53.createElement(DropdownMenu4.RadioItem, {
     title: page.name || "Page",
     value: page.id,
     key: page.id,
     asChild: true
-  }, /* @__PURE__ */ React54.createElement(PageButton, null, /* @__PURE__ */ React54.createElement("span", null, page.name || "Page"), /* @__PURE__ */ React54.createElement(DropdownMenu4.ItemIndicator, null, /* @__PURE__ */ React54.createElement(SmallIcon, null, /* @__PURE__ */ React54.createElement(import_react_icons7.CheckIcon, null))))), /* @__PURE__ */ React54.createElement(PageOptionsDialog, {
+  }, /* @__PURE__ */ React53.createElement(PageButton, null, /* @__PURE__ */ React53.createElement("span", null, page.name || "Page"), /* @__PURE__ */ React53.createElement(DropdownMenu4.ItemIndicator, null, /* @__PURE__ */ React53.createElement(SmallIcon, null, /* @__PURE__ */ React53.createElement(import_react_icons7.CheckIcon, null))))), /* @__PURE__ */ React53.createElement(PageOptionsDialog, {
     page,
     onClose
-  })))), /* @__PURE__ */ React54.createElement(DMDivider, null), /* @__PURE__ */ React54.createElement(DropdownMenu4.Item, {
+  })))), /* @__PURE__ */ React53.createElement(DMDivider, null), /* @__PURE__ */ React53.createElement(DropdownMenu4.Item, {
     onSelect: handleCreatePage,
     asChild: true
-  }, /* @__PURE__ */ React54.createElement(RowButton, null, /* @__PURE__ */ React54.createElement("span", null, "Create Page"), /* @__PURE__ */ React54.createElement(SmallIcon, null, /* @__PURE__ */ React54.createElement(import_react_icons7.PlusIcon, null)))));
+  }, /* @__PURE__ */ React53.createElement(RowButton, null, /* @__PURE__ */ React53.createElement("span", null, "Create Page"), /* @__PURE__ */ React53.createElement(SmallIcon, null, /* @__PURE__ */ React53.createElement(import_react_icons7.PlusIcon, null)))));
 }
 var ButtonWithOptions = styled("div", {
   display: "grid",
@@ -12780,39 +12792,39 @@ var PageButton = styled(RowButton, {
 });
 
 // src/components/TopPanel/ZoomMenu/ZoomMenu.tsx
-var React55 = __toModule(require("react"));
+var React54 = __toModule(require("react"));
 var DropdownMenu5 = __toModule(require("@radix-ui/react-dropdown-menu"));
 var zoomSelector = (s) => s.document.pageStates[s.appState.currentPageId].camera.zoom;
-var ZoomMenu = React55.memo(function ZoomMenu2() {
+var ZoomMenu = React54.memo(function ZoomMenu2() {
   const app = useTldrawApp();
   const zoom = app.useStore(zoomSelector);
-  return /* @__PURE__ */ React55.createElement(DropdownMenu5.Root, {
+  return /* @__PURE__ */ React54.createElement(DropdownMenu5.Root, {
     dir: "ltr"
-  }, /* @__PURE__ */ React55.createElement(DropdownMenu5.Trigger, {
+  }, /* @__PURE__ */ React54.createElement(DropdownMenu5.Trigger, {
     dir: "ltr",
     asChild: true
-  }, /* @__PURE__ */ React55.createElement(FixedWidthToolButton, {
+  }, /* @__PURE__ */ React54.createElement(FixedWidthToolButton, {
     onDoubleClick: app.resetZoom,
     variant: "text"
-  }, Math.round(zoom * 100), "%")), /* @__PURE__ */ React55.createElement(DMContent, {
+  }, Math.round(zoom * 100), "%")), /* @__PURE__ */ React54.createElement(DMContent, {
     align: "end"
-  }, /* @__PURE__ */ React55.createElement(DMItem, {
+  }, /* @__PURE__ */ React54.createElement(DMItem, {
     onSelect: preventEvent,
     onClick: app.zoomIn,
     kbd: "#+"
-  }, "Zoom In"), /* @__PURE__ */ React55.createElement(DMItem, {
+  }, "Zoom In"), /* @__PURE__ */ React54.createElement(DMItem, {
     onSelect: preventEvent,
     onClick: app.zoomOut,
     kbd: "#\u2212"
-  }, "Zoom Out"), /* @__PURE__ */ React55.createElement(DMItem, {
+  }, "Zoom Out"), /* @__PURE__ */ React54.createElement(DMItem, {
     onSelect: preventEvent,
     onClick: app.resetZoom,
     kbd: "\u21E70"
-  }, "To 100%"), /* @__PURE__ */ React55.createElement(DMItem, {
+  }, "To 100%"), /* @__PURE__ */ React54.createElement(DMItem, {
     onSelect: preventEvent,
     onClick: app.zoomToFit,
     kbd: "\u21E71"
-  }, "To Fit"), /* @__PURE__ */ React55.createElement(DMItem, {
+  }, "To Fit"), /* @__PURE__ */ React54.createElement(DMItem, {
     onSelect: preventEvent,
     onClick: app.zoomToSelection,
     kbd: "\u21E72"
@@ -12823,28 +12835,28 @@ var FixedWidthToolButton = styled(ToolButton, {
 });
 
 // src/components/TopPanel/StyleMenu/StyleMenu.tsx
-var React56 = __toModule(require("react"));
+var React55 = __toModule(require("react"));
 var DropdownMenu6 = __toModule(require("@radix-ui/react-dropdown-menu"));
 var import_react_icons8 = __toModule(require("@radix-ui/react-icons"));
 var currentStyleSelector = (s) => s.appState.currentStyle;
 var selectedIdsSelector = (s) => s.document.pageStates[s.appState.currentPageId].selectedIds;
 var STYLE_KEYS = Object.keys(defaultTextStyle);
 var DASH_ICONS = {
-  [DashStyle.Draw]: /* @__PURE__ */ React56.createElement(DashDrawIcon, null),
-  [DashStyle.Solid]: /* @__PURE__ */ React56.createElement(DashSolidIcon, null),
-  [DashStyle.Dashed]: /* @__PURE__ */ React56.createElement(DashDashedIcon, null),
-  [DashStyle.Dotted]: /* @__PURE__ */ React56.createElement(DashDottedIcon, null)
+  [DashStyle.Draw]: /* @__PURE__ */ React55.createElement(DashDrawIcon, null),
+  [DashStyle.Solid]: /* @__PURE__ */ React55.createElement(DashSolidIcon, null),
+  [DashStyle.Dashed]: /* @__PURE__ */ React55.createElement(DashDashedIcon, null),
+  [DashStyle.Dotted]: /* @__PURE__ */ React55.createElement(DashDottedIcon, null)
 };
 var SIZE_ICONS = {
-  [SizeStyle.Small]: /* @__PURE__ */ React56.createElement(SizeSmallIcon, null),
-  [SizeStyle.Medium]: /* @__PURE__ */ React56.createElement(SizeMediumIcon, null),
-  [SizeStyle.Large]: /* @__PURE__ */ React56.createElement(SizeLargeIcon, null)
+  [SizeStyle.Small]: /* @__PURE__ */ React55.createElement(SizeSmallIcon, null),
+  [SizeStyle.Medium]: /* @__PURE__ */ React55.createElement(SizeMediumIcon, null),
+  [SizeStyle.Large]: /* @__PURE__ */ React55.createElement(SizeLargeIcon, null)
 };
 var ALIGN_ICONS = {
-  [AlignStyle.Start]: /* @__PURE__ */ React56.createElement(import_react_icons8.TextAlignLeftIcon, null),
-  [AlignStyle.Middle]: /* @__PURE__ */ React56.createElement(import_react_icons8.TextAlignCenterIcon, null),
-  [AlignStyle.End]: /* @__PURE__ */ React56.createElement(import_react_icons8.TextAlignRightIcon, null),
-  [AlignStyle.Justify]: /* @__PURE__ */ React56.createElement(import_react_icons8.TextAlignJustifyIcon, null)
+  [AlignStyle.Start]: /* @__PURE__ */ React55.createElement(import_react_icons8.TextAlignLeftIcon, null),
+  [AlignStyle.Middle]: /* @__PURE__ */ React55.createElement(import_react_icons8.TextAlignCenterIcon, null),
+  [AlignStyle.End]: /* @__PURE__ */ React55.createElement(import_react_icons8.TextAlignRightIcon, null),
+  [AlignStyle.Justify]: /* @__PURE__ */ React55.createElement(import_react_icons8.TextAlignJustifyIcon, null)
 };
 var themeSelector = (s) => s.settings.isDarkMode ? "dark" : "light";
 var showTextStylesSelector = (s) => {
@@ -12852,15 +12864,15 @@ var showTextStylesSelector = (s) => {
   const page = s.document.pages[pageId];
   return activeTool === "text" || s.document.pageStates[pageId].selectedIds.some((id) => "text" in page.shapes[id]);
 };
-var StyleMenu = React56.memo(function ColorMenu() {
+var StyleMenu = React55.memo(function ColorMenu() {
   const app = useTldrawApp();
   const theme = app.useStore(themeSelector);
   const showTextStyles = app.useStore(showTextStylesSelector);
   const currentStyle = app.useStore(currentStyleSelector);
   const selectedIds = app.useStore(selectedIdsSelector);
-  const [displayedStyle, setDisplayedStyle] = React56.useState(currentStyle);
-  const rDisplayedStyle = React56.useRef(currentStyle);
-  React56.useEffect(() => {
+  const [displayedStyle, setDisplayedStyle] = React55.useState(currentStyle);
+  const rDisplayedStyle = React55.useRef(currentStyle);
+  React55.useEffect(() => {
     const {
       appState: { currentStyle: currentStyle2 },
       page,
@@ -12891,95 +12903,95 @@ var StyleMenu = React56.memo(function ColorMenu() {
       setDisplayedStyle(commonStyle);
     }
   }, [currentStyle, selectedIds]);
-  const handleToggleFilled = React56.useCallback((checked) => {
+  const handleToggleFilled = React55.useCallback((checked) => {
     app.style({ isFilled: checked });
   }, []);
-  const handleDashChange = React56.useCallback((value) => {
+  const handleDashChange = React55.useCallback((value) => {
     app.style({ dash: value });
   }, []);
-  const handleSizeChange = React56.useCallback((value) => {
+  const handleSizeChange = React55.useCallback((value) => {
     app.style({ size: value });
   }, []);
-  const handleFontChange = React56.useCallback((value) => {
+  const handleFontChange = React55.useCallback((value) => {
     app.style({ font: value });
   }, []);
-  const handleTextAlignChange = React56.useCallback((value) => {
+  const handleTextAlignChange = React55.useCallback((value) => {
     app.style({ textAlign: value });
   }, []);
-  const handleMenuOpenChange = React56.useCallback((open) => {
+  const handleMenuOpenChange = React55.useCallback((open) => {
     app.setMenuOpen(open);
   }, [app]);
-  return /* @__PURE__ */ React56.createElement(DropdownMenu6.Root, {
+  return /* @__PURE__ */ React55.createElement(DropdownMenu6.Root, {
     dir: "ltr",
     onOpenChange: handleMenuOpenChange
-  }, /* @__PURE__ */ React56.createElement(DropdownMenu6.Trigger, {
+  }, /* @__PURE__ */ React55.createElement(DropdownMenu6.Trigger, {
     asChild: true
-  }, /* @__PURE__ */ React56.createElement(ToolButton, {
+  }, /* @__PURE__ */ React55.createElement(ToolButton, {
     variant: "text"
-  }, "Styles", /* @__PURE__ */ React56.createElement(OverlapIcons, {
+  }, "Styles", /* @__PURE__ */ React55.createElement(OverlapIcons, {
     style: {
       color: strokes[theme][displayedStyle.color]
     }
-  }, displayedStyle.isFilled && /* @__PURE__ */ React56.createElement(CircleIcon, {
+  }, displayedStyle.isFilled && /* @__PURE__ */ React55.createElement(CircleIcon, {
     size: 16,
     stroke: "none",
     fill: fills[theme][displayedStyle.color]
-  }), DASH_ICONS[displayedStyle.dash]))), /* @__PURE__ */ React56.createElement(DMContent, null, /* @__PURE__ */ React56.createElement(StyledRow, {
+  }), DASH_ICONS[displayedStyle.dash]))), /* @__PURE__ */ React55.createElement(DMContent, null, /* @__PURE__ */ React55.createElement(StyledRow, {
     variant: "tall"
-  }, /* @__PURE__ */ React56.createElement("span", null, "Color"), /* @__PURE__ */ React56.createElement(ColorGrid, null, Object.keys(strokes.light).map((style) => /* @__PURE__ */ React56.createElement(DropdownMenu6.Item, {
+  }, /* @__PURE__ */ React55.createElement("span", null, "Color"), /* @__PURE__ */ React55.createElement(ColorGrid, null, Object.keys(strokes.light).map((style) => /* @__PURE__ */ React55.createElement(DropdownMenu6.Item, {
     key: style,
     onSelect: preventEvent,
     asChild: true
-  }, /* @__PURE__ */ React56.createElement(ToolButton, {
+  }, /* @__PURE__ */ React55.createElement(ToolButton, {
     variant: "icon",
     isActive: displayedStyle.color === style,
     onClick: () => app.style({ color: style })
-  }, /* @__PURE__ */ React56.createElement(CircleIcon, {
+  }, /* @__PURE__ */ React55.createElement(CircleIcon, {
     size: 18,
     strokeWidth: 2.5,
     fill: displayedStyle.isFilled ? fills.light[style] : "transparent",
     stroke: strokes.light[style]
-  })))))), /* @__PURE__ */ React56.createElement(DMCheckboxItem, {
+  })))))), /* @__PURE__ */ React55.createElement(DMCheckboxItem, {
     variant: "styleMenu",
     checked: !!displayedStyle.isFilled,
     onCheckedChange: handleToggleFilled
-  }, "Fill"), /* @__PURE__ */ React56.createElement(StyledRow, null, "Dash", /* @__PURE__ */ React56.createElement(StyledGroup, {
+  }, "Fill"), /* @__PURE__ */ React55.createElement(StyledRow, null, "Dash", /* @__PURE__ */ React55.createElement(StyledGroup, {
     dir: "ltr",
     value: displayedStyle.dash,
     onValueChange: handleDashChange
-  }, Object.values(DashStyle).map((style) => /* @__PURE__ */ React56.createElement(DMRadioItem, {
+  }, Object.values(DashStyle).map((style) => /* @__PURE__ */ React55.createElement(DMRadioItem, {
     key: style,
     isActive: style === displayedStyle.dash,
     value: style,
     onSelect: preventEvent,
     bp: breakpoints
-  }, DASH_ICONS[style])))), /* @__PURE__ */ React56.createElement(StyledRow, null, "Size", /* @__PURE__ */ React56.createElement(StyledGroup, {
+  }, DASH_ICONS[style])))), /* @__PURE__ */ React55.createElement(StyledRow, null, "Size", /* @__PURE__ */ React55.createElement(StyledGroup, {
     dir: "ltr",
     value: displayedStyle.size,
     onValueChange: handleSizeChange
-  }, Object.values(SizeStyle).map((sizeStyle) => /* @__PURE__ */ React56.createElement(DMRadioItem, {
+  }, Object.values(SizeStyle).map((sizeStyle) => /* @__PURE__ */ React55.createElement(DMRadioItem, {
     key: sizeStyle,
     isActive: sizeStyle === displayedStyle.size,
     value: sizeStyle,
     onSelect: preventEvent,
     bp: breakpoints
-  }, SIZE_ICONS[sizeStyle])))), showTextStyles && /* @__PURE__ */ React56.createElement(React56.Fragment, null, /* @__PURE__ */ React56.createElement(Divider, null), /* @__PURE__ */ React56.createElement(StyledRow, null, "Font", /* @__PURE__ */ React56.createElement(StyledGroup, {
+  }, SIZE_ICONS[sizeStyle])))), showTextStyles && /* @__PURE__ */ React55.createElement(React55.Fragment, null, /* @__PURE__ */ React55.createElement(Divider, null), /* @__PURE__ */ React55.createElement(StyledRow, null, "Font", /* @__PURE__ */ React55.createElement(StyledGroup, {
     dir: "ltr",
     value: displayedStyle.font,
     onValueChange: handleFontChange
-  }, Object.values(FontStyle).map((fontStyle) => /* @__PURE__ */ React56.createElement(DMRadioItem, {
+  }, Object.values(FontStyle).map((fontStyle) => /* @__PURE__ */ React55.createElement(DMRadioItem, {
     key: fontStyle,
     isActive: fontStyle === displayedStyle.font,
     value: fontStyle,
     onSelect: preventEvent,
     bp: breakpoints
-  }, /* @__PURE__ */ React56.createElement(FontIcon, {
+  }, /* @__PURE__ */ React55.createElement(FontIcon, {
     fontStyle
-  }, "Aa"))))), /* @__PURE__ */ React56.createElement(StyledRow, null, "Align", /* @__PURE__ */ React56.createElement(StyledGroup, {
+  }, "Aa"))))), /* @__PURE__ */ React55.createElement(StyledRow, null, "Align", /* @__PURE__ */ React55.createElement(StyledGroup, {
     dir: "ltr",
     value: displayedStyle.textAlign,
     onValueChange: handleTextAlignChange
-  }, Object.values(AlignStyle).map((style) => /* @__PURE__ */ React56.createElement(DMRadioItem, {
+  }, Object.values(AlignStyle).map((style) => /* @__PURE__ */ React55.createElement(DMRadioItem, {
     key: style,
     isActive: style === displayedStyle.textAlign,
     value: style,
@@ -13072,20 +13084,20 @@ function TopPanel({
   showSponsorLink
 }) {
   const app = useTldrawApp();
-  return /* @__PURE__ */ React57.createElement(StyledTopPanel, null, (showMenu || showPages) && /* @__PURE__ */ React57.createElement(Panel, {
+  return /* @__PURE__ */ React56.createElement(StyledTopPanel, null, (showMenu || showPages) && /* @__PURE__ */ React56.createElement(Panel, {
     side: "left"
-  }, showMenu && /* @__PURE__ */ React57.createElement(Menu, {
+  }, showMenu && /* @__PURE__ */ React56.createElement(Menu, {
     showSponsorLink,
     readOnly
-  }), showPages && /* @__PURE__ */ React57.createElement(PageMenu, null)), /* @__PURE__ */ React57.createElement(StyledSpacer, null), (showStyles || showZoom) && /* @__PURE__ */ React57.createElement(Panel, {
+  }), showPages && /* @__PURE__ */ React56.createElement(PageMenu, null)), /* @__PURE__ */ React56.createElement(StyledSpacer, null), (showStyles || showZoom) && /* @__PURE__ */ React56.createElement(Panel, {
     side: "right"
-  }, showStyles && !readOnly && /* @__PURE__ */ React57.createElement(StyleMenu, null), /* @__PURE__ */ React57.createElement(MobileOnly, {
+  }, showStyles && !readOnly && /* @__PURE__ */ React56.createElement(StyleMenu, null), /* @__PURE__ */ React56.createElement(MobileOnly, {
     bp: breakpoints
-  }, /* @__PURE__ */ React57.createElement(ToolButton, null, /* @__PURE__ */ React57.createElement(UndoIcon, {
+  }, /* @__PURE__ */ React56.createElement(ToolButton, null, /* @__PURE__ */ React56.createElement(UndoIcon, {
     onClick: app.undo
-  })), /* @__PURE__ */ React57.createElement(ToolButton, null, /* @__PURE__ */ React57.createElement(RedoIcon, {
+  })), /* @__PURE__ */ React56.createElement(ToolButton, null, /* @__PURE__ */ React56.createElement(RedoIcon, {
     onClick: app.redo
-  }))), showZoom && /* @__PURE__ */ React57.createElement(ZoomMenu, null)));
+  }))), showZoom && /* @__PURE__ */ React56.createElement(ZoomMenu, null)));
 }
 var StyledTopPanel = styled("div", {
   width: "100%",
@@ -13120,7 +13132,7 @@ var MobileOnly = styled("div", {
 });
 
 // src/components/ContextMenu/ContextMenu.tsx
-var React58 = __toModule(require("react"));
+var React57 = __toModule(require("react"));
 var RadixContextMenu = __toModule(require("@radix-ui/react-context-menu"));
 var import_react_icons9 = __toModule(require("@radix-ui/react-icons"));
 var numberOfSelectedIdsSelector2 = (s) => {
@@ -13138,131 +13150,131 @@ var ContextMenu = ({ onBlur, children }) => {
   const numberOfSelectedIds = app.useStore(numberOfSelectedIdsSelector2);
   const isDebugMode = app.useStore(isDebugModeSelector2);
   const hasGroupSelected = app.useStore(hasGroupSelectedSelector);
-  const rContent = React58.useRef(null);
-  const handleFlipHorizontal = React58.useCallback(() => {
+  const rContent = React57.useRef(null);
+  const handleFlipHorizontal = React57.useCallback(() => {
     app.flipHorizontal();
   }, [app]);
-  const handleFlipVertical = React58.useCallback(() => {
+  const handleFlipVertical = React57.useCallback(() => {
     app.flipVertical();
   }, [app]);
-  const handleDuplicate = React58.useCallback(() => {
+  const handleDuplicate = React57.useCallback(() => {
     app.duplicate();
   }, [app]);
-  const handleLock = React58.useCallback(() => {
+  const handleLock = React57.useCallback(() => {
     app.toggleLocked();
   }, [app]);
-  const handleGroup = React58.useCallback(() => {
+  const handleGroup = React57.useCallback(() => {
     app.group();
   }, [app]);
-  const handleMoveToBack = React58.useCallback(() => {
+  const handleMoveToBack = React57.useCallback(() => {
     app.moveToBack();
   }, [app]);
-  const handleMoveBackward = React58.useCallback(() => {
+  const handleMoveBackward = React57.useCallback(() => {
     app.moveBackward();
   }, [app]);
-  const handleMoveForward = React58.useCallback(() => {
+  const handleMoveForward = React57.useCallback(() => {
     app.moveForward();
   }, [app]);
-  const handleMoveToFront = React58.useCallback(() => {
+  const handleMoveToFront = React57.useCallback(() => {
     app.moveToFront();
   }, [app]);
-  const handleDelete = React58.useCallback(() => {
+  const handleDelete = React57.useCallback(() => {
     app.delete();
   }, [app]);
-  const handleCopyJson = React58.useCallback(() => {
+  const handleCopyJson = React57.useCallback(() => {
     app.copyJson();
   }, [app]);
-  const handleCut = React58.useCallback(() => {
+  const handleCut = React57.useCallback(() => {
     app.cut();
   }, [app]);
-  const handleCopy = React58.useCallback(() => {
+  const handleCopy = React57.useCallback(() => {
     app.copy();
   }, [app]);
-  const handlePaste = React58.useCallback(() => {
+  const handlePaste = React57.useCallback(() => {
     app.paste();
   }, [app]);
-  const handleCopySvg = React58.useCallback(() => {
+  const handleCopySvg = React57.useCallback(() => {
     app.copySvg();
   }, [app]);
-  const handleUndo = React58.useCallback(() => {
+  const handleUndo = React57.useCallback(() => {
     app.undo();
   }, [app]);
-  const handleRedo = React58.useCallback(() => {
+  const handleRedo = React57.useCallback(() => {
     app.redo();
   }, [app]);
   const hasSelection = numberOfSelectedIds > 0;
   const hasTwoOrMore = numberOfSelectedIds > 1;
   const hasThreeOrMore = numberOfSelectedIds > 2;
-  return /* @__PURE__ */ React58.createElement(RadixContextMenu.Root, {
+  return /* @__PURE__ */ React57.createElement(RadixContextMenu.Root, {
     dir: "ltr"
-  }, /* @__PURE__ */ React58.createElement(RadixContextMenu.Trigger, {
+  }, /* @__PURE__ */ React57.createElement(RadixContextMenu.Trigger, {
     dir: "ltr"
-  }, children), /* @__PURE__ */ React58.createElement(RadixContextMenu.Content, {
+  }, children), /* @__PURE__ */ React57.createElement(RadixContextMenu.Content, {
     dir: "ltr",
     ref: rContent,
     onEscapeKeyDown: preventDefault,
     asChild: true,
     tabIndex: -1,
     onBlur
-  }, /* @__PURE__ */ React58.createElement(MenuContent, null, hasSelection ? /* @__PURE__ */ React58.createElement(React58.Fragment, null, /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, /* @__PURE__ */ React57.createElement(MenuContent, null, hasSelection ? /* @__PURE__ */ React57.createElement(React57.Fragment, null, /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleDuplicate,
     kbd: "#D"
-  }, "Duplicate"), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Duplicate"), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleFlipHorizontal,
     kbd: "\u21E7H"
-  }, "Flip Horizontal"), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Flip Horizontal"), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleFlipVertical,
     kbd: "\u21E7V"
-  }, "Flip Vertical"), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Flip Vertical"), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleLock,
     kbd: "#\u21E7L"
-  }, "Lock / Unlock"), (hasTwoOrMore || hasGroupSelected) && /* @__PURE__ */ React58.createElement(Divider, null), hasTwoOrMore && /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Lock / Unlock"), (hasTwoOrMore || hasGroupSelected) && /* @__PURE__ */ React57.createElement(Divider, null), hasTwoOrMore && /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleGroup,
     kbd: "#G"
-  }, "Group"), hasGroupSelected && /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Group"), hasGroupSelected && /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleGroup,
     kbd: "#G"
-  }, "Ungroup"), /* @__PURE__ */ React58.createElement(Divider, null), /* @__PURE__ */ React58.createElement(ContextMenuSubMenu, {
+  }, "Ungroup"), /* @__PURE__ */ React57.createElement(Divider, null), /* @__PURE__ */ React57.createElement(ContextMenuSubMenu, {
     label: "Move"
-  }, /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleMoveToFront,
     kbd: "\u21E7]"
-  }, "To Front"), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "To Front"), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleMoveForward,
     kbd: "]"
-  }, "Forward"), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Forward"), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleMoveBackward,
     kbd: "["
-  }, "Backward"), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Backward"), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleMoveToBack,
     kbd: "\u21E7["
-  }, "To Back")), /* @__PURE__ */ React58.createElement(MoveToPageMenu, null), hasTwoOrMore && /* @__PURE__ */ React58.createElement(AlignDistributeSubMenu, {
+  }, "To Back")), /* @__PURE__ */ React57.createElement(MoveToPageMenu, null), hasTwoOrMore && /* @__PURE__ */ React57.createElement(AlignDistributeSubMenu, {
     hasTwoOrMore,
     hasThreeOrMore
-  }), /* @__PURE__ */ React58.createElement(Divider, null), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }), /* @__PURE__ */ React57.createElement(Divider, null), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleCut,
     kbd: "#X"
-  }, "Cut"), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Cut"), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleCopy,
     kbd: "#C"
-  }, "Copy"), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Copy"), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleCopySvg,
     kbd: "#\u21E7C"
-  }, "Copy as SVG"), isDebugMode && /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Copy as SVG"), isDebugMode && /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleCopyJson
-  }, "Copy as JSON"), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Copy as JSON"), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handlePaste,
     kbd: "#V"
-  }, "Paste"), /* @__PURE__ */ React58.createElement(Divider, null), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Paste"), /* @__PURE__ */ React57.createElement(Divider, null), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleDelete,
     kbd: "\u232B"
-  }, "Delete")) : /* @__PURE__ */ React58.createElement(React58.Fragment, null, /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Delete")) : /* @__PURE__ */ React57.createElement(React57.Fragment, null, /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handlePaste,
     kbd: "#V"
-  }, "Paste"), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Paste"), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleUndo,
     kbd: "#Z"
-  }, "Undo"), /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, "Undo"), /* @__PURE__ */ React57.createElement(CMRowButton, {
     onClick: handleRedo,
     kbd: "#\u21E7Z"
   }, "Redo")))));
@@ -13271,67 +13283,67 @@ function AlignDistributeSubMenu({
   hasThreeOrMore
 }) {
   const app = useTldrawApp();
-  const alignTop = React58.useCallback(() => {
+  const alignTop = React57.useCallback(() => {
     app.align(AlignType.Top);
   }, [app]);
-  const alignCenterVertical = React58.useCallback(() => {
+  const alignCenterVertical = React57.useCallback(() => {
     app.align(AlignType.CenterVertical);
   }, [app]);
-  const alignBottom = React58.useCallback(() => {
+  const alignBottom = React57.useCallback(() => {
     app.align(AlignType.Bottom);
   }, [app]);
-  const stretchVertically = React58.useCallback(() => {
+  const stretchVertically = React57.useCallback(() => {
     app.stretch(StretchType.Vertical);
   }, [app]);
-  const distributeVertically = React58.useCallback(() => {
+  const distributeVertically = React57.useCallback(() => {
     app.distribute(DistributeType.Vertical);
   }, [app]);
-  const alignLeft = React58.useCallback(() => {
+  const alignLeft = React57.useCallback(() => {
     app.align(AlignType.Left);
   }, [app]);
-  const alignCenterHorizontal = React58.useCallback(() => {
+  const alignCenterHorizontal = React57.useCallback(() => {
     app.align(AlignType.CenterHorizontal);
   }, [app]);
-  const alignRight = React58.useCallback(() => {
+  const alignRight = React57.useCallback(() => {
     app.align(AlignType.Right);
   }, [app]);
-  const stretchHorizontally = React58.useCallback(() => {
+  const stretchHorizontally = React57.useCallback(() => {
     app.stretch(StretchType.Horizontal);
   }, [app]);
-  const distributeHorizontally = React58.useCallback(() => {
+  const distributeHorizontally = React57.useCallback(() => {
     app.distribute(DistributeType.Horizontal);
   }, [app]);
-  return /* @__PURE__ */ React58.createElement(RadixContextMenu.Root, {
+  return /* @__PURE__ */ React57.createElement(RadixContextMenu.Root, {
     dir: "ltr"
-  }, /* @__PURE__ */ React58.createElement(CMTriggerButton, {
+  }, /* @__PURE__ */ React57.createElement(CMTriggerButton, {
     isSubmenu: true
-  }, "Align / Distribute"), /* @__PURE__ */ React58.createElement(RadixContextMenu.Content, {
+  }, "Align / Distribute"), /* @__PURE__ */ React57.createElement(RadixContextMenu.Content, {
     asChild: true,
     sideOffset: 2,
     alignOffset: -2
-  }, /* @__PURE__ */ React58.createElement(StyledGridContent, {
+  }, /* @__PURE__ */ React57.createElement(StyledGridContent, {
     numberOfSelected: hasThreeOrMore ? "threeOrMore" : "twoOrMore"
-  }, /* @__PURE__ */ React58.createElement(CMIconButton, {
+  }, /* @__PURE__ */ React57.createElement(CMIconButton, {
     onClick: alignLeft
-  }, /* @__PURE__ */ React58.createElement(import_react_icons9.AlignLeftIcon, null)), /* @__PURE__ */ React58.createElement(CMIconButton, {
+  }, /* @__PURE__ */ React57.createElement(import_react_icons9.AlignLeftIcon, null)), /* @__PURE__ */ React57.createElement(CMIconButton, {
     onClick: alignCenterHorizontal
-  }, /* @__PURE__ */ React58.createElement(import_react_icons9.AlignCenterHorizontallyIcon, null)), /* @__PURE__ */ React58.createElement(CMIconButton, {
+  }, /* @__PURE__ */ React57.createElement(import_react_icons9.AlignCenterHorizontallyIcon, null)), /* @__PURE__ */ React57.createElement(CMIconButton, {
     onClick: alignRight
-  }, /* @__PURE__ */ React58.createElement(import_react_icons9.AlignRightIcon, null)), /* @__PURE__ */ React58.createElement(CMIconButton, {
+  }, /* @__PURE__ */ React57.createElement(import_react_icons9.AlignRightIcon, null)), /* @__PURE__ */ React57.createElement(CMIconButton, {
     onClick: stretchHorizontally
-  }, /* @__PURE__ */ React58.createElement(import_react_icons9.StretchHorizontallyIcon, null)), hasThreeOrMore && /* @__PURE__ */ React58.createElement(CMIconButton, {
+  }, /* @__PURE__ */ React57.createElement(import_react_icons9.StretchHorizontallyIcon, null)), hasThreeOrMore && /* @__PURE__ */ React57.createElement(CMIconButton, {
     onClick: distributeHorizontally
-  }, /* @__PURE__ */ React58.createElement(import_react_icons9.SpaceEvenlyHorizontallyIcon, null)), /* @__PURE__ */ React58.createElement(CMIconButton, {
+  }, /* @__PURE__ */ React57.createElement(import_react_icons9.SpaceEvenlyHorizontallyIcon, null)), /* @__PURE__ */ React57.createElement(CMIconButton, {
     onClick: alignTop
-  }, /* @__PURE__ */ React58.createElement(import_react_icons9.AlignTopIcon, null)), /* @__PURE__ */ React58.createElement(CMIconButton, {
+  }, /* @__PURE__ */ React57.createElement(import_react_icons9.AlignTopIcon, null)), /* @__PURE__ */ React57.createElement(CMIconButton, {
     onClick: alignCenterVertical
-  }, /* @__PURE__ */ React58.createElement(import_react_icons9.AlignCenterVerticallyIcon, null)), /* @__PURE__ */ React58.createElement(CMIconButton, {
+  }, /* @__PURE__ */ React57.createElement(import_react_icons9.AlignCenterVerticallyIcon, null)), /* @__PURE__ */ React57.createElement(CMIconButton, {
     onClick: alignBottom
-  }, /* @__PURE__ */ React58.createElement(import_react_icons9.AlignBottomIcon, null)), /* @__PURE__ */ React58.createElement(CMIconButton, {
+  }, /* @__PURE__ */ React57.createElement(import_react_icons9.AlignBottomIcon, null)), /* @__PURE__ */ React57.createElement(CMIconButton, {
     onClick: stretchVertically
-  }, /* @__PURE__ */ React58.createElement(import_react_icons9.StretchVerticallyIcon, null)), hasThreeOrMore && /* @__PURE__ */ React58.createElement(CMIconButton, {
+  }, /* @__PURE__ */ React57.createElement(import_react_icons9.StretchVerticallyIcon, null)), hasThreeOrMore && /* @__PURE__ */ React57.createElement(CMIconButton, {
     onClick: distributeVertically
-  }, /* @__PURE__ */ React58.createElement(import_react_icons9.SpaceEvenlyVerticallyIcon, null)), /* @__PURE__ */ React58.createElement(CMArrow, {
+  }, /* @__PURE__ */ React57.createElement(import_react_icons9.SpaceEvenlyVerticallyIcon, null)), /* @__PURE__ */ React57.createElement(CMArrow, {
     offset: 13
   }))));
 }
@@ -13357,34 +13369,34 @@ function MoveToPageMenu() {
   const sorted = Object.values(documentPages).sort((a, b) => (a.childIndex || 0) - (b.childIndex || 0)).filter((a) => a.id !== currentPageId);
   if (sorted.length === 0)
     return null;
-  return /* @__PURE__ */ React58.createElement(RadixContextMenu.Root, {
+  return /* @__PURE__ */ React57.createElement(RadixContextMenu.Root, {
     dir: "ltr"
-  }, /* @__PURE__ */ React58.createElement(CMTriggerButton, {
+  }, /* @__PURE__ */ React57.createElement(CMTriggerButton, {
     isSubmenu: true
-  }, "Move To Page"), /* @__PURE__ */ React58.createElement(RadixContextMenu.Content, {
+  }, "Move To Page"), /* @__PURE__ */ React57.createElement(RadixContextMenu.Content, {
     dir: "ltr",
     sideOffset: 2,
     alignOffset: -2,
     asChild: true
-  }, /* @__PURE__ */ React58.createElement(MenuContent, null, sorted.map(({ id, name }, i) => /* @__PURE__ */ React58.createElement(CMRowButton, {
+  }, /* @__PURE__ */ React57.createElement(MenuContent, null, sorted.map(({ id, name }, i) => /* @__PURE__ */ React57.createElement(CMRowButton, {
     key: id,
     disabled: id === currentPageId,
     onClick: () => app.moveToPage(id)
-  }, name || `Page ${i}`)), /* @__PURE__ */ React58.createElement(CMArrow, {
+  }, name || `Page ${i}`)), /* @__PURE__ */ React57.createElement(CMArrow, {
     offset: 13
   }))));
 }
 function ContextMenuSubMenu({ children, label }) {
-  return /* @__PURE__ */ React58.createElement(RadixContextMenu.Root, {
+  return /* @__PURE__ */ React57.createElement(RadixContextMenu.Root, {
     dir: "ltr"
-  }, /* @__PURE__ */ React58.createElement(CMTriggerButton, {
+  }, /* @__PURE__ */ React57.createElement(CMTriggerButton, {
     isSubmenu: true
-  }, label), /* @__PURE__ */ React58.createElement(RadixContextMenu.Content, {
+  }, label), /* @__PURE__ */ React57.createElement(RadixContextMenu.Content, {
     dir: "ltr",
     sideOffset: 2,
     alignOffset: -2,
     asChild: true
-  }, /* @__PURE__ */ React58.createElement(MenuContent, null, children, /* @__PURE__ */ React58.createElement(CMArrow, {
+  }, /* @__PURE__ */ React57.createElement(MenuContent, null, children, /* @__PURE__ */ React57.createElement(CMArrow, {
     offset: 13
   }))));
 }
@@ -13393,34 +13405,34 @@ var CMArrow = styled(RadixContextMenu.ContextMenuArrow, {
 });
 function CMIconButton(_a) {
   var _b = _a, { onSelect } = _b, rest = __objRest(_b, ["onSelect"]);
-  return /* @__PURE__ */ React58.createElement(RadixContextMenu.ContextMenuItem, {
+  return /* @__PURE__ */ React57.createElement(RadixContextMenu.ContextMenuItem, {
     dir: "ltr",
     onSelect,
     asChild: true
-  }, /* @__PURE__ */ React58.createElement(ToolButton, __spreadValues({}, rest)));
+  }, /* @__PURE__ */ React57.createElement(ToolButton, __spreadValues({}, rest)));
 }
 var CMRowButton = (_a) => {
   var rest = __objRest(_a, []);
-  return /* @__PURE__ */ React58.createElement(RadixContextMenu.ContextMenuItem, {
+  return /* @__PURE__ */ React57.createElement(RadixContextMenu.ContextMenuItem, {
     asChild: true
-  }, /* @__PURE__ */ React58.createElement(RowButton, __spreadValues({}, rest)));
+  }, /* @__PURE__ */ React57.createElement(RowButton, __spreadValues({}, rest)));
 };
 var CMTriggerButton = (_a) => {
   var _b = _a, { isSubmenu } = _b, rest = __objRest(_b, ["isSubmenu"]);
-  return /* @__PURE__ */ React58.createElement(RadixContextMenu.ContextMenuTriggerItem, {
+  return /* @__PURE__ */ React57.createElement(RadixContextMenu.ContextMenuTriggerItem, {
     asChild: true
-  }, /* @__PURE__ */ React58.createElement(RowButton, __spreadValues({
+  }, /* @__PURE__ */ React57.createElement(RowButton, __spreadValues({
     hasArrow: isSubmenu
   }, rest)));
 };
 
 // src/components/FocusButton/FocusButton.tsx
 var import_react_icons10 = __toModule(require("@radix-ui/react-icons"));
-var React59 = __toModule(require("react"));
+var React58 = __toModule(require("react"));
 function FocusButton({ onSelect }) {
-  return /* @__PURE__ */ React59.createElement(StyledButtonContainer, null, /* @__PURE__ */ React59.createElement(IconButton, {
+  return /* @__PURE__ */ React58.createElement(StyledButtonContainer, null, /* @__PURE__ */ React58.createElement(IconButton, {
     onClick: onSelect
-  }, /* @__PURE__ */ React59.createElement(import_react_icons10.DotFilledIcon, null)));
+  }, /* @__PURE__ */ React58.createElement(import_react_icons10.DotFilledIcon, null)));
 }
 var StyledButtonContainer = styled("div", {
   opacity: 1,
@@ -13465,8 +13477,8 @@ function Tldraw({
   onCommand,
   onChangePage
 }) {
-  const [sId, setSId] = React60.useState(id);
-  const [app, setApp] = React60.useState(() => new TldrawApp(id, {
+  const [sId, setSId] = React59.useState(id);
+  const [app, setApp] = React59.useState(() => new TldrawApp(id, {
     onMount,
     onChange,
     onChangePresence,
@@ -13483,7 +13495,7 @@ function Tldraw({
     onCommand,
     onChangePage
   }));
-  React60.useEffect(() => {
+  React59.useEffect(() => {
     if (id === sId)
       return;
     const newApp = new TldrawApp(id, {
@@ -13506,7 +13518,7 @@ function Tldraw({
     setSId(id);
     setApp(newApp);
   }, [sId, id]);
-  React60.useEffect(() => {
+  React59.useEffect(() => {
     if (!document2)
       return;
     if (document2.id === app.document.id) {
@@ -13515,19 +13527,19 @@ function Tldraw({
       app.loadDocument(document2);
     }
   }, [document2, app]);
-  React60.useEffect(() => {
+  React59.useEffect(() => {
     if (!currentPageId)
       return;
     app.changePage(currentPageId);
   }, [currentPageId, app]);
-  React60.useEffect(() => {
+  React59.useEffect(() => {
     app.readOnly = readOnly;
   }, [app, readOnly]);
-  React60.useEffect(() => {
+  React59.useEffect(() => {
     if (darkMode && !app.settings.isDarkMode) {
     }
   }, [app, darkMode]);
-  React60.useEffect(() => {
+  React59.useEffect(() => {
     app.callbacks = {
       onMount,
       onChange,
@@ -13562,9 +13574,9 @@ function Tldraw({
     onCommand,
     onChangePage
   ]);
-  return /* @__PURE__ */ React60.createElement(TldrawContext.Provider, {
+  return /* @__PURE__ */ React59.createElement(TldrawContext.Provider, {
     value: app
-  }, /* @__PURE__ */ React60.createElement(import_react_id.IdProvider, null, /* @__PURE__ */ React60.createElement(InnerTldraw, {
+  }, /* @__PURE__ */ React59.createElement(import_react_id.IdProvider, null, /* @__PURE__ */ React59.createElement(InnerTldraw, {
     key: sId || "Tldraw",
     id: sId,
     autofocus,
@@ -13578,7 +13590,7 @@ function Tldraw({
     readOnly
   })));
 }
-var InnerTldraw = React60.memo(function InnerTldraw2({
+var InnerTldraw = React59.memo(function InnerTldraw2({
   id,
   autofocus,
   showPages,
@@ -13592,7 +13604,7 @@ var InnerTldraw = React60.memo(function InnerTldraw2({
 }) {
   var _a;
   const app = useTldrawApp();
-  const rWrapper = React60.useRef(null);
+  const rWrapper = React59.useRef(null);
   const state = app.useStore();
   const { document: document2, settings, appState, room } = state;
   const isSelecting = state.appState.activeTool === "select";
@@ -13605,10 +13617,10 @@ var InnerTldraw = React60.memo(function InnerTldraw2({
   const hideBounds = isInSession && ((_a = app.session) == null ? void 0 : _a.constructor.name) !== "BrushSession" || !isSelecting || isHideBoundsShape || !!pageState.editingId;
   const hideHandles = isInSession || !isSelecting;
   const hideIndicators = isInSession && state.appState.status !== TDStatus.Brushing || !isSelecting;
-  const meta = React60.useMemo(() => {
+  const meta = React59.useMemo(() => {
     return { isDarkMode: settings.isDarkMode };
   }, [settings.isDarkMode]);
-  const theme = React60.useMemo(() => {
+  const theme = React59.useMemo(() => {
     if (settings.isDarkMode) {
       return {
         brushFill: "rgba(180, 180, 180, .05)",
@@ -13621,7 +13633,7 @@ var InnerTldraw = React60.memo(function InnerTldraw2({
     }
     return {};
   }, [settings.isDarkMode]);
-  const handleMenuBlur = React60.useCallback((e) => {
+  const handleMenuBlur = React59.useCallback((e) => {
     const elm = rWrapper.current;
     if (!elm)
       return;
@@ -13630,16 +13642,16 @@ var InnerTldraw = React60.memo(function InnerTldraw2({
     elm.dispatchEvent(new Event("pointerdown", { bubbles: true }));
     elm.dispatchEvent(new Event("pointerup", { bubbles: true }));
   }, []);
-  return /* @__PURE__ */ React60.createElement(StyledLayout, {
+  return /* @__PURE__ */ React59.createElement(StyledLayout, {
     ref: rWrapper,
     tabIndex: -0,
     className: settings.isDarkMode ? dark : ""
-  }, /* @__PURE__ */ React60.createElement(OneOff, {
+  }, /* @__PURE__ */ React59.createElement(OneOff, {
     focusableRef: rWrapper,
     autofocus
-  }), /* @__PURE__ */ React60.createElement(ContextMenu, {
+  }), /* @__PURE__ */ React59.createElement(ContextMenu, {
     onBlur: handleMenuBlur
-  }, /* @__PURE__ */ React60.createElement(import_core47.Renderer, {
+  }, /* @__PURE__ */ React59.createElement(import_core45.Renderer, {
     id,
     containerRef: rWrapper,
     shapeUtils,
@@ -13708,26 +13720,26 @@ var InnerTldraw = React60.memo(function InnerTldraw2({
     onBoundsChange: app.updateBounds,
     onKeyDown: app.onKeyDown,
     onKeyUp: app.onKeyUp
-  })), showUI && /* @__PURE__ */ React60.createElement(StyledUI, null, settings.isFocusMode ? /* @__PURE__ */ React60.createElement(FocusButton, {
+  })), showUI && /* @__PURE__ */ React59.createElement(StyledUI, null, settings.isFocusMode ? /* @__PURE__ */ React59.createElement(FocusButton, {
     onSelect: app.toggleFocusMode
-  }) : /* @__PURE__ */ React60.createElement(React60.Fragment, null, /* @__PURE__ */ React60.createElement(TopPanel, {
+  }) : /* @__PURE__ */ React59.createElement(React59.Fragment, null, /* @__PURE__ */ React59.createElement(TopPanel, {
     readOnly,
     showPages,
     showMenu,
     showStyles,
     showZoom,
     showSponsorLink
-  }), /* @__PURE__ */ React60.createElement(StyledSpacer2, null), showTools && !readOnly && /* @__PURE__ */ React60.createElement(ToolsPanel, {
+  }), /* @__PURE__ */ React59.createElement(StyledSpacer2, null), showTools && !readOnly && /* @__PURE__ */ React59.createElement(ToolsPanel, {
     onBlur: handleMenuBlur
   }))));
 });
-var OneOff = React60.memo(function OneOff2({
+var OneOff = React59.memo(function OneOff2({
   focusableRef,
   autofocus
 }) {
   useKeyboardShortcuts(focusableRef);
   useStylesheet();
-  React60.useEffect(() => {
+  React59.useEffect(() => {
     var _a;
     if (autofocus) {
       (_a = focusableRef.current) == null ? void 0 : _a.focus();
