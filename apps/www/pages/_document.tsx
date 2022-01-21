@@ -11,7 +11,7 @@ class MyDocument extends NextDocument {
       styles: (
         <>
           {initialProps.styles}
-          <style id="stitches" dangerouslySetInnerHTML={{ __html: getCssText() }} />
+          {/* <style id="stitches" dangerouslySetInnerHTML={{ __html: getCssText() }} /> */}
         </>
       ),
     }
