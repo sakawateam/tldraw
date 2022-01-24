@@ -13,7 +13,7 @@
     "dev": "next dev",
     "build:apps": "yarn build",
     "build:www": "yarn build",
-    "build": "next build",
+    "build": "next build --profile",
     "serve": "next serve",
     "lint": "next lint"
   },
